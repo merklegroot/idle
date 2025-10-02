@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { WoodDef, BerryDef } from '../app/models/ResourceDef';
+import { WoodDef, BerryDef, StoneDef } from '../app/models/ResourceDef';
 
 export interface ResourceState {
   amount: number;
@@ -215,7 +215,8 @@ const useGameStore = create<GameStore>((set, get) => ({
     // Get salary from resource definition
     const resourceDefs: Record<string, { workerSalary: number }> = {
       wood: { workerSalary: WoodDef.workerSalary },
-      berries: { workerSalary: BerryDef.workerSalary }
+      berries: { workerSalary: BerryDef.workerSalary },
+      stone: { workerSalary: StoneDef.workerSalary }
     };
     const resourceDef = resourceDefs[resourceKey];
     const workerSalary = resourceDef?.workerSalary || 10;
@@ -291,7 +292,8 @@ const useGameStore = create<GameStore>((set, get) => ({
     // Get default values from resource definitions
     const resourceDefs: Record<string, { workerCost: number; workerSalary: number }> = {
       wood: { workerCost: WoodDef.workerCost, workerSalary: WoodDef.workerSalary },
-      berries: { workerCost: BerryDef.workerCost, workerSalary: BerryDef.workerSalary }
+      berries: { workerCost: BerryDef.workerCost, workerSalary: BerryDef.workerSalary },
+      stone: { workerCost: StoneDef.workerCost, workerSalary: StoneDef.workerSalary }
     };
     const resourceDef = resourceDefs[resourceKey];
     const defaultWorkerCost = resourceDef?.workerCost || 100;
@@ -407,7 +409,11 @@ const useGameStore = create<GameStore>((set, get) => ({
     const resource = state.resources[resourceKey];
     if (!resource || !resource.autoSellEnabled || resource.autoSellThreshold <= 0) return;
 
-    if (resource.amount > resource.autoSellThreshold) {
+    // Add a buffer to prevent flickering - only sell when significantly over threshold
+    const buffer = Math.max(1, Math.floor(resource.autoSellThreshold * 0.1)); // 10% buffer or minimum 1
+    const sellThreshold = resource.autoSellThreshold + buffer;
+    
+    if (resource.amount > sellThreshold) {
       const amountToSell = resource.amount - resource.autoSellThreshold;
       get().sellResource(resourceKey, amountToSell);
     }
@@ -545,8 +551,9 @@ const useGameStore = create<GameStore>((set, get) => ({
 // Helper function to get sell prices
 const getSellPrice = (resourceKey: string): number => {
   const prices: Record<string, number> = {
-    wood: WoodDef.sellPrice,    // Wood sells for 20 gold each
-    berries: BerryDef.sellPrice  // Berries sell for 30 gold each
+    wood: WoodDef.sellPrice || 20,    // Wood sells for 20 gold each
+    berries: BerryDef.sellPrice || 30,  // Berries sell for 30 gold each
+    stone: StoneDef.sellPrice || 50   // Stone sells for 50 gold each
   };
   return prices[resourceKey] || 1;
 };

@@ -40,6 +40,19 @@ export const BerryDef: GatherableResourceDef = {
     sellPrice: 30 // Increased from 3 to 30
 };
 
+export const StoneDef: GatherableResourceDef = {
+    name: 'Stone',
+    resourceKey: 'stone',
+    icon: '🪨',
+    perSecond: 1,
+    workerCost: 200, // Most expensive to hire
+    workerSalary: 15, // Highest salary cost
+    workerPerSecond: 1, // Same production rate
+    gatherPerSecond: 1, // Slowest manual gathering (1% per 20ms = 2 seconds)
+    gatherInterval: 20,
+    sellPrice: 50 // Most valuable to sell
+};
+
 export const GoldDef: ResourceDef = {
     name: 'Gold',
     resourceKey: 'gold',
