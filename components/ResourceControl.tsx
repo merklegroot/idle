@@ -74,8 +74,8 @@ export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef
             </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
-                  className={`h-2 rounded-full transition-all duration-75 ${
-                    isGathering ? 'bg-green-600' : 'bg-gray-400'
+                  className={`h-2 rounded-full ${
+                    isGathering ? 'bg-green-600 transition-all duration-75' : 'bg-gray-400'
                   }`}
                   style={{ width: `${isGathering ? gatherProgress : 0}%` }}
                 ></div>
