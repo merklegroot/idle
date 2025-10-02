@@ -1,10 +1,13 @@
 import { create } from 'zustand';
+import { WoodDef, BerryDef } from '../app/models/ResourceDef';
 
 export interface ResourceState {
   amount: number;
   perSecond: number;
   workers: number;
+  paidWorkers: number;
   workerCost: number;
+  workerSalary: number;
   isGathering: boolean;
   gatherProgress: number;
   workerProgress: number;
@@ -25,7 +28,9 @@ export interface GameActions {
   addResourceAmount: (resourceKey: string, amount: number) => void;
   setResourcePerSecond: (resourceKey: string, perSecond: number) => void;
   setResourceWorkers: (resourceKey: string, workers: number) => void;
+  setResourcePaidWorkers: (resourceKey: string, paidWorkers: number) => void;
   setResourceWorkerCost: (resourceKey: string, workerCost: number) => void;
+  setResourceWorkerSalary: (resourceKey: string, workerSalary: number) => void;
   setResourceIsGathering: (resourceKey: string, isGathering: boolean) => void;
   setResourceGatherProgress: (resourceKey: string, gatherProgress: number) => void;
   setResourceWorkerProgress: (resourceKey: string, workerProgress: number) => void;
@@ -48,6 +53,9 @@ export interface GameActions {
   setAutoSellThreshold: (resourceKey: string, threshold: number) => void;
   setAutoSellEnabled: (resourceKey: string, enabled: boolean) => void;
   checkAutoSell: (resourceKey: string) => void;
+  
+  // Salary system
+  payWorkerSalaries: (resourceKey: string) => void;
   
   // Game loop
   startGameLoop: () => void;
@@ -122,6 +130,18 @@ const useGameStore = create<GameStore>((set, get) => ({
     }));
   },
 
+  setResourcePaidWorkers: (resourceKey: string, paidWorkers: number) => {
+    set((state) => ({
+      resources: {
+        ...state.resources,
+        [resourceKey]: {
+          ...state.resources[resourceKey],
+          paidWorkers
+        }
+      }
+    }));
+  },
+
   setResourceWorkerCost: (resourceKey: string, workerCost: number) => {
     set((state) => ({
       resources: {
@@ -129,6 +149,18 @@ const useGameStore = create<GameStore>((set, get) => ({
         [resourceKey]: {
           ...state.resources[resourceKey],
           workerCost
+        }
+      }
+    }));
+  },
+
+  setResourceWorkerSalary: (resourceKey: string, workerSalary: number) => {
+    set((state) => ({
+      resources: {
+        ...state.resources,
+        [resourceKey]: {
+          ...state.resources[resourceKey],
+          workerSalary
         }
       }
     }));
@@ -180,6 +212,14 @@ const useGameStore = create<GameStore>((set, get) => ({
     const gold = state.resources.gold;
     if (!gold || gold.amount < resource.workerCost) return;
 
+    // Get salary from resource definition
+    const resourceDefs: Record<string, { workerSalary: number }> = {
+      wood: { workerSalary: WoodDef.workerSalary },
+      berries: { workerSalary: BerryDef.workerSalary }
+    };
+    const resourceDef = resourceDefs[resourceKey];
+    const workerSalary = resourceDef?.workerSalary || 10;
+
     set({
       resources: {
         ...state.resources,
@@ -187,7 +227,8 @@ const useGameStore = create<GameStore>((set, get) => ({
           ...resource,
           workers: resource.workers + 1,
           perSecond: resource.perSecond + 1,
-          workerCost: Math.floor(resource.workerCost * 1.15)
+          workerCost: Math.floor(resource.workerCost * 1.15),
+          workerSalary: workerSalary
         },
         gold: {
           ...gold,
@@ -247,6 +288,15 @@ const useGameStore = create<GameStore>((set, get) => ({
     const state = get();
     if (state.resources[resourceKey]) return; // Already initialized
 
+    // Get default values from resource definitions
+    const resourceDefs: Record<string, { workerCost: number; workerSalary: number }> = {
+      wood: { workerCost: WoodDef.workerCost, workerSalary: WoodDef.workerSalary },
+      berries: { workerCost: BerryDef.workerCost, workerSalary: BerryDef.workerSalary }
+    };
+    const resourceDef = resourceDefs[resourceKey];
+    const defaultWorkerCost = resourceDef?.workerCost || 100;
+    const defaultWorkerSalary = resourceDef?.workerSalary || 10;
+
     set({
       resources: {
         ...state.resources,
@@ -254,7 +304,9 @@ const useGameStore = create<GameStore>((set, get) => ({
           amount: 0,
           perSecond: 0,
           workers: 0,
-          workerCost: 10,
+          paidWorkers: 0,
+          workerCost: defaultWorkerCost,
+          workerSalary: defaultWorkerSalary,
           isGathering: false,
           gatherProgress: 0,
           workerProgress: 0,
@@ -280,7 +332,9 @@ const useGameStore = create<GameStore>((set, get) => ({
         amount: 0,
         perSecond: 0,
         workers: 0,
-        workerCost: 10,
+        paidWorkers: 0,
+        workerCost: 100,
+        workerSalary: 0,
         isGathering: false,
         gatherProgress: 0,
         workerProgress: 0,
@@ -359,6 +413,53 @@ const useGameStore = create<GameStore>((set, get) => ({
     }
   },
 
+  // Salary system
+  payWorkerSalaries: (resourceKey: string) => {
+    const state = get();
+    const resource = state.resources[resourceKey];
+    if (!resource || resource.workers === 0 || resource.workerSalary <= 0) return;
+
+    const gold = state.resources.gold;
+    if (!gold) return;
+
+    const totalSalaryCost = resource.workers * resource.workerSalary;
+    
+    if (gold.amount >= totalSalaryCost) {
+      // Pay all workers
+      set({
+        resources: {
+          ...state.resources,
+          [resourceKey]: {
+            ...resource,
+            paidWorkers: resource.workers
+          },
+          gold: {
+            ...gold,
+            amount: gold.amount - totalSalaryCost
+          }
+        }
+      });
+    } else {
+      // Pay as many workers as possible
+      const affordableWorkers = Math.floor(gold.amount / resource.workerSalary);
+      const actualCost = affordableWorkers * resource.workerSalary;
+      
+      set({
+        resources: {
+          ...state.resources,
+          [resourceKey]: {
+            ...resource,
+            paidWorkers: affordableWorkers
+          },
+          gold: {
+            ...gold,
+            amount: gold.amount - actualCost
+          }
+        }
+      });
+    }
+  },
+
   // Game loop
   startGameLoop: () => {
     const state = get();
@@ -399,21 +500,21 @@ const useGameStore = create<GameStore>((set, get) => ({
         }
       }
 
-      // Handle worker progress
-      if (resource.workers > 0) {
+      // Handle worker progress (only paid workers work)
+      if (resource.paidWorkers > 0) {
         const progressPerWorker = 2; // 2% per 20ms per worker
-        const newWorkerProgress = resource.workerProgress + (resource.workers * progressPerWorker);
+        const newWorkerProgress = resource.workerProgress + (resource.paidWorkers * progressPerWorker);
         if (newWorkerProgress >= 100) {
-          resourceUpdates.amount = resource.amount + resource.workers;
+          resourceUpdates.amount = resource.amount + resource.paidWorkers;
           resourceUpdates.workerProgress = 0;
         } else {
           resourceUpdates.workerProgress = newWorkerProgress;
         }
       }
 
-      // Add per-second production (every 50 ticks = 1 second)
+      // Pay salaries and update paid workers (every 50 ticks = 1 second)
       if (state.tickCount && state.tickCount % 50 === 0) {
-        resourceUpdates.amount = resource.amount + resource.perSecond;
+        get().payWorkerSalaries(resourceKey);
       }
 
       if (Object.keys(resourceUpdates).length > 0) {
@@ -444,8 +545,8 @@ const useGameStore = create<GameStore>((set, get) => ({
 // Helper function to get sell prices
 const getSellPrice = (resourceKey: string): number => {
   const prices: Record<string, number> = {
-    wood: 2,    // Wood sells for 2 gold each
-    berries: 1  // Berries sell for 1 gold each
+    wood: WoodDef.sellPrice,    // Wood sells for 20 gold each
+    berries: BerryDef.sellPrice  // Berries sell for 30 gold each
   };
   return prices[resourceKey] || 1;
 };

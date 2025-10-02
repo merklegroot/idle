@@ -32,7 +32,9 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
     amount = 0,
     perSecond = 0,
     workers = 0,
-    workerCost = 10,
+    paidWorkers = 0,
+    workerCost = resourceDef.workerCost,
+    workerSalary = resourceDef.workerSalary,
     isGathering = false,
     gatherProgress = 0,
     workerProgress = 0
@@ -87,19 +89,21 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
 
             <div className="mt-3">
               <div className="text-xs text-gray-600 mb-1">
-                {workers > 0 ? (
-                  `Workers gathering (${workers} worker${workers > 1 ? 's' : ''})`
+                {paidWorkers > 0 ? (
+                  `Workers gathering (${paidWorkers}/${workers} paid)`
+                ) : workers > 0 ? (
+                  `${workers} workers (unpaid)`
                 ) : (
                   'No workers gathering'
                 )}
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2 relative">
-                {workers > 0 ? (
-                  workers >= 3 ? (
+                {paidWorkers > 0 ? (
+                  paidWorkers >= 3 ? (
                     // Fast gathering: solid bar with text
                     <div className="bg-blue-600 h-2 rounded-full flex items-center justify-center">
                       <span className="text-xs text-white font-semibold">
-                        {workers} / sec
+                        {paidWorkers} / sec
                       </span>
                     </div>
                   ) : (
@@ -110,21 +114,25 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
                     ></div>
                   )
                 ) : (
-                  // No workers: empty gray bar
+                  // No paid workers: empty gray bar
                   <div className="bg-gray-300 h-2 rounded-full"></div>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-3 gap-3 text-sm">
             <div className="bg-gray-50 p-3 rounded">
               <div className="text-gray-600">Workers</div>
               <div className="font-semibold">{workers}</div>
             </div>
             <div className="bg-gray-50 p-3 rounded">
-              <div className="text-gray-600">Production</div>
-              <div className="font-semibold">{perSecond}/sec</div>
+              <div className="text-gray-600">Paid</div>
+              <div className="font-semibold">{paidWorkers}</div>
+            </div>
+            <div className="bg-gray-50 p-3 rounded">
+              <div className="text-gray-600">Salary</div>
+              <div className="font-semibold">{workerSalary}/sec</div>
             </div>
           </div>
 

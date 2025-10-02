@@ -8,6 +8,7 @@ export interface ResourceDef {
 export interface GatherableResourceDef extends ResourceDef {
     perSecond: number;
     workerCost: number;
+    workerSalary: number;
     workerPerSecond: number;
     gatherPerSecond: number;
     gatherInterval: number;
@@ -18,11 +19,12 @@ export const WoodDef: GatherableResourceDef = {
     resourceKey: 'wood',
     icon: '🪵',
     perSecond: 1,
-    workerCost: 10,
+    workerCost: 100, // Increased from 10 to 100
+    workerSalary: 10, // Each worker costs 10 gold per second
     workerPerSecond: 1, // Each worker produces 1 wood per second
     gatherPerSecond: 2, // 2% per 20ms = 100% per 1000ms = 1 second
     gatherInterval: 20,
-    sellPrice: 2
+    sellPrice: 20 // Increased from 2 to 20
 };
 
 export const BerryDef: GatherableResourceDef = {
@@ -30,11 +32,12 @@ export const BerryDef: GatherableResourceDef = {
     resourceKey: 'berries',
     icon: '🫐',
     perSecond: 1,
-    workerCost: 5, // Cheaper than wood workers
+    workerCost: 50, // Increased from 5 to 50
+    workerSalary: 5, // Each worker costs 5 gold per second
     workerPerSecond: 1, // Same production rate as wood
     gatherPerSecond: 1.5, // Slower manual gathering (1.5% per 20ms = 1.33 seconds)
     gatherInterval: 20,
-    sellPrice: 3
+    sellPrice: 30 // Increased from 3 to 30
 };
 
 export const GoldDef: ResourceDef = {
