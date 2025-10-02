@@ -37,6 +37,11 @@ export interface GameActions {
   // Initialize resource
   initializeResource: (resourceKey: string) => void;
   
+  // Selling
+  sellResource: (resourceKey: string, amount: number) => void;
+  sellResourcePercentage: (resourceKey: string, percentage: number) => void;
+  sellAllResource: (resourceKey: string) => void;
+  
   // Game loop
   startGameLoop: () => void;
   stopGameLoop: () => void;
@@ -244,6 +249,62 @@ const useGameStore = create<GameStore>((set, get) => ({
     });
   },
 
+  // Selling functions
+  sellResource: (resourceKey: string, amount: number) => {
+    const state = get();
+    const resource = state.resources[resourceKey];
+    if (!resource || resource.amount < amount) return;
+
+    const sellPrice = getSellPrice(resourceKey);
+    const goldEarned = amount * sellPrice;
+
+    // Initialize gold resource if it doesn't exist
+    if (!state.resources.gold) {
+      state.resources.gold = {
+        amount: 0,
+        perSecond: 0,
+        workers: 0,
+        workerCost: 10,
+        isGathering: false,
+        gatherProgress: 0,
+        workerProgress: 0
+      };
+    }
+
+    set({
+      resources: {
+        ...state.resources,
+        [resourceKey]: {
+          ...resource,
+          amount: resource.amount - amount
+        },
+        gold: {
+          ...state.resources.gold,
+          amount: state.resources.gold.amount + goldEarned
+        }
+      }
+    });
+  },
+
+  sellResourcePercentage: (resourceKey: string, percentage: number) => {
+    const state = get();
+    const resource = state.resources[resourceKey];
+    if (!resource) return;
+
+    const amount = Math.floor(resource.amount * (percentage / 100));
+    if (amount > 0) {
+      get().sellResource(resourceKey, amount);
+    }
+  },
+
+  sellAllResource: (resourceKey: string) => {
+    const state = get();
+    const resource = state.resources[resourceKey];
+    if (!resource || resource.amount === 0) return;
+
+    get().sellResource(resourceKey, resource.amount);
+  },
+
   // Game loop
   startGameLoop: () => {
     const state = get();
@@ -320,5 +381,14 @@ const useGameStore = create<GameStore>((set, get) => ({
     }
   }
 }));
+
+// Helper function to get sell prices
+const getSellPrice = (resourceKey: string): number => {
+  const prices: Record<string, number> = {
+    wood: 2,    // Wood sells for 2 gold each
+    berries: 1  // Berries sell for 1 gold each
+  };
+  return prices[resourceKey] || 1;
+};
 
 export default useGameStore;
