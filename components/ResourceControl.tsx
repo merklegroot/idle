@@ -87,11 +87,21 @@ export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef
                 <div className="text-xs text-gray-600 mb-1">
                   Workers gathering ({workers} worker{workers > 1 ? 's' : ''})
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-75"
-                    style={{ width: `${workerProgress}%` }}
-                  ></div>
+                <div className="w-full bg-gray-200 rounded-full h-2 relative">
+                  {workers >= 3 ? (
+                    // Fast gathering: solid bar with text
+                    <div className="bg-blue-600 h-2 rounded-full flex items-center justify-center">
+                      <span className="text-xs text-white font-semibold">
+                        {workers} / sec
+                      </span>
+                    </div>
+                  ) : (
+                    // Slow gathering: animated progress bar
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-75"
+                      style={{ width: `${workerProgress}%` }}
+                    ></div>
+                  )}
                 </div>
               </div>
             )}
