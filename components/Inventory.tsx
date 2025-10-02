@@ -3,31 +3,7 @@
 import { useState } from 'react';
 import useGameStore from '../stores/gameStore';
 import { WoodDef, BerryDef } from '../app/models/ResourceDef';
-
-interface InventoryItemProps {
-  resourceKey: string;
-  name: string;
-  icon: string;
-  amount: number;
-  onClick: () => void;
-}
-
-function InventoryItem({ resourceKey, name, icon, amount, onClick }: InventoryItemProps) {
-  if (amount === 0) return null;
-
-  return (
-    <div
-      onClick={onClick}
-      className="bg-white rounded-lg p-4 border border-gray-200 cursor-pointer hover:shadow-md transition-shadow flex items-center gap-3"
-    >
-      <div className="text-2xl">{icon}</div>
-      <div className="flex-1">
-        <div className="font-semibold text-gray-800">{name}</div>
-        <div className="text-sm text-gray-500">{amount.toLocaleString()}</div>
-      </div>
-    </div>
-  );
-}
+import InventoryItem from './InventoryItem';
 
 export default function Inventory() {
   const { getResource } = useGameStore();
