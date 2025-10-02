@@ -82,13 +82,17 @@ export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef
               </div>
             </div>
 
-            {workers > 0 && (
-              <div className="mt-3">
-                <div className="text-xs text-gray-600 mb-1">
-                  Workers gathering ({workers} worker{workers > 1 ? 's' : ''})
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2 relative">
-                  {workers >= 3 ? (
+            <div className="mt-3">
+              <div className="text-xs text-gray-600 mb-1">
+                {workers > 0 ? (
+                  `Workers gathering (${workers} worker${workers > 1 ? 's' : ''})`
+                ) : (
+                  'No workers gathering'
+                )}
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 relative">
+                {workers > 0 ? (
+                  workers >= 3 ? (
                     // Fast gathering: solid bar with text
                     <div className="bg-blue-600 h-2 rounded-full flex items-center justify-center">
                       <span className="text-xs text-white font-semibold">
@@ -101,10 +105,13 @@ export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef
                       className="bg-blue-600 h-2 rounded-full transition-all duration-75"
                       style={{ width: `${workerProgress}%` }}
                     ></div>
-                  )}
-                </div>
+                  )
+                ) : (
+                  // No workers: empty gray bar
+                  <div className="bg-gray-300 h-2 rounded-full"></div>
+                )}
               </div>
-            )}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 text-sm">
