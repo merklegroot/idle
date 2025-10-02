@@ -183,17 +183,19 @@ const useGameStore = create<GameStore>((set, get) => ({
     const resource = state.resources[resourceKey];
     if (!resource) return;
 
-    // Always allow starting gathering, even if already gathering (restart it)
-    set({
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...resource,
-          isGathering: true,
-          gatherProgress: 0
+    // Only start gathering if not already gathering
+    if (!resource.isGathering) {
+      set({
+        resources: {
+          ...state.resources,
+          [resourceKey]: {
+            ...resource,
+            isGathering: true,
+            gatherProgress: 0
+          }
         }
-      }
-    });
+      });
+    }
   },
 
   resetGatherProgress: (resourceKey: string) => {
