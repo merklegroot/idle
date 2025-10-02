@@ -16,6 +16,6 @@ export const WoodDef: ResourceDef = {
     perSecond: 1,
     workerCost: 10,
     workerPerSecond: 1, // Each worker produces 1 wood per second
-    gatherPerSecond: 2,
+    gatherPerSecond: 2, // 2% per 20ms = 100% per 1000ms = 1 second
     gatherInterval: 20
 };

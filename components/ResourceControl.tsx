@@ -7,24 +7,21 @@ import { ResourceDef } from '../app/models/ResourceDef';
 export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef}) {
   const {
     getResource,
-    addResourceAmount,
-    setResourcePerSecond,
-    setResourceWorkers,
-    setResourceWorkerCost,
-    setResourceIsGathering,
-    setResourceGatherProgress,
-    setResourceWorkerProgress,
     hireWorker,
     startGathering,
-    resetGatherProgress,
-    resetWorkerProgress,
-    initializeResource
+    initializeResource,
+    startGameLoop
   } = useGameStore();
 
   // Initialize resource on mount
   useEffect(() => {
     initializeResource(resourceDef.resourceKey);
   }, [resourceDef.resourceKey, initializeResource]);
+
+  // Start game loop on mount
+  useEffect(() => {
+    startGameLoop();
+  }, [startGameLoop]);
 
   // Get current resource state
   const resource = getResource(resourceDef.resourceKey);
@@ -39,54 +36,6 @@ export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef
     gatherProgress = 0,
     workerProgress = 0
   } = resource || {};
-
-  // Update resource amount every second
-  useEffect(() => {
-    if (!resource) return; // Don't run if resource doesn't exist yet
-    
-    const interval = setInterval(() => {
-      addResourceAmount(resourceDef.resourceKey, perSecond);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [addResourceAmount, resourceDef.resourceKey, perSecond, resource]);
-
-  // Update worker progress continuously
-  useEffect(() => {
-    if (!resource || workers === 0) return;
-
-    const workerInterval = setInterval(() => {
-      // Simple: 1 worker = 1 second to complete (100% progress)
-      // With 20ms intervals, each worker adds 1% per interval (100% / 50 intervals = 2% per interval)
-      const progressPerWorker = 2; // 2% per 20ms = 100% per 1000ms = 1 second
-      const newProgress = workerProgress + (workers * progressPerWorker);
-      if (newProgress >= 100) {
-        addResourceAmount(resourceDef.resourceKey, workers); // Add wood equal to number of workers
-        resetWorkerProgress(resourceDef.resourceKey);
-      } else {
-        setResourceWorkerProgress(resourceDef.resourceKey, newProgress);
-      }
-    }, resourceDef.gatherInterval);
-
-    return () => clearInterval(workerInterval);
-  }, [workers, perSecond, workerProgress, resourceDef.resourceKey, resourceDef.workerPerSecond, resourceDef.gatherInterval, setResourceWorkerProgress, resetWorkerProgress, resource, addResourceAmount]);
-
-  // Handle gathering progress
-  useEffect(() => {
-    if (!resource || !isGathering) return;
-
-    const gatherInterval = setInterval(() => {
-      const newProgress = gatherProgress + resourceDef.gatherPerSecond;
-      if (newProgress >= 100) {
-        addResourceAmount(resourceDef.resourceKey, 1);
-        resetGatherProgress(resourceDef.resourceKey);
-      } else {
-        setResourceGatherProgress(resourceDef.resourceKey, newProgress);
-      }
-    }, resourceDef.gatherInterval);
-
-    return () => clearInterval(gatherInterval);
-  }, [isGathering, gatherProgress, resourceDef.resourceKey, resourceDef.gatherPerSecond, resourceDef.gatherInterval, addResourceAmount, setResourceGatherProgress, resetGatherProgress, resource]);
 
 
   const formatNumber = (num: number) => {
