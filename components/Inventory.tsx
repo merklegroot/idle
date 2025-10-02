@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import useGameStore from '../stores/gameStore';
-import { WoodDef, BerryDef } from '../app/models/ResourceDef';
+import { WoodDef, BerryDef, GoldDef, ResourceDef } from '../app/models/ResourceDef';
 import InventoryItem from './InventoryItem';
 import ItemDetails from './ItemDetails';
 
@@ -10,10 +10,24 @@ export default function Inventory() {
   const { getResource } = useGameStore();
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
+  interface resouceInventoryItemDef {
+    key: string;
+    name: string;
+    icon: string;
+  }
+
+  function toResourceInventoryItemDef(resourceDef: ResourceDef): resouceInventoryItemDef {
+    return {
+      key: resourceDef.resourceKey,
+      name: resourceDef.name,
+      icon: resourceDef.icon
+    };
+  }
+  
   const resources = [
-    { key: 'wood', name: WoodDef.name, icon: WoodDef.icon },
-    { key: 'berries', name: BerryDef.name, icon: BerryDef.icon },
-    { key: 'gold', name: 'Gold', icon: '🪙' }
+    toResourceInventoryItemDef(WoodDef),
+    toResourceInventoryItemDef(BerryDef),
+    toResourceInventoryItemDef(GoldDef)
   ];
 
   const inventoryItems = resources.map(resource => {

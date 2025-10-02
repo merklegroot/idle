@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 import useGameStore from '../stores/gameStore';
-import { ResourceDef } from '../app/models/ResourceDef';
+import { GatherableResourceDef } from '../app/models/ResourceDef';
 
-export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef}) {
+export default function ResourceControl({resourceDef}: {resourceDef: GatherableResourceDef}) {
   const {
     getResource,
     hireWorker,
