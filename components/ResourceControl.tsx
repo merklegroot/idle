@@ -25,6 +25,7 @@ export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef
 
   // Get current resource state
   const resource = getResource(resourceDef.resourceKey);
+  const gold = getResource('gold');
   
   // Use default values if resource doesn't exist yet
   const {
@@ -36,6 +37,8 @@ export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef
     gatherProgress = 0,
     workerProgress = 0
   } = resource || {};
+
+  const goldAmount = gold?.amount || 0;
 
 
   const formatNumber = (num: number) => {
@@ -130,14 +133,14 @@ export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef
               e.stopPropagation();
               hireWorker(resourceDef.resourceKey);
             }}
-            disabled={amount < workerCost}
+            disabled={goldAmount < workerCost}
             className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors ${
-              amount >= workerCost
+              goldAmount >= workerCost
                 ? 'bg-green-600 hover:bg-green-700 text-white'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
-            Hire Worker ({formatNumber(workerCost)} {resourceDef.name})
+            Hire Worker ({formatNumber(workerCost)} 🪙)
           </button>
         </div>
       </div>

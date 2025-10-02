@@ -167,17 +167,24 @@ const useGameStore = create<GameStore>((set, get) => ({
   hireWorker: (resourceKey: string) => {
     const state = get();
     const resource = state.resources[resourceKey];
-    if (!resource || resource.amount < resource.workerCost) return;
+    if (!resource) return;
+
+    // Get gold resource
+    const gold = state.resources.gold;
+    if (!gold || gold.amount < resource.workerCost) return;
 
     set({
       resources: {
         ...state.resources,
         [resourceKey]: {
           ...resource,
-          amount: resource.amount - resource.workerCost,
           workers: resource.workers + 1,
           perSecond: resource.perSecond + 1,
           workerCost: Math.floor(resource.workerCost * 1.15)
+        },
+        gold: {
+          ...gold,
+          amount: gold.amount - resource.workerCost
         }
       }
     });

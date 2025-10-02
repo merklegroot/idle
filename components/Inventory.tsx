@@ -35,7 +35,8 @@ export default function Inventory() {
 
   const resources = [
     { key: 'wood', name: WoodDef.name, icon: WoodDef.icon },
-    { key: 'berries', name: BerryDef.name, icon: BerryDef.icon }
+    { key: 'berries', name: BerryDef.name, icon: BerryDef.icon },
+    { key: 'gold', name: 'Gold', icon: '🪙' }
   ];
 
   const inventoryItems = resources.map(resource => {
@@ -92,11 +93,52 @@ function ItemDetails({ resourceKey, onClose }: { resourceKey: string; onClose: (
 
   const resourceDefs: Record<string, { name: string; icon: string }> = {
     wood: { name: WoodDef.name, icon: WoodDef.icon },
-    berries: { name: BerryDef.name, icon: BerryDef.icon }
+    berries: { name: BerryDef.name, icon: BerryDef.icon },
+    gold: { name: 'Gold', icon: '🪙' }
   };
 
   const resourceDef = resourceDefs[resourceKey];
   if (!resourceDef) return null;
+
+  // If it's gold, show currency info instead of sell options
+  if (resourceKey === 'gold') {
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="text-3xl">{resourceDef.icon}</div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-800">{resourceDef.name}</h3>
+              <p className="text-gray-500">Amount: {resource.amount.toLocaleString()}</p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 text-2xl"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="text-sm text-yellow-800">
+              <strong>Currency</strong>
+            </div>
+            <div className="text-sm text-yellow-700 mt-1">
+              Gold is your currency. Use it to hire workers and make purchases.
+            </div>
+          </div>
+
+          <div className="text-sm text-gray-600">
+            <div className="font-semibold mb-2">Sell Prices:</div>
+            <div>• Wood: 2 gold each</div>
+            <div>• Berries: 1 gold each</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const sellPrice = resourceKey === 'wood' ? 2 : 1;
 
