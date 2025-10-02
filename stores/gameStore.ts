@@ -8,6 +8,8 @@ export interface ResourceState {
   isGathering: boolean;
   gatherProgress: number;
   workerProgress: number;
+  autoSellThreshold: number;
+  autoSellEnabled: boolean;
 }
 
 export interface GameState {
@@ -41,6 +43,11 @@ export interface GameActions {
   sellResource: (resourceKey: string, amount: number) => void;
   sellResourcePercentage: (resourceKey: string, percentage: number) => void;
   sellAllResource: (resourceKey: string) => void;
+  
+  // Auto-sell
+  setAutoSellThreshold: (resourceKey: string, threshold: number) => void;
+  setAutoSellEnabled: (resourceKey: string, enabled: boolean) => void;
+  checkAutoSell: (resourceKey: string) => void;
   
   // Game loop
   startGameLoop: () => void;
@@ -250,7 +257,9 @@ const useGameStore = create<GameStore>((set, get) => ({
           workerCost: 10,
           isGathering: false,
           gatherProgress: 0,
-          workerProgress: 0
+          workerProgress: 0,
+          autoSellThreshold: 0,
+          autoSellEnabled: false
         }
       }
     });
@@ -274,7 +283,9 @@ const useGameStore = create<GameStore>((set, get) => ({
         workerCost: 10,
         isGathering: false,
         gatherProgress: 0,
-        workerProgress: 0
+        workerProgress: 0,
+        autoSellThreshold: 0,
+        autoSellEnabled: false
       };
     }
 
@@ -310,6 +321,42 @@ const useGameStore = create<GameStore>((set, get) => ({
     if (!resource || resource.amount === 0) return;
 
     get().sellResource(resourceKey, resource.amount);
+  },
+
+  // Auto-sell functions
+  setAutoSellThreshold: (resourceKey: string, threshold: number) => {
+    set((state) => ({
+      resources: {
+        ...state.resources,
+        [resourceKey]: {
+          ...state.resources[resourceKey],
+          autoSellThreshold: Math.max(0, threshold)
+        }
+      }
+    }));
+  },
+
+  setAutoSellEnabled: (resourceKey: string, enabled: boolean) => {
+    set((state) => ({
+      resources: {
+        ...state.resources,
+        [resourceKey]: {
+          ...state.resources[resourceKey],
+          autoSellEnabled: enabled
+        }
+      }
+    }));
+  },
+
+  checkAutoSell: (resourceKey: string) => {
+    const state = get();
+    const resource = state.resources[resourceKey];
+    if (!resource || !resource.autoSellEnabled || resource.autoSellThreshold <= 0) return;
+
+    if (resource.amount > resource.autoSellThreshold) {
+      const amountToSell = resource.amount - resource.autoSellThreshold;
+      get().sellResource(resourceKey, amountToSell);
+    }
   },
 
   // Game loop
@@ -372,6 +419,11 @@ const useGameStore = create<GameStore>((set, get) => ({
       if (Object.keys(resourceUpdates).length > 0) {
         updates[resourceKey] = resourceUpdates;
       }
+    });
+
+    // Check auto-sell for all resources after updates
+    Object.keys(state.resources).forEach(resourceKey => {
+      get().checkAutoSell(resourceKey);
     });
 
     // Apply all updates
