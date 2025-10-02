@@ -19,3 +19,14 @@ export const WoodDef: ResourceDef = {
     gatherPerSecond: 2, // 2% per 20ms = 100% per 1000ms = 1 second
     gatherInterval: 20
 };
+
+export const BerryDef: ResourceDef = {
+    name: 'Berries',
+    resourceKey: 'berries',
+    icon: '🫐',
+    perSecond: 1,
+    workerCost: 5, // Cheaper than wood workers
+    workerPerSecond: 1, // Same production rate as wood
+    gatherPerSecond: 1.5, // Slower manual gathering (1.5% per 20ms = 1.33 seconds)
+    gatherInterval: 20
+};
