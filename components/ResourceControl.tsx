@@ -1,72 +1,92 @@
 'use client';
 
 import { useEffect } from 'react';
-import useWoodStore from '../stores/woodStore';
+import useGameStore from '../stores/gameStore';
 import { ResourceDef } from '../app/models/ResourceDef';
 
 export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef}) {
   const {
-    amount,
-    perSecond,
-    workers,
-    workerCost,
-    isGathering,
-    gatherProgress,
-    workerProgress,
-    addAmount,
-    setPerSecond,
-    setWorkers,
-    setWorkerCost,
-    setIsGathering,
-    setGatherProgress,
-    setWorkerProgress,
+    getResource,
+    addResourceAmount,
+    setResourcePerSecond,
+    setResourceWorkers,
+    setResourceWorkerCost,
+    setResourceIsGathering,
+    setResourceGatherProgress,
+    setResourceWorkerProgress,
     hireWorker,
     startGathering,
     resetGatherProgress,
-    resetWorkerProgress
-  } = useWoodStore();
+    resetWorkerProgress,
+    initializeResource
+  } = useGameStore();
 
-  // Update wood amount every second
+  // Initialize resource on mount
   useEffect(() => {
+    initializeResource(resourceDef.resourceKey);
+  }, [resourceDef.resourceKey, initializeResource]);
+
+  // Get current resource state
+  const resource = getResource(resourceDef.resourceKey);
+  
+  // Use default values if resource doesn't exist yet
+  const {
+    amount = 0,
+    perSecond = 0,
+    workers = 0,
+    workerCost = 10,
+    isGathering = false,
+    gatherProgress = 0,
+    workerProgress = 0
+  } = resource || {};
+
+  // Update resource amount every second
+  useEffect(() => {
+    if (!resource) return; // Don't run if resource doesn't exist yet
+    
     const interval = setInterval(() => {
-      addAmount(perSecond);
+      addResourceAmount(resourceDef.resourceKey, perSecond);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [addAmount, perSecond]);
+  }, [addResourceAmount, resourceDef.resourceKey, perSecond, resource]);
 
   // Update worker progress continuously
   useEffect(() => {
-    if (workers === 0) return;
+    if (!resource || workers === 0) return;
 
     const workerInterval = setInterval(() => {
-      const newProgress = workerProgress + (perSecond * 0.4); // 0.4% per worker per 20ms
+      // Simple: 1 worker = 1 second to complete (100% progress)
+      // With 20ms intervals, each worker adds 1% per interval (100% / 50 intervals = 2% per interval)
+      const progressPerWorker = 2; // 2% per 20ms = 100% per 1000ms = 1 second
+      const newProgress = workerProgress + (workers * progressPerWorker);
       if (newProgress >= 100) {
-        resetWorkerProgress();
+        addResourceAmount(resourceDef.resourceKey, workers); // Add wood equal to number of workers
+        resetWorkerProgress(resourceDef.resourceKey);
       } else {
-        setWorkerProgress(newProgress);
+        setResourceWorkerProgress(resourceDef.resourceKey, newProgress);
       }
-    }, 20);
+    }, resourceDef.gatherInterval);
 
     return () => clearInterval(workerInterval);
-  }, [workers, perSecond, workerProgress, setWorkerProgress, resetWorkerProgress]);
+  }, [workers, perSecond, workerProgress, resourceDef.resourceKey, resourceDef.workerPerSecond, resourceDef.gatherInterval, setResourceWorkerProgress, resetWorkerProgress, resource, addResourceAmount]);
 
   // Handle gathering progress
   useEffect(() => {
-    if (!isGathering) return;
+    if (!resource || !isGathering) return;
 
     const gatherInterval = setInterval(() => {
-      const newProgress = gatherProgress + 2; // 2% per 20ms
+      const newProgress = gatherProgress + resourceDef.gatherPerSecond;
       if (newProgress >= 100) {
-        addAmount(1);
-        resetGatherProgress();
+        addResourceAmount(resourceDef.resourceKey, 1);
+        resetGatherProgress(resourceDef.resourceKey);
       } else {
-        setGatherProgress(newProgress);
+        setResourceGatherProgress(resourceDef.resourceKey, newProgress);
       }
-    }, 20);
+    }, resourceDef.gatherInterval);
 
     return () => clearInterval(gatherInterval);
-  }, [isGathering, gatherProgress, addAmount, setGatherProgress, resetGatherProgress]);
+  }, [isGathering, gatherProgress, resourceDef.resourceKey, resourceDef.gatherPerSecond, resourceDef.gatherInterval, addResourceAmount, setResourceGatherProgress, resetGatherProgress, resource]);
 
 
   const formatNumber = (num: number) => {
@@ -83,11 +103,11 @@ export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef
         className={`bg-white rounded-lg shadow-md p-6 border border-gray-200 cursor-pointer transition-all hover:shadow-lg ${
           isGathering ? 'ring-2 ring-green-400' : ''
         }`}
-        onClick={startGathering}
+        onClick={() => startGathering(resourceDef.resourceKey)}
       >
         <div className="flex items-center gap-3 mb-4">
           <div className="text-2xl">{resourceDef.icon}</div>
-          <h2 className="text-2xl font-bold text-gray-800">Wood</h2>
+          <h2 className="text-2xl font-bold text-gray-800">{resourceDef.name}</h2>
         </div>
         
         <div className="space-y-4">
@@ -100,9 +120,9 @@ export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef
             </div>
             
             <div className="mt-3">
-              <div className="text-xs text-gray-600 mb-1">
-                {isGathering ? 'Gathering...' : 'Click to gather wood'}
-              </div>
+            <div className="text-xs text-gray-600 mb-1">
+              {isGathering ? 'Gathering...' : `Click to gather ${resourceDef.name.toLowerCase()}`}
+            </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
                   className={`h-2 rounded-full transition-all duration-75 ${
@@ -142,7 +162,7 @@ export default function ResourceControl({resourceDef}: {resourceDef: ResourceDef
           <button
             onClick={(e) => {
               e.stopPropagation();
-              hireWorker();
+              hireWorker(resourceDef.resourceKey);
             }}
             disabled={amount < workerCost}
             className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors ${
