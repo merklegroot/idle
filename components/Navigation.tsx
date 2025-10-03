@@ -23,11 +23,22 @@ function NavLink({ label, href }: { label: string, href: string }) {
 }
 
 export default function Navigation() {
-  const { bootstrap } = useGameStore();
+  const { bootstrap, getResource, homes } = useGameStore();
 
   const handleBootstrap = () => {
     bootstrap();
   };
+
+  const gold = getResource('gold');
+  const wood = getResource('wood');
+  const stone = getResource('stone');
+  
+  const goldAmount = gold?.amount || 0;
+  const woodAmount = wood?.amount || 0;
+  const stoneAmount = stone?.amount || 0;
+  
+  // Calculate total population from all homes
+  const totalPopulation = homes.reduce((sum, home) => sum + home.population, 0);
 
   return (
     <nav className="bg-gray-800 text-white p-4 sticky top-0 z-50 shadow-lg border-b border-gray-700">
@@ -44,6 +55,24 @@ export default function Navigation() {
           </ul>
         </div>
         <div className="flex items-center gap-4">
+          <div className="flex gap-4 text-sm">
+            <div className="flex items-center gap-1">
+              <span className="text-yellow-400">💰</span>
+              <span className="font-semibold text-yellow-400">{goldAmount.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-green-400">🪵</span>
+              <span className="font-semibold text-green-400">{woodAmount.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-gray-300">🪨</span>
+              <span className="font-semibold text-gray-300">{stoneAmount.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-blue-400">👥</span>
+              <span className="font-semibold text-blue-400">{totalPopulation}</span>
+            </div>
+          </div>
           <button
             onClick={handleBootstrap}
             className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm"
