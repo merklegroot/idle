@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { WoodDef, BerryDef, StoneDef, HatchetDef } from '../app/models/ResourceDef';
+import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef } from '../app/models/ResourceDef';
 
 export interface ResourceState {
   amount: number;
@@ -217,7 +217,8 @@ const useGameStore = create<GameStore>((set, get) => ({
       wood: { workerSalary: WoodDef.workerSalary },
       berries: { workerSalary: BerryDef.workerSalary },
       stone: { workerSalary: StoneDef.workerSalary },
-      hatchet: { workerSalary: HatchetDef.workerSalary }
+      hatchet: { workerSalary: HatchetDef.workerSalary },
+      pickaxe: { workerSalary: PickaxeDef.workerSalary }
     };
     const resourceDef = resourceDefs[resourceKey];
     const workerSalary = resourceDef?.workerSalary || 10;
@@ -300,7 +301,8 @@ const useGameStore = create<GameStore>((set, get) => ({
       wood: { workerCost: WoodDef.workerCost, workerSalary: WoodDef.workerSalary },
       berries: { workerCost: BerryDef.workerCost, workerSalary: BerryDef.workerSalary },
       stone: { workerCost: StoneDef.workerCost, workerSalary: StoneDef.workerSalary },
-      hatchet: { workerCost: HatchetDef.workerCost, workerSalary: HatchetDef.workerSalary }
+      hatchet: { workerCost: HatchetDef.workerCost, workerSalary: HatchetDef.workerSalary },
+      pickaxe: { workerCost: PickaxeDef.workerCost, workerSalary: PickaxeDef.workerSalary }
     };
     const resourceDef = resourceDefs[resourceKey];
     const defaultWorkerCost = resourceDef?.workerCost || 100;
@@ -610,7 +612,8 @@ const getSellPrice = (resourceKey: string): number => {
     wood: WoodDef.sellPrice || 20,    // Wood sells for 20 gold each
     berries: BerryDef.sellPrice || 30,  // Berries sell for 30 gold each
     stone: StoneDef.sellPrice || 50,   // Stone sells for 50 gold each
-    hatchet: HatchetDef.sellPrice || 75 // Hatchet sells for 75 gold each
+    hatchet: HatchetDef.sellPrice || 75, // Hatchet sells for 75 gold each
+    pickaxe: PickaxeDef.sellPrice || 100 // Pickaxe sells for 100 gold each
   };
   return prices[resourceKey] || 1;
 };
@@ -621,7 +624,8 @@ const checkMaterialsAvailable = (resourceKey: string, state: GameState): boolean
     wood: WoodDef,
     berries: BerryDef,
     stone: StoneDef,
-    hatchet: HatchetDef
+    hatchet: HatchetDef,
+    pickaxe: PickaxeDef
   };
   
   const resourceDef = resourceDefs[resourceKey];
@@ -644,7 +648,8 @@ const checkAndConsumeMaterials = (resourceKey: string, state: GameState): boolea
     wood: WoodDef,
     berries: BerryDef,
     stone: StoneDef,
-    hatchet: HatchetDef
+    hatchet: HatchetDef,
+    pickaxe: PickaxeDef
   };
   
   const resourceDef = resourceDefs[resourceKey];

@@ -76,6 +76,23 @@ export const HatchetDef: GatherableResourceDef = {
     ]
 };
 
+export const PickaxeDef: GatherableResourceDef = {
+    name: 'Pickaxe',
+    resourceKey: 'pickaxe',
+    icon: '⛏️',
+    perSecond: 1,
+    workerCost: 500, // Most expensive to hire
+    workerSalary: 25, // Highest salary cost
+    workerPerSecond: 1, // Same production rate
+    gatherPerSecond: 0.6, // Slowest manual gathering (0.6% per 20ms = 3.33 seconds)
+    gatherInterval: 20,
+    sellPrice: 100, // Most valuable to sell
+    materials: [
+        { resourceKey: 'wood', amount: 3 },
+        { resourceKey: 'stone', amount: 2 }
+    ]
+};
+
 export const GoldDef: ResourceDef = {
     name: 'Gold',
     resourceKey: 'gold',

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import useGameStore from '../stores/gameStore';
-import { WoodDef, BerryDef, StoneDef, HatchetDef } from '../app/models/ResourceDef';
+import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef } from '../app/models/ResourceDef';
 import { formattingUtil } from '@/utils/formattingUtil';
 
 interface ItemDetailsProps {
@@ -28,6 +28,7 @@ export default function ItemDetails({ resourceKey, onClose }: ItemDetailsProps) 
     berries: { name: BerryDef.name, icon: BerryDef.icon, sellPrice: BerryDef.sellPrice },
     stone: { name: StoneDef.name, icon: StoneDef.icon, sellPrice: StoneDef.sellPrice },
     hatchet: { name: HatchetDef.name, icon: HatchetDef.icon, sellPrice: HatchetDef.sellPrice },
+    pickaxe: { name: PickaxeDef.name, icon: PickaxeDef.icon, sellPrice: PickaxeDef.sellPrice },
     gold: { name: 'Gold', icon: '🪙' }
   };
 
