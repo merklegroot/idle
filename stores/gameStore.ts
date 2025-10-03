@@ -49,7 +49,7 @@ export interface GameActions {
   setResourceIsGathering: (resourceKey: string, isGathering: boolean) => void;
   setResourceGatherProgress: (resourceKey: string, gatherProgress: number) => void;
   setResourceWorkerProgress: (resourceKey: string, workerProgress: number) => void;
-  
+
   // Home management
   buildHome: () => void;
   upgradeHome: (homeId: string) => void;
@@ -57,42 +57,42 @@ export interface GameActions {
   getHomeUpgradeCost: (homeId: string) => HomeCost;
   canBuildHome: () => boolean;
   canUpgradeHome: (homeId: string) => boolean;
-  
+
   // Bootstrap
   bootstrap: () => void;
-  
+
   // Actions
   hireWorker: (resourceKey: string) => void;
   startGathering: (resourceKey: string) => void;
   resetGatherProgress: (resourceKey: string) => void;
   resetWorkerProgress: (resourceKey: string) => void;
-  
+
   // Initialize resource
   initializeResource: (resourceKey: string) => void;
-  
+
   // Selling
   sellResource: (resourceKey: string, amount: number) => void;
   sellResourcePercentage: (resourceKey: string, percentage: number) => void;
   sellAllResource: (resourceKey: string) => void;
-  
+
   // Auto-sell
   setAutoSellThreshold: (resourceKey: string, threshold: number) => void;
   setAutoSellEnabled: (resourceKey: string, enabled: boolean) => void;
   checkAutoSell: (resourceKey: string) => void;
-  
+
   // Salary system
   payWorkerSalaries: (resourceKey: string) => void;
-  
+
   // Equipment management
   equipTool: (toolKey: string) => void;
   unequipTool: (toolKey: string) => void;
   getEquippedTool: (toolKey: string) => string | undefined;
   getToolBonus: (resourceKey: string) => number;
-  
+
   // Worker equipment management
   getWorkerToolBonus: (resourceKey: string) => number;
   getWorkersWithTools: (resourceKey: string) => number;
-  
+
   // Game loop
   startGameLoop: () => void;
   stopGameLoop: () => void;
@@ -139,111 +139,139 @@ function setResourceWorkersFactory(set: (fn: (state: GameState) => Partial<GameS
   }
 }
 
-const useGameStore = create<GameStore>((set, get) => ({
-  // Initial state
-  resources: {},
-  gameLoopInterval: undefined,
-  tickCount: 0,
-  characterEquipment: {},
-  homes: [],
-
-  // Resource management
-  getResource: getResourceFactory(get),
-
-  setResourceAmount: setResourceAmountFactory(set),
-
-  addResourceAmount: addResourceAmountFactory(set),
-
-  setResourcePerSecond: setResourcePerSecondFactory(set),
-
-  setResourceWorkers: setResourceWorkersFactory(set),
-
-  setResourcePaidWorkers: (resourceKey: string, paidWorkers: number) => {
+function setResourcePaidWorkersFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, paidWorkers: number): void {
     set((state) => ({
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...state.resources[resourceKey],
-          paidWorkers
-        }
-      }
+      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], paidWorkers } }
     }));
-  },
+  }
+}
 
-  setResourceWorkerCost: (resourceKey: string, workerCost: number) => {
+function setResourceWorkerCostFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, workerCost: number): void {
     set((state) => ({
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...state.resources[resourceKey],
-          workerCost
-        }
-      }
+      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], workerCost } }
     }));
-  },
+  }
+}
 
-  setResourceWorkerSalary: (resourceKey: string, workerSalary: number) => {
+function setResourceWorkerSalaryFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, workerSalary: number): void {
     set((state) => ({
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...state.resources[resourceKey],
-          workerSalary
-        }
-      }
+      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], workerSalary } }
     }));
-  },
+  }
+}
 
-  setResourceIsGathering: (resourceKey: string, isGathering: boolean) => {
+function setResourceIsGatheringFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, isGathering: boolean): void {
     set((state) => ({
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...state.resources[resourceKey],
-          isGathering
-        }
-      }
+      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], isGathering } }
     }));
-  },
+  }
+}
 
-  setResourceGatherProgress: (resourceKey: string, gatherProgress: number) => {
+function setResourceGatherProgressFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, gatherProgress: number): void {
     set((state) => ({
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...state.resources[resourceKey],
-          gatherProgress
-        }
-      }
+      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], gatherProgress } }
     }));
-  },
+  }
+}
 
-  setResourceWorkerProgress: (resourceKey: string, workerProgress: number) => {
+function setResourceWorkerProgressFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, workerProgress: number): void {
     set((state) => ({
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...state.resources[resourceKey],
-          workerProgress
-        }
-      }
+      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], workerProgress } }
     }));
-  },
+  }
+}
 
-  // Home management
-  buildHome: () => {
+function getHomeCostFactory(get: () => GameState) {
+  return function (): HomeCost {
     const state = get();
-    const cost = get().getHomeCost();
-    
-    if (!get().canBuildHome()) return;
-    
+    const homeCount = state.homes.length;
+
+    // Base costs: 50 wood, 30 stone, 200 gold
+    // Costs increase with each home built
+    const multiplier = Math.pow(1.3, homeCount);
+
+    return {
+      wood: Math.floor(50 * multiplier),
+      stone: Math.floor(30 * multiplier),
+      gold: Math.floor(200 * multiplier)
+    };
+  }
+}
+
+function canBuildHomeFactory(get: () => GameState) {
+  return function (): boolean {
+    const state = get();
+    const cost = getHomeCostFactory(get)();
+
+    const wood = state.resources.wood;
+    const stone = state.resources.stone;
+    const gold = state.resources.gold;
+
+    return (
+      wood && wood.amount >= cost.wood &&
+      stone && stone.amount >= cost.stone &&
+      gold && gold.amount >= cost.gold
+    );
+  }
+}
+
+function getHomeUpgradeCostFactory(get: () => GameState) {
+  return function (homeId: string) {
+    const state = get();
+    const home = state.homes.find(h => h.id === homeId);
+    if (!home) return { wood: 0, stone: 0, gold: 0 };
+
+    // Upgrade costs: 25 wood, 15 stone, 100 gold per level
+    const multiplier = Math.pow(1.2, home.level);
+
+    return {
+      wood: Math.floor(25 * multiplier),
+      stone: Math.floor(15 * multiplier),
+      gold: Math.floor(100 * multiplier)
+    };
+  }
+}
+
+function canUpgradeHomeFactory(get: () => GameState) {
+  return function (homeId: string) {
+    const state = get();
+    const home = state.homes.find(h => h.id === homeId);
+    if (!home) return false;
+
+    const cost = getHomeUpgradeCostFactory(get)(homeId);
+
+    const wood = state.resources.wood;
+    const stone = state.resources.stone;
+    const gold = state.resources.gold;
+
+    return (
+      wood && wood.amount >= cost.wood &&
+      stone && stone.amount >= cost.stone &&
+      gold && gold.amount >= cost.gold
+    );
+  }
+}
+
+function buildHomeFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (): void {
+    const state = get();
+    const cost = getHomeCostFactory(get)();
+
+    if (!canBuildHomeFactory(get)()) return;
+
     const newHome: Home = {
       id: `home-${Date.now()}`,
       level: 1,
       population: 2,
       happiness: 50
     };
-    
+
     // Consume materials
     const updatedResources = { ...state.resources };
     updatedResources.wood = {
@@ -258,20 +286,23 @@ const useGameStore = create<GameStore>((set, get) => ({
       ...updatedResources.gold,
       amount: updatedResources.gold.amount - cost.gold
     };
-    
-    set({
+
+    set((state) => ({
+      ...state,
       homes: [...state.homes, newHome],
       resources: updatedResources
-    });
-  },
+    }));
+  }
+}
 
-  upgradeHome: (homeId: string) => {
+function upgradeHomeFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (homeId: string) {
     const state = get();
     const home = state.homes.find(h => h.id === homeId);
-    if (!home || !get().canUpgradeHome(homeId)) return;
-    
-    const upgradeCost = get().getHomeUpgradeCost(homeId);
-    
+    if (!home || !canUpgradeHomeFactory(get)(homeId)) return;
+
+    const upgradeCost = getHomeUpgradeCostFactory(get)(homeId);
+
     // Consume materials
     const updatedResources = { ...state.resources };
     updatedResources.wood = {
@@ -286,89 +317,57 @@ const useGameStore = create<GameStore>((set, get) => ({
       ...updatedResources.gold,
       amount: updatedResources.gold.amount - upgradeCost.gold
     };
-    
-    set({
-      homes: state.homes.map(h => 
-        h.id === homeId 
+
+    set((state) => ({
+      ...state,
+      homes: state.homes.map(h =>
+        h.id === homeId
           ? {
-              ...h,
-              level: h.level + 1,
-              population: h.population + 1,
-              happiness: Math.min(100, h.happiness + 10)
-            }
+            ...h,
+            level: h.level + 1,
+            population: h.population + 1,
+            happiness: Math.min(100, h.happiness + 10)
+          }
           : h
       ),
       resources: updatedResources
-    });
-  },
+    }));
+  }
+}
 
-  getHomeCost: () => {
-    const state = get();
-    const homeCount = state.homes.length;
-    
-    // Base costs: 50 wood, 30 stone, 200 gold
-    // Costs increase with each home built
-    const multiplier = Math.pow(1.3, homeCount);
-    
-    return {
-      wood: Math.floor(50 * multiplier),
-      stone: Math.floor(30 * multiplier),
-      gold: Math.floor(200 * multiplier)
-    };
-  },
+const useGameStore = create<GameStore>((set, get) => ({
+  // Initial state
+  resources: {},
+  gameLoopInterval: undefined,
+  tickCount: 0,
+  characterEquipment: {},
+  homes: [],
 
-  getHomeUpgradeCost: (homeId: string) => {
-    const state = get();
-    const home = state.homes.find(h => h.id === homeId);
-    if (!home) return { wood: 0, stone: 0, gold: 0 };
-    
-    // Upgrade costs: 25 wood, 15 stone, 100 gold per level
-    const multiplier = Math.pow(1.2, home.level);
-    
-    return {
-      wood: Math.floor(25 * multiplier),
-      stone: Math.floor(15 * multiplier),
-      gold: Math.floor(100 * multiplier)
-    };
-  },
+  // Resource management
+  getResource: getResourceFactory(get),
+  setResourceAmount: setResourceAmountFactory(set),
+  addResourceAmount: addResourceAmountFactory(set),
+  setResourcePerSecond: setResourcePerSecondFactory(set),
+  setResourceWorkers: setResourceWorkersFactory(set),
+  setResourcePaidWorkers: setResourcePaidWorkersFactory(set),
+  setResourceWorkerCost: setResourceWorkerCostFactory(set),
+  setResourceWorkerSalary: setResourceWorkerSalaryFactory(set),
+  setResourceIsGathering: setResourceIsGatheringFactory(set),
+  setResourceGatherProgress: setResourceGatherProgressFactory(set),
+  setResourceWorkerProgress: setResourceWorkerProgressFactory(set),
 
-  canBuildHome: () => {
-    const state = get();
-    const cost = get().getHomeCost();
-    
-    const wood = state.resources.wood;
-    const stone = state.resources.stone;
-    const gold = state.resources.gold;
-    
-    return (
-      wood && wood.amount >= cost.wood &&
-      stone && stone.amount >= cost.stone &&
-      gold && gold.amount >= cost.gold
-    );
-  },
-
-  canUpgradeHome: (homeId: string) => {
-    const state = get();
-    const home = state.homes.find(h => h.id === homeId);
-    if (!home) return false;
-    
-    const cost = get().getHomeUpgradeCost(homeId);
-    
-    const wood = state.resources.wood;
-    const stone = state.resources.stone;
-    const gold = state.resources.gold;
-    
-    return (
-      wood && wood.amount >= cost.wood &&
-      stone && stone.amount >= cost.stone &&
-      gold && gold.amount >= cost.gold
-    );
-  },
+  // Home management
+  buildHome: buildHomeFactory(set, get),
+  upgradeHome: upgradeHomeFactory(set, get),
+  getHomeCost: getHomeCostFactory(get),
+  getHomeUpgradeCost: getHomeUpgradeCostFactory(get),
+  canBuildHome: canBuildHomeFactory(get),
+  canUpgradeHome: canUpgradeHomeFactory(get),
 
   // Bootstrap
   bootstrap: () => {
     const state = get();
-    
+
     // Give instant resources
     const bootstrapAmounts = {
       wood: 1000,
@@ -378,9 +377,9 @@ const useGameStore = create<GameStore>((set, get) => ({
       hatchet: 5,
       pickaxe: 3
     };
-    
+
     const updatedResources = { ...state.resources };
-    
+
     // Add resources to existing amounts
     Object.entries(bootstrapAmounts).forEach(([resourceKey, amount]) => {
       if (updatedResources[resourceKey]) {
@@ -405,7 +404,7 @@ const useGameStore = create<GameStore>((set, get) => ({
         };
       }
     });
-    
+
     set({
       resources: updatedResources
     });
@@ -630,7 +629,7 @@ const useGameStore = create<GameStore>((set, get) => ({
     // Add a buffer to prevent flickering - only sell when significantly over threshold
     const buffer = Math.max(1, Math.floor(resource.autoSellThreshold * 0.1)); // 10% buffer or minimum 1
     const sellThreshold = resource.autoSellThreshold + buffer;
-    
+
     if (resource.amount > sellThreshold) {
       const amountToSell = resource.amount - resource.autoSellThreshold;
       get().sellResource(resourceKey, amountToSell);
@@ -647,7 +646,7 @@ const useGameStore = create<GameStore>((set, get) => ({
     if (!gold) return;
 
     const totalSalaryCost = resource.workers * resource.workerSalary;
-    
+
     if (gold.amount >= totalSalaryCost) {
       // Pay all workers
       set({
@@ -667,7 +666,7 @@ const useGameStore = create<GameStore>((set, get) => ({
       // Pay as many workers as possible
       const affordableWorkers = Math.floor(gold.amount / resource.workerSalary);
       const actualCost = affordableWorkers * resource.workerSalary;
-      
+
       set({
         resources: {
           ...state.resources,
@@ -688,14 +687,14 @@ const useGameStore = create<GameStore>((set, get) => ({
   equipTool: (toolKey: string) => {
     const state = get();
     const toolResource = state.resources[toolKey];
-    
+
     // Check if player has the tool
     if (!toolResource || toolResource.amount <= 0) return;
-    
+
     // Get the tool category
     const toolCategory = toolCategories[toolKey];
     if (!toolCategory) return;
-    
+
     set((state) => ({
       characterEquipment: {
         ...state.characterEquipment,
@@ -715,10 +714,10 @@ const useGameStore = create<GameStore>((set, get) => ({
     const state = get();
     const toolCategory = toolCategories[toolKey];
     if (!toolCategory) return;
-    
+
     const equippedTool = state.characterEquipment[toolCategory];
     if (!equippedTool || equippedTool !== toolKey) return;
-    
+
     set((state) => ({
       characterEquipment: {
         ...state.characterEquipment,
@@ -738,13 +737,13 @@ const useGameStore = create<GameStore>((set, get) => ({
     const state = get();
     const toolCategory = toolCategories[toolKey];
     if (!toolCategory) return undefined;
-    
+
     return state.characterEquipment[toolCategory];
   },
 
   getToolBonus: (resourceKey: string) => {
     const state = get();
-    
+
     // Check all tool categories for effective tools
     for (const [toolKey, bonus] of Object.entries(toolBonuses)) {
       const effectiveResources = toolEffectiveness[toolKey] || [];
@@ -755,7 +754,7 @@ const useGameStore = create<GameStore>((set, get) => ({
         }
       }
     }
-    
+
     return 0;
   },
 
@@ -763,9 +762,9 @@ const useGameStore = create<GameStore>((set, get) => ({
   getWorkerToolBonus: (resourceKey: string) => {
     const state = get();
     const resource = state.resources[resourceKey];
-    
+
     if (!resource || resource.paidWorkers === 0) return 0;
-    
+
     // Find available tools for this resource
     for (const [toolKey, bonus] of Object.entries(toolBonuses)) {
       const effectiveResources = toolEffectiveness[toolKey] || [];
@@ -776,16 +775,16 @@ const useGameStore = create<GameStore>((set, get) => ({
         }
       }
     }
-    
+
     return 0;
   },
 
   getWorkersWithTools: (resourceKey: string) => {
     const state = get();
     const resource = state.resources[resourceKey];
-    
+
     if (!resource || resource.paidWorkers === 0) return 0;
-    
+
     // Find available tools for this resource
     for (const [toolKey] of Object.entries(toolBonuses)) {
       const effectiveResources = toolEffectiveness[toolKey] || [];
@@ -797,7 +796,7 @@ const useGameStore = create<GameStore>((set, get) => ({
         }
       }
     }
-    
+
     return 0;
   },
 
@@ -837,7 +836,7 @@ const useGameStore = create<GameStore>((set, get) => ({
         const baseProgress = 2; // 2% per 20ms = 100% per 1000ms
         const bonusMultiplier = 1 + (toolBonus / 100);
         const actualProgress = baseProgress * bonusMultiplier;
-        
+
         const newProgress = resource.gatherProgress + actualProgress;
         if (newProgress >= 100) {
           // Check if materials are available before producing
@@ -858,7 +857,7 @@ const useGameStore = create<GameStore>((set, get) => ({
         const baseProgressPerWorker = 2; // 2% per 20ms per worker
         const bonusMultiplier = 1 + (workerToolBonus / 100);
         const actualProgressPerWorker = baseProgressPerWorker * bonusMultiplier;
-        
+
         const newWorkerProgress = resource.workerProgress + (resource.paidWorkers * actualProgressPerWorker);
         if (newWorkerProgress >= 100) {
           // Check if materials are available for each worker
@@ -891,12 +890,12 @@ const useGameStore = create<GameStore>((set, get) => ({
     Object.entries(state.resources).forEach(([resourceKey, resource]) => {
       const resourceUpdate = updates[resourceKey] || {};
       const newAmount = resourceUpdate.amount !== undefined ? resourceUpdate.amount : resource.amount;
-      
+
       // Check auto-sell conditions
       if (resource.autoSellEnabled && resource.autoSellThreshold > 0) {
         const buffer = Math.max(1, Math.floor(resource.autoSellThreshold * 0.1)); // 10% buffer or minimum 1
         const sellThreshold = resource.autoSellThreshold + buffer;
-        
+
         if (newAmount > sellThreshold) {
           const amountToSell = newAmount - resource.autoSellThreshold;
           const sellPrice = getSellPrice(resourceKey);
@@ -964,10 +963,10 @@ const checkMaterialsAvailable = (resourceKey: string, state: GameState): boolean
     hatchet: HatchetDef,
     pickaxe: PickaxeDef
   };
-  
+
   const resourceDef = resourceDefs[resourceKey];
   if (!resourceDef?.materials) return true; // No materials required
-  
+
   // Check if all required materials are available
   for (const material of resourceDef.materials) {
     const materialResource = state.resources[material.resourceKey];
@@ -975,7 +974,7 @@ const checkMaterialsAvailable = (resourceKey: string, state: GameState): boolean
       return false; // Not enough materials
     }
   }
-  
+
   return true; // Materials available
 };
 
@@ -988,10 +987,10 @@ const checkAndConsumeMaterials = (resourceKey: string, state: GameState): boolea
     hatchet: HatchetDef,
     pickaxe: PickaxeDef
   };
-  
+
   const resourceDef = resourceDefs[resourceKey];
   if (!resourceDef?.materials) return true; // No materials required
-  
+
   // Check if all required materials are available
   for (const material of resourceDef.materials) {
     const materialResource = state.resources[material.resourceKey];
@@ -999,7 +998,7 @@ const checkAndConsumeMaterials = (resourceKey: string, state: GameState): boolea
       return false; // Not enough materials
     }
   }
-  
+
   // Consume materials
   for (const material of resourceDef.materials) {
     const materialResource = state.resources[material.resourceKey];
@@ -1007,7 +1006,7 @@ const checkAndConsumeMaterials = (resourceKey: string, state: GameState): boolea
       materialResource.amount -= material.amount;
     }
   }
-  
+
   return true; // Materials consumed successfully
 };
 
