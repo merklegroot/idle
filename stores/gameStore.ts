@@ -15,11 +15,25 @@ export interface ResourceState {
   autoSellEnabled: boolean;
 }
 
+export interface Home {
+  id: string;
+  level: number;
+  population: number;
+  happiness: number;
+}
+
+export interface HomeCost {
+  wood: number;
+  stone: number;
+  gold: number;
+}
+
 export interface GameState {
   resources: Record<string, ResourceState>;
   gameLoopInterval?: NodeJS.Timeout;
   tickCount: number;
   characterEquipment: CharacterEquipment;
+  homes: Home[];
 }
 
 export interface GameActions {
@@ -35,6 +49,14 @@ export interface GameActions {
   setResourceIsGathering: (resourceKey: string, isGathering: boolean) => void;
   setResourceGatherProgress: (resourceKey: string, gatherProgress: number) => void;
   setResourceWorkerProgress: (resourceKey: string, workerProgress: number) => void;
+  
+  // Home management
+  buildHome: () => void;
+  upgradeHome: (homeId: string) => void;
+  getHomeCost: () => HomeCost;
+  getHomeUpgradeCost: (homeId: string) => HomeCost;
+  canBuildHome: () => boolean;
+  canUpgradeHome: (homeId: string) => boolean;
   
   // Actions
   hireWorker: (resourceKey: string) => void;
@@ -82,6 +104,7 @@ const useGameStore = create<GameStore>((set, get) => ({
   gameLoopInterval: undefined,
   tickCount: 0,
   characterEquipment: {},
+  homes: [],
 
   // Resource management
   getResource: (resourceKey: string) => {
@@ -212,6 +235,141 @@ const useGameStore = create<GameStore>((set, get) => ({
         }
       }
     }));
+  },
+
+  // Home management
+  buildHome: () => {
+    const state = get();
+    const cost = get().getHomeCost();
+    
+    if (!get().canBuildHome()) return;
+    
+    const newHome: Home = {
+      id: `home-${Date.now()}`,
+      level: 1,
+      population: 2,
+      happiness: 50
+    };
+    
+    // Consume materials
+    const updatedResources = { ...state.resources };
+    updatedResources.wood = {
+      ...updatedResources.wood,
+      amount: updatedResources.wood.amount - cost.wood
+    };
+    updatedResources.stone = {
+      ...updatedResources.stone,
+      amount: updatedResources.stone.amount - cost.stone
+    };
+    updatedResources.gold = {
+      ...updatedResources.gold,
+      amount: updatedResources.gold.amount - cost.gold
+    };
+    
+    set({
+      homes: [...state.homes, newHome],
+      resources: updatedResources
+    });
+  },
+
+  upgradeHome: (homeId: string) => {
+    const state = get();
+    const home = state.homes.find(h => h.id === homeId);
+    if (!home || !get().canUpgradeHome(homeId)) return;
+    
+    const upgradeCost = get().getHomeUpgradeCost(homeId);
+    
+    // Consume materials
+    const updatedResources = { ...state.resources };
+    updatedResources.wood = {
+      ...updatedResources.wood,
+      amount: updatedResources.wood.amount - upgradeCost.wood
+    };
+    updatedResources.stone = {
+      ...updatedResources.stone,
+      amount: updatedResources.stone.amount - upgradeCost.stone
+    };
+    updatedResources.gold = {
+      ...updatedResources.gold,
+      amount: updatedResources.gold.amount - upgradeCost.gold
+    };
+    
+    set({
+      homes: state.homes.map(h => 
+        h.id === homeId 
+          ? {
+              ...h,
+              level: h.level + 1,
+              population: h.population + 1,
+              happiness: Math.min(100, h.happiness + 10)
+            }
+          : h
+      ),
+      resources: updatedResources
+    });
+  },
+
+  getHomeCost: () => {
+    const state = get();
+    const homeCount = state.homes.length;
+    
+    // Base costs: 50 wood, 30 stone, 200 gold
+    // Costs increase with each home built
+    const multiplier = Math.pow(1.3, homeCount);
+    
+    return {
+      wood: Math.floor(50 * multiplier),
+      stone: Math.floor(30 * multiplier),
+      gold: Math.floor(200 * multiplier)
+    };
+  },
+
+  getHomeUpgradeCost: (homeId: string) => {
+    const state = get();
+    const home = state.homes.find(h => h.id === homeId);
+    if (!home) return { wood: 0, stone: 0, gold: 0 };
+    
+    // Upgrade costs: 25 wood, 15 stone, 100 gold per level
+    const multiplier = Math.pow(1.2, home.level);
+    
+    return {
+      wood: Math.floor(25 * multiplier),
+      stone: Math.floor(15 * multiplier),
+      gold: Math.floor(100 * multiplier)
+    };
+  },
+
+  canBuildHome: () => {
+    const state = get();
+    const cost = get().getHomeCost();
+    
+    const wood = state.resources.wood;
+    const stone = state.resources.stone;
+    const gold = state.resources.gold;
+    
+    return (
+      wood && wood.amount >= cost.wood &&
+      stone && stone.amount >= cost.stone &&
+      gold && gold.amount >= cost.gold
+    );
+  },
+
+  canUpgradeHome: (homeId: string) => {
+    const state = get();
+    const home = state.homes.find(h => h.id === homeId);
+    if (!home) return false;
+    
+    const cost = get().getHomeUpgradeCost(homeId);
+    
+    const wood = state.resources.wood;
+    const stone = state.resources.stone;
+    const gold = state.resources.gold;
+    
+    return (
+      wood && wood.amount >= cost.wood &&
+      stone && stone.amount >= cost.stone &&
+      gold && gold.amount >= cost.gold
+    );
   },
 
   // Actions
