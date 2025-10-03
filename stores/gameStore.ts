@@ -58,6 +58,9 @@ export interface GameActions {
   canBuildHome: () => boolean;
   canUpgradeHome: (homeId: string) => boolean;
   
+  // Bootstrap
+  bootstrap: () => void;
+  
   // Actions
   hireWorker: (resourceKey: string) => void;
   startGathering: (resourceKey: string) => void;
@@ -370,6 +373,52 @@ const useGameStore = create<GameStore>((set, get) => ({
       stone && stone.amount >= cost.stone &&
       gold && gold.amount >= cost.gold
     );
+  },
+
+  // Bootstrap
+  bootstrap: () => {
+    const state = get();
+    
+    // Give instant resources
+    const bootstrapAmounts = {
+      wood: 1000,
+      berries: 500,
+      stone: 800,
+      gold: 5000,
+      hatchet: 5,
+      pickaxe: 3
+    };
+    
+    const updatedResources = { ...state.resources };
+    
+    // Add resources to existing amounts
+    Object.entries(bootstrapAmounts).forEach(([resourceKey, amount]) => {
+      if (updatedResources[resourceKey]) {
+        updatedResources[resourceKey] = {
+          ...updatedResources[resourceKey],
+          amount: updatedResources[resourceKey].amount + amount
+        };
+      } else {
+        // Initialize resource if it doesn't exist
+        updatedResources[resourceKey] = {
+          amount: amount,
+          perSecond: 0,
+          workers: 0,
+          paidWorkers: 0,
+          workerCost: 100,
+          workerSalary: 10,
+          isGathering: false,
+          gatherProgress: 0,
+          workerProgress: 0,
+          autoSellThreshold: 0,
+          autoSellEnabled: false
+        };
+      }
+    });
+    
+    set({
+      resources: updatedResources
+    });
   },
 
   // Actions
