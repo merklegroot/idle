@@ -29,8 +29,9 @@ export default function Navigation() {
           <Link href="/home" className="text-xl font-bold text-white hover:text-gray-300 transition-colors">
             Idle Game
           </Link>
-          <ul className="flex flex-wrap Home-4 lg:gap-6">
+          <ul className="flex flex-wrap gap-4 lg:gap-6">
             <NavLink href="/home" label="Home" />
+            <NavLink href="/numbers" label="Numbers" />
           </ul>
         </div>
       </div>
