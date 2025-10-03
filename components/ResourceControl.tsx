@@ -11,7 +11,8 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
     hireWorker,
     startGathering,
     initializeResource,
-    startGameLoop
+    startGameLoop,
+    getToolBonus
   } = useGameStore();
 
   // Initialize resource on mount
@@ -42,6 +43,9 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
   } = resource || {};
 
   const goldAmount = gold?.amount || 0;
+  
+  // Get tool bonus for this resource
+  const toolBonus = getToolBonus(resourceDef.resourceKey);
   
   // Resource icon mapping
   const resourceIcons: Record<string, string> = {
@@ -85,6 +89,11 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
             </div>
             <div className="text-sm text-gray-500">
               +{perSecond}/sec
+              {toolBonus > 0 && (
+                <span className="text-green-600 ml-2">
+                  (+{toolBonus}% tool bonus)
+                </span>
+              )}
             </div>
             
             {/* Material Requirements */}

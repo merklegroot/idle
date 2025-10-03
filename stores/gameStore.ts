@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef } from '../app/models/ResourceDef';
+import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, CharacterEquipment, toolEffectiveness, toolBonuses } from '../app/models/ResourceDef';
 
 export interface ResourceState {
   amount: number;
@@ -19,6 +19,7 @@ export interface GameState {
   resources: Record<string, ResourceState>;
   gameLoopInterval?: NodeJS.Timeout;
   tickCount: number;
+  characterEquipment: CharacterEquipment;
 }
 
 export interface GameActions {
@@ -57,6 +58,12 @@ export interface GameActions {
   // Salary system
   payWorkerSalaries: (resourceKey: string) => void;
   
+  // Equipment management
+  equipTool: (toolKey: string) => void;
+  unequipTool: () => void;
+  getEquippedTool: () => string | undefined;
+  getToolBonus: (resourceKey: string) => number;
+  
   // Game loop
   startGameLoop: () => void;
   stopGameLoop: () => void;
@@ -70,6 +77,7 @@ const useGameStore = create<GameStore>((set, get) => ({
   resources: {},
   gameLoopInterval: undefined,
   tickCount: 0,
+  characterEquipment: {},
 
   // Resource management
   getResource: (resourceKey: string) => {
@@ -475,6 +483,69 @@ const useGameStore = create<GameStore>((set, get) => ({
     }
   },
 
+  // Equipment management
+  equipTool: (toolKey: string) => {
+    const state = get();
+    const toolResource = state.resources[toolKey];
+    
+    // Check if player has the tool
+    if (!toolResource || toolResource.amount <= 0) return;
+    
+    set((state) => ({
+      characterEquipment: {
+        ...state.characterEquipment,
+        tool: toolKey
+      },
+      resources: {
+        ...state.resources,
+        [toolKey]: {
+          ...toolResource,
+          amount: toolResource.amount - 1 // Remove tool from inventory
+        }
+      }
+    }));
+  },
+
+  unequipTool: () => {
+    const state = get();
+    const equippedTool = state.characterEquipment.tool;
+    
+    if (!equippedTool) return;
+    
+    set((state) => ({
+      characterEquipment: {
+        ...state.characterEquipment,
+        tool: undefined
+      },
+      resources: {
+        ...state.resources,
+        [equippedTool]: {
+          ...state.resources[equippedTool],
+          amount: (state.resources[equippedTool]?.amount || 0) + 1 // Return tool to inventory
+        }
+      }
+    }));
+  },
+
+  getEquippedTool: () => {
+    const state = get();
+    return state.characterEquipment.tool;
+  },
+
+  getToolBonus: (resourceKey: string) => {
+    const state = get();
+    const equippedTool = state.characterEquipment.tool;
+    
+    if (!equippedTool) return 0;
+    
+    // Check if the equipped tool helps with this resource
+    const effectiveResources = toolEffectiveness[equippedTool] || [];
+    if (!effectiveResources.includes(resourceKey)) return 0;
+    
+    // Return the bonus percentage
+    return toolBonuses[equippedTool] || 0;
+  },
+
   // Game loop
   startGameLoop: () => {
     const state = get();
@@ -506,7 +577,13 @@ const useGameStore = create<GameStore>((set, get) => ({
 
       // Handle manual gathering progress
       if (resource.isGathering) {
-        const newProgress = resource.gatherProgress + 2; // 2% per 20ms = 100% per 1000ms
+        // Apply tool bonus for manual gathering
+        const toolBonus = get().getToolBonus(resourceKey);
+        const baseProgress = 2; // 2% per 20ms = 100% per 1000ms
+        const bonusMultiplier = 1 + (toolBonus / 100);
+        const actualProgress = baseProgress * bonusMultiplier;
+        
+        const newProgress = resource.gatherProgress + actualProgress;
         if (newProgress >= 100) {
           // Check if materials are available before producing
           if (checkAndConsumeMaterials(resourceKey, state)) {
@@ -521,8 +598,13 @@ const useGameStore = create<GameStore>((set, get) => ({
 
       // Handle worker progress (only paid workers work)
       if (resource.paidWorkers > 0) {
-        const progressPerWorker = 2; // 2% per 20ms per worker
-        const newWorkerProgress = resource.workerProgress + (resource.paidWorkers * progressPerWorker);
+        // Workers automatically benefit from tools (no equipping needed)
+        const toolBonus = get().getToolBonus(resourceKey);
+        const baseProgressPerWorker = 2; // 2% per 20ms per worker
+        const bonusMultiplier = 1 + (toolBonus / 100);
+        const actualProgressPerWorker = baseProgressPerWorker * bonusMultiplier;
+        
+        const newWorkerProgress = resource.workerProgress + (resource.paidWorkers * actualProgressPerWorker);
         if (newWorkerProgress >= 100) {
           // Check if materials are available for each worker
           let workersThatCanProduce = 0;

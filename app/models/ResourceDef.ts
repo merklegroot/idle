@@ -98,3 +98,20 @@ export const GoldDef: ResourceDef = {
     resourceKey: 'gold',
     icon: '🪙',
 };
+
+// Simple equipment interface for existing items
+export interface CharacterEquipment {
+    tool?: string; // resourceKey of equipped tool (hatchet, pickaxe)
+}
+
+// Tool effectiveness mapping
+export const toolEffectiveness: Record<string, string[]> = {
+    hatchet: ['wood'], // Hatchet helps with wood
+    pickaxe: ['stone'] // Pickaxe helps with stone
+};
+
+// Tool bonus percentages
+export const toolBonuses: Record<string, number> = {
+    hatchet: 50, // 50% faster wood gathering
+    pickaxe: 50  // 50% faster stone gathering
+};
