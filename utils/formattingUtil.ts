@@ -33,6 +33,56 @@ function formatNumber(num: number) {
     return Math.floor(num).toString();
 }
 
+function parseFormattedNumber(str: string): number | null {
+    if (!str || str.trim() === '') return null;
+    
+    const prefixes = [
+        { prefix: 'v', multiplier: 1e63 },
+        { prefix: 'N', multiplier: 1e60 },
+        { prefix: 'O', multiplier: 1e57 },
+        { prefix: 'St', multiplier: 1e54 },
+        { prefix: 'Sd', multiplier: 1e51 },
+        { prefix: 'Qd', multiplier: 1e48 },
+        { prefix: 'Qt', multiplier: 1e45 },
+        { prefix: 'T', multiplier: 1e42 },
+        { prefix: 'D', multiplier: 1e39 },
+        { prefix: 'U', multiplier: 1e36 },
+        { prefix: 'd', multiplier: 1e33 },
+        { prefix: 'n', multiplier: 1e30 },
+        { prefix: 'o', multiplier: 1e27 },
+        { prefix: 'S', multiplier: 1e24 },
+        { prefix: 's', multiplier: 1e21 },
+        { prefix: 'Q', multiplier: 1e18 },
+        { prefix: 'q', multiplier: 1e15 },
+        { prefix: 't', multiplier: 1e12 },
+        { prefix: 'B', multiplier: 1e9 },
+        { prefix: 'M', multiplier: 1e6 },
+        { prefix: 'K', multiplier: 1e3 }
+    ];
+
+    // Try to parse as regular number first
+    const regularNumber = parseFloat(str);
+    if (!isNaN(regularNumber)) {
+        return regularNumber;
+    }
+
+    // Try to parse with prefixes
+    for (const { prefix, multiplier } of prefixes) {
+        const lowerStr = str.toLowerCase();
+        const lowerPrefix = prefix.toLowerCase();
+        if (lowerStr.endsWith(lowerPrefix)) {
+            const numberPart = str.slice(0, -prefix.length);
+            const num = parseFloat(numberPart);
+            if (!isNaN(num)) {
+                return num * multiplier;
+            }
+        }
+    }
+
+    return null;
+}
+
 export const formattingUtil = {
-    formatNumber
+    formatNumber,
+    parseFormattedNumber
 };
