@@ -33,7 +33,10 @@ export default function Equipment() {
     stone: StoneDef.icon
   };
 
-  const equippedTool = getEquippedTool();
+  // Get equipped tools for each category
+  const getEquippedToolForCategory = (toolKey: string) => {
+    return getEquippedTool(toolKey);
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -41,31 +44,34 @@ export default function Equipment() {
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Character Equipment</h2>
         
-        {/* Tool Slot */}
-        <div className="border border-gray-200 rounded-lg p-4">
-          <div className="text-sm font-semibold text-gray-600 mb-2">Tool</div>
-          <div className="min-h-[80px] flex items-center justify-center bg-gray-50 rounded border-2 border-dashed border-gray-300">
-            {equippedTool ? (
-              <div className="flex items-center gap-3">
-                <div className="text-3xl">
-                  {availableTools.find(tool => tool.key === equippedTool)?.icon}
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-800">
-                    {availableTools.find(tool => tool.key === equippedTool)?.name}
-                  </div>
-                  <button
-                    onClick={() => unequipTool()}
-                    className="text-sm text-red-600 hover:text-red-800"
-                  >
-                    Unequip
-                  </button>
+        {/* Tool Slots */}
+        <div className="space-y-4">
+          {availableTools.map(tool => {
+            const isEquipped = getEquippedToolForCategory(tool.key) === tool.key;
+            return (
+              <div key={tool.key} className="border border-gray-200 rounded-lg p-4">
+                <div className="text-sm font-semibold text-gray-600 mb-2 capitalize">{tool.key} Category</div>
+                <div className="min-h-[60px] flex items-center justify-center bg-gray-50 rounded border-2 border-dashed border-gray-300">
+                  {isEquipped ? (
+                    <div className="flex items-center gap-3">
+                      <div className="text-2xl">{tool.icon}</div>
+                      <div>
+                        <div className="font-semibold text-gray-800">{tool.name}</div>
+                        <button
+                          onClick={() => unequipTool(tool.key)}
+                          className="text-sm text-red-600 hover:text-red-800"
+                        >
+                          Unequip
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-gray-400 text-sm">No {tool.key} equipped</div>
+                  )}
                 </div>
               </div>
-            ) : (
-              <div className="text-gray-400 text-sm">No tool equipped</div>
-            )}
-          </div>
+            );
+          })}
         </div>
       </div>
 
@@ -76,7 +82,7 @@ export default function Equipment() {
         <div className="space-y-4">
           {availableTools.map(tool => {
             const ownedAmount = getResource(tool.key)?.amount || 0;
-            const isEquipped = equippedTool === tool.key;
+            const isEquipped = getEquippedToolForCategory(tool.key) === tool.key;
             
             return (
               <div 
@@ -112,7 +118,7 @@ export default function Equipment() {
                   
                   {isEquipped && (
                     <button
-                      onClick={() => unequipTool()}
+                      onClick={() => unequipTool(tool.key)}
                       className="flex-1 py-2 px-3 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm font-semibold transition-colors"
                     >
                       Unequip

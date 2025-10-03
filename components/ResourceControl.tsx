@@ -13,7 +13,9 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
     initializeResource,
     startGameLoop,
     getToolBonus,
-    getEquippedTool
+    getEquippedTool,
+    getWorkerToolBonus,
+    getWorkersWithTools
   } = useGameStore();
 
   // Initialize resource on mount
@@ -47,6 +49,12 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
   
   // Get tool bonus for this resource
   const toolBonus = getToolBonus(resourceDef.resourceKey);
+  
+  // Get worker tool bonus for this resource
+  const workerToolBonus = getWorkerToolBonus(resourceDef.resourceKey);
+  
+  // Get number of workers with tools (calculated dynamically)
+  const workersWithTools = getWorkersWithTools(resourceDef.resourceKey);
   
   // Get equipped tool for this resource (check all tools that are effective for this resource)
   const getEffectiveEquippedTool = () => {
@@ -182,13 +190,22 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
             </div>
 
             <div className="mt-3">
-              <div className="text-xs text-gray-600 mb-1">
-                {paidWorkers > 0 ? (
-                  `Workers gathering (${paidWorkers}/${workers} paid)`
-                ) : workers > 0 ? (
-                  `${workers} workers (unpaid)`
-                ) : (
-                  'No workers gathering'
+              <div className="flex items-center gap-2 text-xs text-gray-600 mb-1">
+                <span>
+                  {paidWorkers > 0 ? (
+                    `Workers gathering (${paidWorkers}/${workers} paid)`
+                  ) : workers > 0 ? (
+                    `${workers} workers (unpaid)`
+                  ) : (
+                    'No workers gathering'
+                  )}
+                </span>
+                {paidWorkers > 0 && workersWithTools > 0 && (
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs">{workersWithTools} grabbed</span>
+                    <span className="text-sm">{toolIcons[equippedTool || '']}</span>
+                    <span className="text-xs text-green-600">(+{workerToolBonus}%)</span>
+                  </div>
                 )}
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2 relative">
@@ -230,6 +247,43 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
             </div>
           </div>
 
+          {/* Tool Information for Workers */}
+          {paidWorkers > 0 && (
+            <div className="bg-blue-50 p-3 rounded border border-blue-200">
+              <div className="text-sm text-blue-800 font-semibold mb-2">Worker Equipment</div>
+              <div className="space-y-2">
+                {workersWithTools > 0 ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{toolIcons[equippedTool || '']}</span>
+                      <span className="text-sm text-blue-700">
+                        {workersWithTools} workers grabbed {equippedTool}s (+{workerToolBonus}% efficiency)
+                      </span>
+                    </div>
+                    {paidWorkers - workersWithTools > 0 && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">✋</span>
+                        <span className="text-sm text-blue-700">
+                          {paidWorkers - workersWithTools} workers using hands (no tools available)
+                        </span>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">✋</span>
+                    <span className="text-sm text-blue-700">
+                      All {paidWorkers} workers using hands (no tools available)
+                    </span>
+                  </div>
+                )}
+                <div className="text-xs text-blue-600 italic">
+                  Workers automatically grab available tools. Tools can be taken from them anytime.
+                </div>
+              </div>
+            </div>
+          )}
+
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -244,6 +298,7 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
           >
             Hire Worker ({formattingUtil.formatNumber(workerCost)} 🪙)
           </button>
+
         </div>
       </div>
   );

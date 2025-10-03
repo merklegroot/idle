@@ -64,6 +64,10 @@ export interface GameActions {
   getEquippedTool: (toolKey: string) => string | undefined;
   getToolBonus: (resourceKey: string) => number;
   
+  // Worker equipment management
+  getWorkerToolBonus: (resourceKey: string) => number;
+  getWorkersWithTools: (resourceKey: string) => number;
+  
   // Game loop
   startGameLoop: () => void;
   stopGameLoop: () => void;
@@ -558,6 +562,48 @@ const useGameStore = create<GameStore>((set, get) => ({
     return 0;
   },
 
+
+  getWorkerToolBonus: (resourceKey: string) => {
+    const state = get();
+    const resource = state.resources[resourceKey];
+    
+    if (!resource || resource.paidWorkers === 0) return 0;
+    
+    // Find available tools for this resource
+    for (const [toolKey, bonus] of Object.entries(toolBonuses)) {
+      const effectiveResources = toolEffectiveness[toolKey] || [];
+      if (effectiveResources.includes(resourceKey)) {
+        const toolResource = state.resources[toolKey];
+        if (toolResource && toolResource.amount > 0) {
+          return bonus; // Return the bonus percentage if tools are available
+        }
+      }
+    }
+    
+    return 0;
+  },
+
+  getWorkersWithTools: (resourceKey: string) => {
+    const state = get();
+    const resource = state.resources[resourceKey];
+    
+    if (!resource || resource.paidWorkers === 0) return 0;
+    
+    // Find available tools for this resource
+    for (const [toolKey] of Object.entries(toolBonuses)) {
+      const effectiveResources = toolEffectiveness[toolKey] || [];
+      if (effectiveResources.includes(resourceKey)) {
+        const toolResource = state.resources[toolKey];
+        if (toolResource && toolResource.amount > 0) {
+          // Workers automatically use available tools, limited by number of workers
+          return Math.min(resource.paidWorkers, toolResource.amount);
+        }
+      }
+    }
+    
+    return 0;
+  },
+
   // Game loop
   startGameLoop: () => {
     const state = get();
@@ -610,10 +656,10 @@ const useGameStore = create<GameStore>((set, get) => ({
 
       // Handle worker progress (only paid workers work)
       if (resource.paidWorkers > 0) {
-        // Workers automatically benefit from tools (no equipping needed)
-        const toolBonus = get().getToolBonus(resourceKey);
+        // Workers benefit from individual tools they have equipped
+        const workerToolBonus = get().getWorkerToolBonus(resourceKey);
         const baseProgressPerWorker = 2; // 2% per 20ms per worker
-        const bonusMultiplier = 1 + (toolBonus / 100);
+        const bonusMultiplier = 1 + (workerToolBonus / 100);
         const actualProgressPerWorker = baseProgressPerWorker * bonusMultiplier;
         
         const newWorkerProgress = resource.workerProgress + (resource.paidWorkers * actualProgressPerWorker);
