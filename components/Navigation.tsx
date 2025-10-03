@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import useGameStore from '@/stores/gameStore'
+import { formattingUtil } from '@/utils/formattingUtil'
 
 function NavLink({ label, href }: { label: string, href: string }) {
   const pathname = usePathname()
@@ -58,19 +59,19 @@ export default function Navigation() {
           <div className="flex gap-4 text-sm">
             <div className="flex items-center gap-1">
               <span className="text-yellow-400">💰</span>
-              <span className="font-semibold text-yellow-400">{goldAmount.toLocaleString()}</span>
+              <span className="font-semibold text-yellow-400">{formattingUtil.formatNumber(goldAmount)}</span>
             </div>
             <div className="flex items-center gap-1">
               <span className="text-green-400">🪵</span>
-              <span className="font-semibold text-green-400">{woodAmount.toLocaleString()}</span>
+              <span className="font-semibold text-green-400">{formattingUtil.formatNumber(woodAmount)}</span>
             </div>
             <div className="flex items-center gap-1">
               <span className="text-gray-300">🪨</span>
-              <span className="font-semibold text-gray-300">{stoneAmount.toLocaleString()}</span>
+              <span className="font-semibold text-gray-300">{formattingUtil.formatNumber(stoneAmount)}</span>
             </div>
             <div className="flex items-center gap-1">
               <span className="text-blue-400">👥</span>
-              <span className="font-semibold text-blue-400">{totalPopulation}</span>
+              <span className="font-semibold text-blue-400">{formattingUtil.formatNumber(totalPopulation)}</span>
             </div>
           </div>
           <button
