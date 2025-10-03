@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import useGameStore from '../stores/gameStore';
-import { GatherableResourceDef } from '../app/models/ResourceDef';
+import { GatherableResourceDef, WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef } from '../app/models/ResourceDef';
 import { formattingUtil } from '@/utils/formattingUtil';
 
 export default function ResourceControl({resourceDef}: {resourceDef: GatherableResourceDef}) {
@@ -42,6 +42,15 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
   } = resource || {};
 
   const goldAmount = gold?.amount || 0;
+  
+  // Resource icon mapping
+  const resourceIcons: Record<string, string> = {
+    wood: WoodDef.icon,
+    berries: BerryDef.icon,
+    stone: StoneDef.icon,
+    hatchet: HatchetDef.icon,
+    pickaxe: PickaxeDef.icon
+  };
   
   // Check if materials are available for gathering
   const hasMaterials = resourceDef.materials ? 
@@ -97,7 +106,7 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
                             : 'bg-red-100 text-red-800 border border-red-300'
                         }`}
                       >
-                        {material.amount} {material.resourceKey} {hasEnough ? '✓' : '✗'}
+                        {material.amount} {resourceIcons[material.resourceKey] || material.resourceKey} {hasEnough ? '✓' : '✗'}
                       </span>
                     );
                   })}
