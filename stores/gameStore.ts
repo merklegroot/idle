@@ -496,6 +496,7 @@ const useGameStore = create<GameStore>((set, get) => ({
   gameTick: () => {
     const state = get();
     const updates: Partial<Record<string, Partial<ResourceState>>> = {};
+    const autoSellUpdates: Partial<Record<string, Partial<ResourceState>>> = {};
 
     // Process each resource
     Object.entries(state.resources).forEach(([resourceKey, resource]) => {
@@ -547,16 +548,52 @@ const useGameStore = create<GameStore>((set, get) => ({
       }
     });
 
-    // Check auto-sell for all resources after updates
-    Object.keys(state.resources).forEach(resourceKey => {
-      get().checkAutoSell(resourceKey);
+    // Calculate auto-sell updates based on the new amounts
+    Object.entries(state.resources).forEach(([resourceKey, resource]) => {
+      const resourceUpdate = updates[resourceKey] || {};
+      const newAmount = resourceUpdate.amount !== undefined ? resourceUpdate.amount : resource.amount;
+      
+      // Check auto-sell conditions
+      if (resource.autoSellEnabled && resource.autoSellThreshold > 0) {
+        const buffer = Math.max(1, Math.floor(resource.autoSellThreshold * 0.1)); // 10% buffer or minimum 1
+        const sellThreshold = resource.autoSellThreshold + buffer;
+        
+        if (newAmount > sellThreshold) {
+          const amountToSell = newAmount - resource.autoSellThreshold;
+          const sellPrice = getSellPrice(resourceKey);
+          const goldEarned = amountToSell * sellPrice;
+
+          // Update resource amount (reduce by sold amount)
+          if (!autoSellUpdates[resourceKey]) {
+            autoSellUpdates[resourceKey] = {};
+          }
+          autoSellUpdates[resourceKey].amount = newAmount - amountToSell;
+
+          // Update gold amount
+          if (!autoSellUpdates.gold) {
+            autoSellUpdates.gold = { amount: (state.resources.gold?.amount || 0) + goldEarned };
+          } else {
+            autoSellUpdates.gold.amount = (autoSellUpdates.gold.amount || 0) + goldEarned;
+          }
+        }
+      }
     });
 
-    // Apply all updates
-    if (Object.keys(updates).length > 0) {
+    // Merge all updates together
+    const allUpdates = { ...updates };
+    Object.entries(autoSellUpdates).forEach(([key, update]) => {
+      if (allUpdates[key]) {
+        allUpdates[key] = { ...allUpdates[key], ...update };
+      } else {
+        allUpdates[key] = update;
+      }
+    });
+
+    // Apply all updates at once
+    if (Object.keys(allUpdates).length > 0) {
       set((state) => ({
         resources: Object.entries(state.resources).reduce((acc, [key, resource]) => {
-          acc[key] = { ...resource, ...(updates[key] || {}) };
+          acc[key] = { ...resource, ...(allUpdates[key] || {}) };
           return acc;
         }, {} as Record<string, ResourceState>),
         tickCount: (state.tickCount || 0) + 1
