@@ -335,37 +335,8 @@ function upgradeHomeFactory(set: (fn: (state: GameState) => Partial<GameState>) 
   }
 }
 
-const useGameStore = create<GameStore>((set, get) => ({
-  // Initial state
-  resources: {},
-  gameLoopInterval: undefined,
-  tickCount: 0,
-  characterEquipment: {},
-  homes: [],
-
-  // Resource management
-  getResource: getResourceFactory(get),
-  setResourceAmount: setResourceAmountFactory(set),
-  addResourceAmount: addResourceAmountFactory(set),
-  setResourcePerSecond: setResourcePerSecondFactory(set),
-  setResourceWorkers: setResourceWorkersFactory(set),
-  setResourcePaidWorkers: setResourcePaidWorkersFactory(set),
-  setResourceWorkerCost: setResourceWorkerCostFactory(set),
-  setResourceWorkerSalary: setResourceWorkerSalaryFactory(set),
-  setResourceIsGathering: setResourceIsGatheringFactory(set),
-  setResourceGatherProgress: setResourceGatherProgressFactory(set),
-  setResourceWorkerProgress: setResourceWorkerProgressFactory(set),
-
-  // Home management
-  buildHome: buildHomeFactory(set, get),
-  upgradeHome: upgradeHomeFactory(set, get),
-  getHomeCost: getHomeCostFactory(get),
-  getHomeUpgradeCost: getHomeUpgradeCostFactory(get),
-  canBuildHome: canBuildHomeFactory(get),
-  canUpgradeHome: canUpgradeHomeFactory(get),
-
-  // Bootstrap
-  bootstrap: () => {
+function bootstrapFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (): void {
     const state = get();
 
     // Give instant resources
@@ -405,13 +376,15 @@ const useGameStore = create<GameStore>((set, get) => ({
       }
     });
 
-    set({
+    set((state) => ({
+      ...state,
       resources: updatedResources
-    });
-  },
+    }));
+  }
+}
 
-  // Actions
-  hireWorker: (resourceKey: string) => {
+function hireWorkerFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (resourceKey: string): void {
     const state = get();
     const resource = state.resources[resourceKey];
     if (!resource) return;
@@ -431,7 +404,8 @@ const useGameStore = create<GameStore>((set, get) => ({
     const resourceDef = resourceDefs[resourceKey];
     const workerSalary = resourceDef?.workerSalary || 10;
 
-    set({
+    set((state) => ({
+      ...state,
       resources: {
         ...state.resources,
         [resourceKey]: {
@@ -446,10 +420,12 @@ const useGameStore = create<GameStore>((set, get) => ({
           amount: gold.amount - resource.workerCost
         }
       }
-    });
-  },
+    }));
+  }
+}
 
-  startGathering: (resourceKey: string) => {
+function startGatheringFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (resourceKey: string): void {
     const state = get();
     const resource = state.resources[resourceKey];
     if (!resource) return;
@@ -461,7 +437,8 @@ const useGameStore = create<GameStore>((set, get) => ({
 
     // Only start gathering if not already gathering
     if (!resource.isGathering) {
-      set({
+      set((state) => ({
+        ...state,
         resources: {
           ...state.resources,
           [resourceKey]: {
@@ -470,11 +447,13 @@ const useGameStore = create<GameStore>((set, get) => ({
             gatherProgress: 0
           }
         }
-      });
+      }));
     }
-  },
+  }
+}
 
-  resetGatherProgress: (resourceKey: string) => {
+function resetGatherProgressFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string): void {
     set((state) => ({
       resources: {
         ...state.resources,
@@ -485,9 +464,11 @@ const useGameStore = create<GameStore>((set, get) => ({
         }
       }
     }));
-  },
+  }
+}
 
-  resetWorkerProgress: (resourceKey: string) => {
+function resetWorkerProgressFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string): void {
     set((state) => ({
       resources: {
         ...state.resources,
@@ -497,10 +478,11 @@ const useGameStore = create<GameStore>((set, get) => ({
         }
       }
     }));
-  },
+  }
+}
 
-  // Initialize resource
-  initializeResource: (resourceKey: string) => {
+function initializeResourceFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (resourceKey: string): void {
     const state = get();
     if (state.resources[resourceKey]) return; // Already initialized
 
@@ -516,7 +498,8 @@ const useGameStore = create<GameStore>((set, get) => ({
     const defaultWorkerCost = resourceDef?.workerCost || 100;
     const defaultWorkerSalary = resourceDef?.workerSalary || 10;
 
-    set({
+    set((state) => ({
+      ...state,
       resources: {
         ...state.resources,
         [resourceKey]: {
@@ -533,11 +516,12 @@ const useGameStore = create<GameStore>((set, get) => ({
           autoSellEnabled: false
         }
       }
-    });
-  },
+    }));
+  }
+}
 
-  // Selling functions
-  sellResource: (resourceKey: string, amount: number) => {
+function sellResourceFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (resourceKey: string, amount: number): void {
     const state = get();
     const resource = state.resources[resourceKey];
     if (!resource || resource.amount < amount) return;
@@ -562,7 +546,8 @@ const useGameStore = create<GameStore>((set, get) => ({
       };
     }
 
-    set({
+    set((state) => ({
+      ...state,
       resources: {
         ...state.resources,
         [resourceKey]: {
@@ -574,10 +559,12 @@ const useGameStore = create<GameStore>((set, get) => ({
           amount: state.resources.gold.amount + goldEarned
         }
       }
-    });
-  },
+    }));
+  }
+}
 
-  sellResourcePercentage: (resourceKey: string, percentage: number) => {
+function sellResourcePercentageFactory(get: () => GameStore) {
+  return function (resourceKey: string, percentage: number): void {
     const state = get();
     const resource = state.resources[resourceKey];
     if (!resource) return;
@@ -586,18 +573,21 @@ const useGameStore = create<GameStore>((set, get) => ({
     if (amount > 0) {
       get().sellResource(resourceKey, amount);
     }
-  },
+  }
+}
 
-  sellAllResource: (resourceKey: string) => {
+function sellAllResourceFactory(get: () => GameStore) {
+  return function (resourceKey: string): void {
     const state = get();
     const resource = state.resources[resourceKey];
     if (!resource || resource.amount === 0) return;
 
     get().sellResource(resourceKey, resource.amount);
-  },
+  }
+}
 
-  // Auto-sell functions
-  setAutoSellThreshold: (resourceKey: string, threshold: number) => {
+function setAutoSellThresholdFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, threshold: number): void {
     set((state) => ({
       resources: {
         ...state.resources,
@@ -607,9 +597,11 @@ const useGameStore = create<GameStore>((set, get) => ({
         }
       }
     }));
-  },
+  }
+}
 
-  setAutoSellEnabled: (resourceKey: string, enabled: boolean) => {
+function setAutoSellEnabledFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, enabled: boolean): void {
     set((state) => ({
       resources: {
         ...state.resources,
@@ -619,9 +611,11 @@ const useGameStore = create<GameStore>((set, get) => ({
         }
       }
     }));
-  },
+  }
+}
 
-  checkAutoSell: (resourceKey: string) => {
+function checkAutoSellFactory(get: () => GameStore) {
+  return function (resourceKey: string): void {
     const state = get();
     const resource = state.resources[resourceKey];
     if (!resource || !resource.autoSellEnabled || resource.autoSellThreshold <= 0) return;
@@ -634,10 +628,11 @@ const useGameStore = create<GameStore>((set, get) => ({
       const amountToSell = resource.amount - resource.autoSellThreshold;
       get().sellResource(resourceKey, amountToSell);
     }
-  },
+  }
+}
 
-  // Salary system
-  payWorkerSalaries: (resourceKey: string) => {
+function payWorkerSalariesFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (resourceKey: string): void {
     const state = get();
     const resource = state.resources[resourceKey];
     if (!resource || resource.workers === 0 || resource.workerSalary <= 0) return;
@@ -649,7 +644,8 @@ const useGameStore = create<GameStore>((set, get) => ({
 
     if (gold.amount >= totalSalaryCost) {
       // Pay all workers
-      set({
+      set((state) => ({
+        ...state,
         resources: {
           ...state.resources,
           [resourceKey]: {
@@ -661,13 +657,14 @@ const useGameStore = create<GameStore>((set, get) => ({
             amount: gold.amount - totalSalaryCost
           }
         }
-      });
+      }));
     } else {
       // Pay as many workers as possible
       const affordableWorkers = Math.floor(gold.amount / resource.workerSalary);
       const actualCost = affordableWorkers * resource.workerSalary;
 
-      set({
+      set((state) => ({
+        ...state,
         resources: {
           ...state.resources,
           [resourceKey]: {
@@ -679,12 +676,13 @@ const useGameStore = create<GameStore>((set, get) => ({
             amount: gold.amount - actualCost
           }
         }
-      });
+      }));
     }
-  },
+  }
+}
 
-  // Equipment management
-  equipTool: (toolKey: string) => {
+function equipToolFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (toolKey: string): void {
     const state = get();
     const toolResource = state.resources[toolKey];
 
@@ -708,9 +706,11 @@ const useGameStore = create<GameStore>((set, get) => ({
         }
       }
     }));
-  },
+  }
+}
 
-  unequipTool: (toolKey: string) => {
+function unequipToolFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (toolKey: string): void {
     const state = get();
     const toolCategory = toolCategories[toolKey];
     if (!toolCategory) return;
@@ -731,17 +731,21 @@ const useGameStore = create<GameStore>((set, get) => ({
         }
       }
     }));
-  },
+  }
+}
 
-  getEquippedTool: (toolKey: string) => {
+function getEquippedToolFactory(get: () => GameState) {
+  return function (toolKey: string): string | undefined {
     const state = get();
     const toolCategory = toolCategories[toolKey];
     if (!toolCategory) return undefined;
 
     return state.characterEquipment[toolCategory];
-  },
+  }
+}
 
-  getToolBonus: (resourceKey: string) => {
+function getToolBonusFactory(get: () => GameState) {
+  return function (resourceKey: string): number {
     const state = get();
 
     // Check all tool categories for effective tools
@@ -756,10 +760,11 @@ const useGameStore = create<GameStore>((set, get) => ({
     }
 
     return 0;
-  },
+  }
+}
 
-
-  getWorkerToolBonus: (resourceKey: string) => {
+function getWorkerToolBonusFactory(get: () => GameState) {
+  return function (resourceKey: string): number {
     const state = get();
     const resource = state.resources[resourceKey];
 
@@ -777,9 +782,11 @@ const useGameStore = create<GameStore>((set, get) => ({
     }
 
     return 0;
-  },
+  }
+}
 
-  getWorkersWithTools: (resourceKey: string) => {
+function getWorkersWithToolsFactory(get: () => GameState) {
+  return function (resourceKey: string): number {
     const state = get();
     const resource = state.resources[resourceKey];
 
@@ -798,10 +805,11 @@ const useGameStore = create<GameStore>((set, get) => ({
     }
 
     return 0;
-  },
+  }
+}
 
-  // Game loop
-  startGameLoop: () => {
+function startGameLoopFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameStore) {
+  return function (): void {
     const state = get();
     if (state.gameLoopInterval) return; // Already running
 
@@ -809,18 +817,22 @@ const useGameStore = create<GameStore>((set, get) => ({
       get().gameTick();
     }, 20); // 20ms = 50 FPS
 
-    set({ gameLoopInterval: interval });
-  },
+    set((state) => ({ ...state, gameLoopInterval: interval }));
+  }
+}
 
-  stopGameLoop: () => {
+function stopGameLoopFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameStore) {
+  return function (): void {
     const state = get();
     if (state.gameLoopInterval) {
       clearInterval(state.gameLoopInterval);
-      set({ gameLoopInterval: undefined });
+      set((state) => ({ ...state, gameLoopInterval: undefined }));
     }
-  },
+  }
+}
 
-  gameTick: () => {
+function gameTickFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameStore) {
+  return function (): void {
     const state = get();
     const updates: Partial<Record<string, Partial<ResourceState>>> = {};
     const autoSellUpdates: Partial<Record<string, Partial<ResourceState>>> = {};
@@ -937,9 +949,78 @@ const useGameStore = create<GameStore>((set, get) => ({
         tickCount: (state.tickCount || 0) + 1
       }));
     } else {
-      set({ tickCount: (state.tickCount || 0) + 1 });
+      set((state) => ({ ...state, tickCount: (state.tickCount || 0) + 1 }));
     }
   }
+}
+
+const useGameStore = create<GameStore>((set, get) => ({
+  // Initial state
+  resources: {},
+  gameLoopInterval: undefined,
+  tickCount: 0,
+  characterEquipment: {},
+  homes: [],
+
+  // Resource management
+  getResource: getResourceFactory(get),
+  setResourceAmount: setResourceAmountFactory(set),
+  addResourceAmount: addResourceAmountFactory(set),
+  setResourcePerSecond: setResourcePerSecondFactory(set),
+  setResourceWorkers: setResourceWorkersFactory(set),
+  setResourcePaidWorkers: setResourcePaidWorkersFactory(set),
+  setResourceWorkerCost: setResourceWorkerCostFactory(set),
+  setResourceWorkerSalary: setResourceWorkerSalaryFactory(set),
+  setResourceIsGathering: setResourceIsGatheringFactory(set),
+  setResourceGatherProgress: setResourceGatherProgressFactory(set),
+  setResourceWorkerProgress: setResourceWorkerProgressFactory(set),
+
+  // Home management
+  buildHome: buildHomeFactory(set, get),
+  upgradeHome: upgradeHomeFactory(set, get),
+  getHomeCost: getHomeCostFactory(get),
+  getHomeUpgradeCost: getHomeUpgradeCostFactory(get),
+  canBuildHome: canBuildHomeFactory(get),
+  canUpgradeHome: canUpgradeHomeFactory(get),
+
+  // Bootstrap
+  bootstrap: bootstrapFactory(set, get),
+
+  // Actions
+  hireWorker: hireWorkerFactory(set, get),
+
+  startGathering: startGatheringFactory(set, get),
+  resetGatherProgress: resetGatherProgressFactory(set),
+  resetWorkerProgress: resetWorkerProgressFactory(set),
+
+  // Initialize resource
+  initializeResource: initializeResourceFactory(set, get),
+
+  // Selling functions
+  sellResource: sellResourceFactory(set, get),
+  sellResourcePercentage: sellResourcePercentageFactory(get),
+  sellAllResource: sellAllResourceFactory(get),
+
+  // Auto-sell functions
+  setAutoSellThreshold: setAutoSellThresholdFactory(set),
+  setAutoSellEnabled: setAutoSellEnabledFactory(set),
+  checkAutoSell: checkAutoSellFactory(get),
+
+  // Salary system
+  payWorkerSalaries: payWorkerSalariesFactory(set, get),
+
+  // Equipment management
+  equipTool: equipToolFactory(set, get),
+  unequipTool: unequipToolFactory(set, get),
+  getEquippedTool: getEquippedToolFactory(get),
+  getToolBonus: getToolBonusFactory(get),
+  getWorkerToolBonus: getWorkerToolBonusFactory(get),
+  getWorkersWithTools: getWorkersWithToolsFactory(get),
+
+  // Game loop
+  startGameLoop: startGameLoopFactory(set, get),
+  stopGameLoop: stopGameLoopFactory(set, get),
+  gameTick: gameTickFactory(set, get)
 }));
 
 // Helper function to get sell prices
