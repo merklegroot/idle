@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { GameStore } from './gameStoreModels';
 import { getResourceFactory, setResourceAmountFactory, addResourceAmountFactory, setResourcePerSecondFactory, setResourceWorkersFactory, setResourcePaidWorkersFactory, setResourceWorkerCostFactory, setResourceWorkerSalaryFactory, setResourceIsGatheringFactory, setResourceGatherProgressFactory, setResourceWorkerProgressFactory } from './gameStoreFactory';
 import { getHomeCostFactory, getHomeUpgradeCostFactory, canBuildHomeFactory, canUpgradeHomeFactory, buildHomeFactory, upgradeHomeFactory } from './gameStoreFactory';
-import { bootstrapFactory, hireWorkerFactory, startGatheringFactory, resetGatherProgressFactory, resetWorkerProgressFactory, initializeResourceFactory, sellResourceFactory, sellResourcePercentageFactory, sellAllResourceFactory, setAutoSellThresholdFactory, setAutoSellEnabledFactory, checkAutoSellFactory, payWorkerSalariesFactory, equipToolFactory, unequipToolFactory, getEquippedToolFactory, getToolBonusFactory, getWorkerToolBonusFactory, getWorkersWithToolsFactory, startGameLoopFactory, stopGameLoopFactory, gameTickFactory } from './gameStoreFactory';
+import { bootstrapFactory, hireWorkerFactory, startGatheringFactory, resetGatherProgressFactory, resetWorkerProgressFactory, initializeResourceFactory, sellResourceFactory, sellResourcePercentageFactory, sellAllResourceFactory, setAutoSellThresholdFactory, setAutoSellEnabledFactory, checkAutoSellFactory, payWorkerSalariesFactory, equipToolFactory, unequipToolFactory, getEquippedToolFactory, getToolBonusFactory, getWorkerToolBonusFactory, getWorkersWithToolsFactory, startGameLoopFactory, stopGameLoopFactory } from './gameStoreFactory';
+import { gameTickFactory } from './gameTickFactory';
 
 const useGameStore = create<GameStore>((set, get) => ({
   // Initial state
