@@ -45,11 +45,11 @@ export default function Town() {
         
         <div className="mb-6">
           <div className="bg-gray-800 rounded-lg p-6 mb-6">
-            <h2 className="text-2xl font-semibold mb-4">Build New Home</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-white">Build New Home</h2>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-gray-300 mb-2">
-                  <p className="mb-1">Cost:</p>
+                <div className="text-white mb-2">
+                  <p className="mb-1 font-semibold">Cost:</p>
                   <div className="flex gap-4 text-sm">
                     <span className={`${woodAmount >= homeCost.wood ? 'text-green-400' : 'text-red-400'}`}>
                       {formattingUtil.formatNumber(homeCost.wood)} wood
@@ -62,7 +62,7 @@ export default function Town() {
                     </span>
                   </div>
                 </div>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-gray-300">
                   Each new home costs more than the last
                 </p>
               </div>
@@ -72,7 +72,7 @@ export default function Town() {
                 className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
                   canBuildHome()
                     ? 'bg-green-600 hover:bg-green-700 text-white'
-                    : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                    : 'bg-gray-600 text-gray-200 cursor-not-allowed'
                 }`}
               >
                 Build Home
@@ -85,8 +85,8 @@ export default function Town() {
           <h2 className="text-2xl font-semibold mb-4">Your Homes ({homes.length})</h2>
           {homes.length === 0 ? (
             <div className="bg-gray-800 rounded-lg p-8 text-center">
-              <p className="text-gray-400 text-lg">No homes built yet</p>
-              <p className="text-gray-500 mt-2">Build your first home to start your town!</p>
+              <p className="text-white text-lg">No homes built yet</p>
+              <p className="text-gray-300 mt-2">Build your first home to start your town!</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -133,7 +133,7 @@ function HomeCard({ home, onUpgrade, upgradeCost, canUpgrade, woodAmount, stoneA
   return (
     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-xl font-semibold">Home #{home.id.split('-')[1]}</h3>
+        <h3 className="text-xl font-semibold text-white">Home #{home.id.split('-')[1]}</h3>
         <span className="bg-blue-600 text-white px-2 py-1 rounded text-sm">
           Level {home.level}
         </span>
@@ -141,17 +141,17 @@ function HomeCard({ home, onUpgrade, upgradeCost, canUpgrade, woodAmount, stoneA
       
       <div className="space-y-3 mb-4">
         <div className="flex justify-between">
-          <span className="text-gray-400">Population:</span>
-          <span className="font-semibold">{home.population}</span>
+          <span className="text-gray-300">Population:</span>
+          <span className="font-semibold text-white">{home.population}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-400">Happiness:</span>
-          <span className="font-semibold">{home.happiness}%</span>
+          <span className="text-gray-300">Happiness:</span>
+          <span className="font-semibold text-white">{home.happiness}%</span>
         </div>
       </div>
       
       <div className="mb-3">
-        <p className="text-sm text-gray-400 mb-2">Upgrade Cost:</p>
+        <p className="text-sm text-gray-300 mb-2 font-medium">Upgrade Cost:</p>
         <div className="flex gap-2 text-xs">
           <span className={`${woodAmount >= upgradeCost.wood ? 'text-green-400' : 'text-red-400'}`}>
             {formattingUtil.formatNumber(upgradeCost.wood)} wood
@@ -171,7 +171,7 @@ function HomeCard({ home, onUpgrade, upgradeCost, canUpgrade, woodAmount, stoneA
         className={`w-full py-2 px-4 rounded-lg font-semibold transition-colors ${
           canUpgrade
             ? 'bg-blue-600 hover:bg-blue-700 text-white'
-            : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+            : 'bg-gray-600 text-gray-200 cursor-not-allowed'
         }`}
       >
         Upgrade
