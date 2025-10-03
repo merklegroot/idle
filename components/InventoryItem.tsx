@@ -1,3 +1,5 @@
+import { formattingUtil } from '@/utils/formattingUtil';
+
 interface InventoryItemProps {
   resourceKey: string;
   name: string;
@@ -17,7 +19,7 @@ export default function InventoryItem({ resourceKey, name, icon, amount, onClick
       <div className="text-2xl">{icon}</div>
       <div className="flex-1">
         <div className="font-semibold text-gray-800">{name}</div>
-        <div className="text-sm text-gray-500">{amount.toLocaleString()}</div>
+        <div className="text-sm text-gray-500">{formattingUtil.formatNumber(amount)}</div>
       </div>
     </div>
   );

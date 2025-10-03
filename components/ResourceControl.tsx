@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import useGameStore from '../stores/gameStore';
 import { GatherableResourceDef } from '../app/models/ResourceDef';
+import { formattingUtil } from '@/utils/formattingUtil';
 
 export default function ResourceControl({resourceDef}: {resourceDef: GatherableResourceDef}) {
   const {
@@ -49,16 +50,6 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
       return materialResource && materialResource.amount >= material.amount;
     }) : true;
 
-
-  const formatNumber = (num: number) => {
-    if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M';
-    } else if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'K';
-    }
-    return Math.floor(num).toString();
-  };
-
   return (
       <div 
         className={`bg-white rounded-lg shadow-md p-6 border border-gray-200 transition-all ${
@@ -81,7 +72,7 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
         <div className="space-y-4">
           <div className="text-center">
             <div className="text-3xl font-bold text-green-600 mb-1">
-              {formatNumber(amount)}
+              {formattingUtil.formatNumber(amount)}
             </div>
             <div className="text-sm text-gray-500">
               +{perSecond}/sec
@@ -191,7 +182,7 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
-            Hire Worker ({formatNumber(workerCost)} 🪙)
+            Hire Worker ({formattingUtil.formatNumber(workerCost)} 🪙)
           </button>
         </div>
       </div>
