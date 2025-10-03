@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import useGameStore from '../stores/gameStore';
-import { WoodDef, BerryDef, StoneDef } from '../app/models/ResourceDef';
+import { WoodDef, BerryDef, StoneDef, HatchetDef } from '../app/models/ResourceDef';
 
 interface ItemDetailsProps {
   resourceKey: string;
@@ -21,6 +21,7 @@ export default function ItemDetails({ resourceKey, onClose }: ItemDetailsProps) 
     wood: { name: WoodDef.name, icon: WoodDef.icon, sellPrice: WoodDef.sellPrice },
     berries: { name: BerryDef.name, icon: BerryDef.icon, sellPrice: BerryDef.sellPrice },
     stone: { name: StoneDef.name, icon: StoneDef.icon, sellPrice: StoneDef.sellPrice },
+    hatchet: { name: HatchetDef.name, icon: HatchetDef.icon, sellPrice: HatchetDef.sellPrice },
     gold: { name: 'Gold', icon: '🪙' }
   };
 

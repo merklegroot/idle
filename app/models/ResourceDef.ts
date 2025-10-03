@@ -5,6 +5,11 @@ export interface ResourceDef {
     sellPrice?: number;
 };
 
+export interface MaterialRequirement {
+    resourceKey: string;
+    amount: number;
+}
+
 export interface GatherableResourceDef extends ResourceDef {
     perSecond: number;
     workerCost: number;
@@ -12,6 +17,7 @@ export interface GatherableResourceDef extends ResourceDef {
     workerPerSecond: number;
     gatherPerSecond: number;
     gatherInterval: number;
+    materials?: MaterialRequirement[];
 };
 
 export const WoodDef: GatherableResourceDef = {
@@ -63,7 +69,11 @@ export const HatchetDef: GatherableResourceDef = {
     workerPerSecond: 1, // Same production rate
     gatherPerSecond: 0.8, // Slowest manual gathering (0.8% per 20ms = 2.5 seconds)
     gatherInterval: 20,
-    sellPrice: 75 // Most valuable to sell
+    sellPrice: 75, // Most valuable to sell
+    materials: [
+        { resourceKey: 'wood', amount: 2 },
+        { resourceKey: 'stone', amount: 1 }
+    ]
 };
 
 export const GoldDef: ResourceDef = {

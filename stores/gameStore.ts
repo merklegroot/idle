@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { WoodDef, BerryDef, StoneDef } from '../app/models/ResourceDef';
+import { WoodDef, BerryDef, StoneDef, HatchetDef } from '../app/models/ResourceDef';
 
 export interface ResourceState {
   amount: number;
@@ -216,7 +216,8 @@ const useGameStore = create<GameStore>((set, get) => ({
     const resourceDefs: Record<string, { workerSalary: number }> = {
       wood: { workerSalary: WoodDef.workerSalary },
       berries: { workerSalary: BerryDef.workerSalary },
-      stone: { workerSalary: StoneDef.workerSalary }
+      stone: { workerSalary: StoneDef.workerSalary },
+      hatchet: { workerSalary: HatchetDef.workerSalary }
     };
     const resourceDef = resourceDefs[resourceKey];
     const workerSalary = resourceDef?.workerSalary || 10;
@@ -243,6 +244,11 @@ const useGameStore = create<GameStore>((set, get) => ({
     const state = get();
     const resource = state.resources[resourceKey];
     if (!resource) return;
+
+    // Check if materials are available before starting gathering
+    if (!checkMaterialsAvailable(resourceKey, state)) {
+      return; // Don't start gathering if materials aren't available
+    }
 
     // Only start gathering if not already gathering
     if (!resource.isGathering) {
@@ -293,7 +299,8 @@ const useGameStore = create<GameStore>((set, get) => ({
     const resourceDefs: Record<string, { workerCost: number; workerSalary: number }> = {
       wood: { workerCost: WoodDef.workerCost, workerSalary: WoodDef.workerSalary },
       berries: { workerCost: BerryDef.workerCost, workerSalary: BerryDef.workerSalary },
-      stone: { workerCost: StoneDef.workerCost, workerSalary: StoneDef.workerSalary }
+      stone: { workerCost: StoneDef.workerCost, workerSalary: StoneDef.workerSalary },
+      hatchet: { workerCost: HatchetDef.workerCost, workerSalary: HatchetDef.workerSalary }
     };
     const resourceDef = resourceDefs[resourceKey];
     const defaultWorkerCost = resourceDef?.workerCost || 100;
@@ -498,7 +505,10 @@ const useGameStore = create<GameStore>((set, get) => ({
       if (resource.isGathering) {
         const newProgress = resource.gatherProgress + 2; // 2% per 20ms = 100% per 1000ms
         if (newProgress >= 100) {
-          resourceUpdates.amount = resource.amount + 1;
+          // Check if materials are available before producing
+          if (checkAndConsumeMaterials(resourceKey, state)) {
+            resourceUpdates.amount = resource.amount + 1;
+          }
           resourceUpdates.isGathering = false;
           resourceUpdates.gatherProgress = 0;
         } else {
@@ -511,7 +521,16 @@ const useGameStore = create<GameStore>((set, get) => ({
         const progressPerWorker = 2; // 2% per 20ms per worker
         const newWorkerProgress = resource.workerProgress + (resource.paidWorkers * progressPerWorker);
         if (newWorkerProgress >= 100) {
-          resourceUpdates.amount = resource.amount + resource.paidWorkers;
+          // Check if materials are available for each worker
+          let workersThatCanProduce = 0;
+          for (let i = 0; i < resource.paidWorkers; i++) {
+            if (checkAndConsumeMaterials(resourceKey, state)) {
+              workersThatCanProduce++;
+            }
+          }
+          if (workersThatCanProduce > 0) {
+            resourceUpdates.amount = resource.amount + workersThatCanProduce;
+          }
           resourceUpdates.workerProgress = 0;
         } else {
           resourceUpdates.workerProgress = newWorkerProgress;
@@ -553,9 +572,64 @@ const getSellPrice = (resourceKey: string): number => {
   const prices: Record<string, number> = {
     wood: WoodDef.sellPrice || 20,    // Wood sells for 20 gold each
     berries: BerryDef.sellPrice || 30,  // Berries sell for 30 gold each
-    stone: StoneDef.sellPrice || 50   // Stone sells for 50 gold each
+    stone: StoneDef.sellPrice || 50,   // Stone sells for 50 gold each
+    hatchet: HatchetDef.sellPrice || 75 // Hatchet sells for 75 gold each
   };
   return prices[resourceKey] || 1;
+};
+
+// Helper function to check if materials are available (without consuming)
+const checkMaterialsAvailable = (resourceKey: string, state: GameState): boolean => {
+  const resourceDefs: Record<string, { materials?: Array<{ resourceKey: string; amount: number }> }> = {
+    wood: WoodDef,
+    berries: BerryDef,
+    stone: StoneDef,
+    hatchet: HatchetDef
+  };
+  
+  const resourceDef = resourceDefs[resourceKey];
+  if (!resourceDef?.materials) return true; // No materials required
+  
+  // Check if all required materials are available
+  for (const material of resourceDef.materials) {
+    const materialResource = state.resources[material.resourceKey];
+    if (!materialResource || materialResource.amount < material.amount) {
+      return false; // Not enough materials
+    }
+  }
+  
+  return true; // Materials available
+};
+
+// Helper function to check and consume materials
+const checkAndConsumeMaterials = (resourceKey: string, state: GameState): boolean => {
+  const resourceDefs: Record<string, { materials?: Array<{ resourceKey: string; amount: number }> }> = {
+    wood: WoodDef,
+    berries: BerryDef,
+    stone: StoneDef,
+    hatchet: HatchetDef
+  };
+  
+  const resourceDef = resourceDefs[resourceKey];
+  if (!resourceDef?.materials) return true; // No materials required
+  
+  // Check if all required materials are available
+  for (const material of resourceDef.materials) {
+    const materialResource = state.resources[material.resourceKey];
+    if (!materialResource || materialResource.amount < material.amount) {
+      return false; // Not enough materials
+    }
+  }
+  
+  // Consume materials
+  for (const material of resourceDef.materials) {
+    const materialResource = state.resources[material.resourceKey];
+    if (materialResource) {
+      materialResource.amount -= material.amount;
+    }
+  }
+  
+  return true; // Materials consumed successfully
 };
 
 export default useGameStore;

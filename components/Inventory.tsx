@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import useGameStore from '../stores/gameStore';
-import { WoodDef, BerryDef, StoneDef, GoldDef, ResourceDef } from '../app/models/ResourceDef';
+import { WoodDef, BerryDef, StoneDef, HatchetDef, GoldDef, ResourceDef } from '../app/models/ResourceDef';
 import InventoryItem from './InventoryItem';
 import ItemDetails from './ItemDetails';
 
@@ -28,6 +28,7 @@ export default function Inventory() {
     toResourceInventoryItemDef(WoodDef),
     toResourceInventoryItemDef(BerryDef),
     toResourceInventoryItemDef(StoneDef),
+    toResourceInventoryItemDef(HatchetDef),
     toResourceInventoryItemDef(GoldDef)
   ];
 

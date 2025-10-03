@@ -41,6 +41,13 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
   } = resource || {};
 
   const goldAmount = gold?.amount || 0;
+  
+  // Check if materials are available for gathering
+  const hasMaterials = resourceDef.materials ? 
+    resourceDef.materials.every(material => {
+      const materialResource = getResource(material.resourceKey);
+      return materialResource && materialResource.amount >= material.amount;
+    }) : true;
 
 
   const formatNumber = (num: number) => {
@@ -54,10 +61,17 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
 
   return (
       <div 
-        className={`bg-white rounded-lg shadow-md p-6 border border-gray-200 cursor-pointer transition-all hover:shadow-lg ${
+        className={`bg-white rounded-lg shadow-md p-6 border border-gray-200 transition-all ${
           isGathering ? 'ring-2 ring-green-400' : ''
+        } ${
+          hasMaterials ? 'cursor-pointer hover:shadow-lg' : 'cursor-not-allowed opacity-75'
         }`}
-        onClick={() => startGathering(resourceDef.resourceKey)}
+        onClick={() => {
+          if (hasMaterials) {
+            startGathering(resourceDef.resourceKey);
+          }
+          // If no materials, do nothing (could add a toast notification here)
+        }}
       >
         <div className="flex items-center gap-3 mb-4">
           <div className="text-2xl">{resourceDef.icon}</div>
@@ -73,9 +87,38 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
               +{perSecond}/sec
             </div>
             
+            {/* Material Requirements */}
+            {resourceDef.materials && resourceDef.materials.length > 0 && (
+              <div className="mt-2 p-2 bg-yellow-50 rounded border border-yellow-200">
+                <div className="text-xs text-yellow-800 font-semibold mb-1">Materials Required:</div>
+                <div className="flex flex-wrap gap-1">
+                  {resourceDef.materials.map((material, index) => {
+                    const materialResource = getResource(material.resourceKey);
+                    const materialAmount = materialResource?.amount || 0;
+                    const hasEnough = materialAmount >= material.amount;
+                    
+                    return (
+                      <span
+                        key={index}
+                        className={`text-xs px-2 py-1 rounded ${
+                          hasEnough 
+                            ? 'bg-green-100 text-green-800 border border-green-300' 
+                            : 'bg-red-100 text-red-800 border border-red-300'
+                        }`}
+                      >
+                        {material.amount} {material.resourceKey} {hasEnough ? '✓' : '✗'}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            
             <div className="mt-3">
             <div className="text-xs text-gray-600 mb-1">
-              {isGathering ? 'Gathering...' : `Click to gather ${resourceDef.name.toLowerCase()}`}
+              {isGathering ? 'Gathering...' : 
+               hasMaterials ? `Click to gather ${resourceDef.name.toLowerCase()}` : 
+               `Need materials to gather ${resourceDef.name.toLowerCase()}`}
             </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
