@@ -107,6 +107,38 @@ function getResourceFactory(get: () => GameState) {
   }
 }
 
+function setResourceAmountFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, amount: number): void {
+    set((state) => ({
+      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], amount } }
+    }));
+  }
+}
+
+function addResourceAmountFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, amount: number): void {
+    set((state) => ({
+      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], amount: state.resources[resourceKey].amount + amount } }
+    }));
+  }
+}
+
+function setResourcePerSecondFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, perSecond: number): void {
+    set((state) => ({
+      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], perSecond } }
+    }));
+  }
+}
+
+function setResourceWorkersFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, workers: number): void {
+    set((state) => ({
+      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], workers } }
+    }));
+  }
+}
+
 const useGameStore = create<GameStore>((set, get) => ({
   // Initial state
   resources: {},
@@ -118,58 +150,13 @@ const useGameStore = create<GameStore>((set, get) => ({
   // Resource management
   getResource: getResourceFactory(get),
 
-  setResourceAmount: (resourceKey: string, amount: number) => {
-    set((state) => ({
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...state.resources[resourceKey],
-          amount
-        }
-      }
-    }));
-  },
+  setResourceAmount: setResourceAmountFactory(set),
 
-  addResourceAmount: (resourceKey: string, amount: number) => {
-    set((state) => {
-      const currentResource = state.resources[resourceKey];
-      if (!currentResource) return state;
-      
-      return {
-        resources: {
-          ...state.resources,
-          [resourceKey]: {
-            ...currentResource,
-            amount: currentResource.amount + amount
-          }
-        }
-      };
-    });
-  },
+  addResourceAmount: addResourceAmountFactory(set),
 
-  setResourcePerSecond: (resourceKey: string, perSecond: number) => {
-    set((state) => ({
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...state.resources[resourceKey],
-          perSecond
-        }
-      }
-    }));
-  },
+  setResourcePerSecond: setResourcePerSecondFactory(set),
 
-  setResourceWorkers: (resourceKey: string, workers: number) => {
-    set((state) => ({
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...state.resources[resourceKey],
-          workers
-        }
-      }
-    }));
-  },
+  setResourceWorkers: setResourceWorkersFactory(set),
 
   setResourcePaidWorkers: (resourceKey: string, paidWorkers: number) => {
     set((state) => ({
@@ -239,7 +226,7 @@ const useGameStore = create<GameStore>((set, get) => ({
           ...state.resources[resourceKey],
           workerProgress
         }
-      }setter
+      }
     }));
   },
 
