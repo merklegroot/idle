@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, CharacterEquipment, toolEffectiveness, toolBonuses } from '../app/models/ResourceDef';
+import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, CharacterEquipment, toolEffectiveness, toolBonuses, toolCategories } from '../app/models/ResourceDef';
 
 export interface ResourceState {
   amount: number;
@@ -60,8 +60,8 @@ export interface GameActions {
   
   // Equipment management
   equipTool: (toolKey: string) => void;
-  unequipTool: () => void;
-  getEquippedTool: () => string | undefined;
+  unequipTool: (toolKey: string) => void;
+  getEquippedTool: (toolKey: string) => string | undefined;
   getToolBonus: (resourceKey: string) => number;
   
   // Game loop
@@ -491,10 +491,14 @@ const useGameStore = create<GameStore>((set, get) => ({
     // Check if player has the tool
     if (!toolResource || toolResource.amount <= 0) return;
     
+    // Get the tool category
+    const toolCategory = toolCategories[toolKey];
+    if (!toolCategory) return;
+    
     set((state) => ({
       characterEquipment: {
         ...state.characterEquipment,
-        tool: toolKey
+        [toolCategory]: toolKey
       },
       resources: {
         ...state.resources,
@@ -506,44 +510,52 @@ const useGameStore = create<GameStore>((set, get) => ({
     }));
   },
 
-  unequipTool: () => {
+  unequipTool: (toolKey: string) => {
     const state = get();
-    const equippedTool = state.characterEquipment.tool;
+    const toolCategory = toolCategories[toolKey];
+    if (!toolCategory) return;
     
-    if (!equippedTool) return;
+    const equippedTool = state.characterEquipment[toolCategory];
+    if (!equippedTool || equippedTool !== toolKey) return;
     
     set((state) => ({
       characterEquipment: {
         ...state.characterEquipment,
-        tool: undefined
+        [toolCategory]: undefined
       },
       resources: {
         ...state.resources,
-        [equippedTool]: {
-          ...state.resources[equippedTool],
-          amount: (state.resources[equippedTool]?.amount || 0) + 1 // Return tool to inventory
+        [toolKey]: {
+          ...state.resources[toolKey],
+          amount: (state.resources[toolKey]?.amount || 0) + 1 // Return tool to inventory
         }
       }
     }));
   },
 
-  getEquippedTool: () => {
+  getEquippedTool: (toolKey: string) => {
     const state = get();
-    return state.characterEquipment.tool;
+    const toolCategory = toolCategories[toolKey];
+    if (!toolCategory) return undefined;
+    
+    return state.characterEquipment[toolCategory];
   },
 
   getToolBonus: (resourceKey: string) => {
     const state = get();
-    const equippedTool = state.characterEquipment.tool;
     
-    if (!equippedTool) return 0;
+    // Check all tool categories for effective tools
+    for (const [toolKey, bonus] of Object.entries(toolBonuses)) {
+      const effectiveResources = toolEffectiveness[toolKey] || [];
+      if (effectiveResources.includes(resourceKey)) {
+        const toolCategory = toolCategories[toolKey];
+        if (toolCategory && state.characterEquipment[toolCategory] === toolKey) {
+          return bonus;
+        }
+      }
+    }
     
-    // Check if the equipped tool helps with this resource
-    const effectiveResources = toolEffectiveness[equippedTool] || [];
-    if (!effectiveResources.includes(resourceKey)) return 0;
-    
-    // Return the bonus percentage
-    return toolBonuses[equippedTool] || 0;
+    return 0;
   },
 
   // Game loop

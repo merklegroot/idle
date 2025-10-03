@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import useGameStore from '../stores/gameStore';
-import { GatherableResourceDef, WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef } from '../app/models/ResourceDef';
+import { GatherableResourceDef, WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, toolEffectiveness, toolCategories } from '../app/models/ResourceDef';
 import { formattingUtil } from '@/utils/formattingUtil';
 
 export default function ResourceControl({resourceDef}: {resourceDef: GatherableResourceDef}) {
@@ -12,7 +12,8 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
     startGathering,
     initializeResource,
     startGameLoop,
-    getToolBonus
+    getToolBonus,
+    getEquippedTool
   } = useGameStore();
 
   // Initialize resource on mount
@@ -47,6 +48,24 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
   // Get tool bonus for this resource
   const toolBonus = getToolBonus(resourceDef.resourceKey);
   
+  // Get equipped tool for this resource (check all tools that are effective for this resource)
+  const getEffectiveEquippedTool = () => {
+    for (const [toolKey, effectiveResources] of Object.entries(toolEffectiveness)) {
+      if (effectiveResources.includes(resourceDef.resourceKey)) {
+        const toolCategory = toolCategories[toolKey];
+        if (toolCategory) {
+          const equippedTool = getEquippedTool(toolKey);
+          if (equippedTool === toolKey) {
+            return toolKey;
+          }
+        }
+      }
+    }
+    return null;
+  };
+  
+  const equippedTool = getEffectiveEquippedTool();
+  
   // Resource icon mapping
   const resourceIcons: Record<string, string> = {
     wood: WoodDef.icon,
@@ -54,6 +73,20 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
     stone: StoneDef.icon,
     hatchet: HatchetDef.icon,
     pickaxe: PickaxeDef.icon
+  };
+  
+  // Tool icon mapping
+  const toolIcons: Record<string, string> = {
+    hatchet: HatchetDef.icon,
+    pickaxe: PickaxeDef.icon
+  };
+  
+  // Get the tool icon to display (equipped tool or hand)
+  const getToolIcon = () => {
+    if (equippedTool && toolIcons[equippedTool]) {
+      return toolIcons[equippedTool];
+    }
+    return '✋'; // Hand icon when no tool is equipped or tool is not effective
   };
   
   // Check if materials are available for gathering
@@ -79,7 +112,16 @@ export default function ResourceControl({resourceDef}: {resourceDef: GatherableR
       >
         <div className="flex items-center gap-3 mb-4">
           <div className="text-2xl">{resourceDef.icon}</div>
-          <h2 className="text-2xl font-bold text-gray-800">{resourceDef.name}</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-gray-800">{resourceDef.name}</h2>
+            <div className="text-lg text-gray-600" title={
+              equippedTool 
+                ? `Using ${equippedTool} (effective for ${resourceDef.name})` 
+                : 'Using hands'
+            }>
+              {getToolIcon()}
+            </div>
+          </div>
         </div>
         
         <div className="space-y-4">

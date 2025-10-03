@@ -99,9 +99,19 @@ export const GoldDef: ResourceDef = {
     icon: '🪙',
 };
 
-// Simple equipment interface for existing items
+// Tool categories
+export type ToolCategory = 'axe' | 'pickaxe';
+
+// Tool category mapping
+export const toolCategories: Record<string, ToolCategory> = {
+    hatchet: 'axe',
+    pickaxe: 'pickaxe'
+};
+
+// Equipment interface supporting multiple tool categories
 export interface CharacterEquipment {
-    tool?: string; // resourceKey of equipped tool (hatchet, pickaxe)
+    axe?: string; // resourceKey of equipped axe tool (hatchet)
+    pickaxe?: string; // resourceKey of equipped pickaxe tool (pickaxe)
 }
 
 // Tool effectiveness mapping
