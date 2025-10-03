@@ -53,6 +53,19 @@ export const StoneDef: GatherableResourceDef = {
     sellPrice: 50 // Most valuable to sell
 };
 
+export const HatchetDef: GatherableResourceDef = {
+    name: 'Hatchet',
+    resourceKey: 'hatchet',
+    icon: '🪓',
+    perSecond: 1,
+    workerCost: 300, // More expensive than stone
+    workerSalary: 20, // Higher salary cost
+    workerPerSecond: 1, // Same production rate
+    gatherPerSecond: 0.8, // Slowest manual gathering (0.8% per 20ms = 2.5 seconds)
+    gatherInterval: 20,
+    sellPrice: 75 // Most valuable to sell
+};
+
 export const GoldDef: ResourceDef = {
     name: 'Gold',
     resourceKey: 'gold',

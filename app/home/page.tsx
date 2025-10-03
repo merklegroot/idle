@@ -1,7 +1,7 @@
 'use client';
 
 import { CheatControl } from '@/components/CheatControl';
-import { GatherControl } from '@/components/GatherControl';
+import { GatherControl } from '@/components/Gather/GatherControl';
 import Inventory from '../../components/Inventory';
 
 export default function Home() {
