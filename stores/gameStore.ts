@@ -101,6 +101,12 @@ export interface GameActions {
 
 type GameStore = GameState & GameActions;
 
+function getResourceFactory(get: () => GameState) {
+  return (resourceKey: string) => {
+    return get().resources[resourceKey];
+  }
+}
+
 const useGameStore = create<GameStore>((set, get) => ({
   // Initial state
   resources: {},
@@ -110,10 +116,7 @@ const useGameStore = create<GameStore>((set, get) => ({
   homes: [],
 
   // Resource management
-  getResource: (resourceKey: string) => {
-    const state = get();
-    return state.resources[resourceKey];
-  },
+  getResource: getResourceFactory(get),
 
   setResourceAmount: (resourceKey: string, amount: number) => {
     set((state) => ({
@@ -236,7 +239,7 @@ const useGameStore = create<GameStore>((set, get) => ({
           ...state.resources[resourceKey],
           workerProgress
         }
-      }
+      }setter
     }));
   },
 
