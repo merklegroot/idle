@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { 
   // Town Buildings
   TownHallDef, MarketDef, BankDef, ChurchDef, SchoolDef, HospitalDef, 
@@ -24,6 +25,8 @@ import {
 } from '@/app/models/ResourceDef';
 
 export default function Icons() {
+  const [isEmojiSectionOpen, setIsEmojiSectionOpen] = useState(true);
+
   const townBuildings = [
     TownHallDef, MarketDef, BankDef, ChurchDef, SchoolDef, HospitalDef, 
     LibraryDef, BarracksDef, TavernDef, WorkshopDef, MillDef, TowerDef, CastleDef
@@ -69,15 +72,40 @@ export default function Icons() {
   return (
     <div className="min-h-screen bg-gray-900 p-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-8">Icon Showcase</h1>
-        <p className="text-gray-300 mb-8">Browse all available icons for your idle game</p>
+        <h1 className="text-4xl font-bold text-white mb-8">Asset Showcase</h1>
+        <p className="text-gray-300 mb-8">Browse all available assets for your idle game</p>
         
-        <IconGrid title="🏛️ Town Buildings" icons={townBuildings} />
-        <IconGrid title="🌍 Land & Terrain" icons={landTerrain} />
-        <IconGrid title="🛣️ Paths & Roads" icons={pathsRoads} />
-        <IconGrid title="⛺ Camps & Settlements" icons={campsSettlements} />
-        <IconGrid title="🌾 Food & Agriculture" icons={foodAgriculture} />
-        <IconGrid title="🛠️ Existing Resources" icons={existingResources} />
+        {/* Emoji Section - Collapsible */}
+        <div className="mb-8">
+          <button
+            onClick={() => setIsEmojiSectionOpen(!isEmojiSectionOpen)}
+            className="flex items-center gap-3 text-2xl font-bold text-white mb-4 hover:text-gray-300 transition-colors"
+          >
+            <span className="text-3xl">😀</span>
+            <span>Emoji Assets</span>
+            <span className="text-xl">{isEmojiSectionOpen ? '▼' : '▶'}</span>
+          </button>
+          
+          {isEmojiSectionOpen && (
+            <div className="space-y-8">
+              <IconGrid title="🏛️ Town Buildings" icons={townBuildings} />
+              <IconGrid title="🌍 Land & Terrain" icons={landTerrain} />
+              <IconGrid title="🛣️ Paths & Roads" icons={pathsRoads} />
+              <IconGrid title="⛺ Camps & Settlements" icons={campsSettlements} />
+              <IconGrid title="🌾 Food & Agriculture" icons={foodAgriculture} />
+              <IconGrid title="🛠️ Existing Resources" icons={existingResources} />
+            </div>
+          )}
+        </div>
+
+        {/* Placeholder for future asset sections */}
+        <div className="mb-8">
+          <div className="bg-gray-800 rounded-lg p-8 text-center border border-gray-700">
+            <div className="text-4xl mb-4">🎨</div>
+            <h2 className="text-2xl font-bold text-white mb-2">Custom Assets</h2>
+            <p className="text-gray-300">Import your own assets here to compare with emoji options</p>
+          </div>
+        </div>
       </div>
     </div>
   );
