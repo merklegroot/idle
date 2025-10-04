@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import AssetShowcase from '@/components/AssetShowcase';
 import { 
   // Town Buildings
   TownHallDef, MarketDef, BankDef, ChurchDef, SchoolDef, HospitalDef, 
@@ -98,14 +99,8 @@ export default function Icons() {
           )}
         </div>
 
-        {/* Placeholder for future asset sections */}
-        <div className="mb-8">
-          <div className="bg-gray-800 rounded-lg p-8 text-center border border-gray-700">
-            <div className="text-4xl mb-4">🎨</div>
-            <h2 className="text-2xl font-bold text-white mb-2">Custom Assets</h2>
-            <p className="text-gray-300">Import your own assets here to compare with emoji options</p>
-          </div>
-        </div>
+        {/* Pixel Art Assets Section */}
+        <AssetShowcase />
       </div>
     </div>
   );

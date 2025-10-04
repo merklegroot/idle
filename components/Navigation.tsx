@@ -54,6 +54,7 @@ export default function Navigation() {
             <NavLink href="/town" label="Town" />
             <NavLink href="/numbers" label="Numbers" />
             <NavLink href="/icons" label="Icons" />
+            <NavLink href="/credits" label="Credits" />
           </ul>
         </div>
         <div className="flex items-center gap-4">
