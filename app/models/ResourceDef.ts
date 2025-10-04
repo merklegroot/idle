@@ -111,6 +111,269 @@ export const TownHallDef: ResourceDef = {
     icon: '🏛️',
 };
 
+// Town Building Icons
+export const MarketDef: ResourceDef = {
+    name: 'Market',
+    resourceKey: 'market',
+    icon: '🏪',
+};
+
+export const BankDef: ResourceDef = {
+    name: 'Bank',
+    resourceKey: 'bank',
+    icon: '🏦',
+};
+
+export const ChurchDef: ResourceDef = {
+    name: 'Church',
+    resourceKey: 'church',
+    icon: '⛪',
+};
+
+export const SchoolDef: ResourceDef = {
+    name: 'School',
+    resourceKey: 'school',
+    icon: '🏫',
+};
+
+export const HospitalDef: ResourceDef = {
+    name: 'Hospital',
+    resourceKey: 'hospital',
+    icon: '🏥',
+};
+
+export const LibraryDef: ResourceDef = {
+    name: 'Library',
+    resourceKey: 'library',
+    icon: '📚',
+};
+
+export const BarracksDef: ResourceDef = {
+    name: 'Barracks',
+    resourceKey: 'barracks',
+    icon: '🏰',
+};
+
+export const TavernDef: ResourceDef = {
+    name: 'Tavern',
+    resourceKey: 'tavern',
+    icon: '🍺',
+};
+
+export const WorkshopDef: ResourceDef = {
+    name: 'Workshop',
+    resourceKey: 'workshop',
+    icon: '🔨',
+};
+
+export const MillDef: ResourceDef = {
+    name: 'Mill',
+    resourceKey: 'mill',
+    icon: '🏭',
+};
+
+export const TowerDef: ResourceDef = {
+    name: 'Tower',
+    resourceKey: 'tower',
+    icon: '🗼',
+};
+
+export const CastleDef: ResourceDef = {
+    name: 'Castle',
+    resourceKey: 'castle',
+    icon: '🏰',
+};
+
+// Land and Terrain Icons
+export const PlainsDef: ResourceDef = {
+    name: 'Plains',
+    resourceKey: 'plains',
+    icon: '🌾',
+};
+
+export const ForestDef: ResourceDef = {
+    name: 'Forest',
+    resourceKey: 'forest',
+    icon: '🌲',
+};
+
+export const MountainDef: ResourceDef = {
+    name: 'Mountain',
+    resourceKey: 'mountain',
+    icon: '⛰️',
+};
+
+export const HillDef: ResourceDef = {
+    name: 'Hill',
+    resourceKey: 'hill',
+    icon: '🏔️',
+};
+
+export const DesertDef: ResourceDef = {
+    name: 'Desert',
+    resourceKey: 'desert',
+    icon: '🏜️',
+};
+
+export const SwampDef: ResourceDef = {
+    name: 'Swamp',
+    resourceKey: 'swamp',
+    icon: '🌿',
+};
+
+export const LakeDef: ResourceDef = {
+    name: 'Lake',
+    resourceKey: 'lake',
+    icon: '🏞️',
+};
+
+export const RiverDef: ResourceDef = {
+    name: 'River',
+    resourceKey: 'river',
+    icon: '🌊',
+};
+
+export const CoastDef: ResourceDef = {
+    name: 'Coast',
+    resourceKey: 'coast',
+    icon: '🏖️',
+};
+
+export const CaveDef: ResourceDef = {
+    name: 'Cave',
+    resourceKey: 'cave',
+    icon: '🕳️',
+};
+
+// Path and Road Icons
+export const RoadDef: ResourceDef = {
+    name: 'Road',
+    resourceKey: 'road',
+    icon: '🛣️',
+};
+
+export const PathDef: ResourceDef = {
+    name: 'Path',
+    resourceKey: 'path',
+    icon: '🛤️',
+};
+
+export const BridgeDef: ResourceDef = {
+    name: 'Bridge',
+    resourceKey: 'bridge',
+    icon: '🌉',
+};
+
+export const GateDef: ResourceDef = {
+    name: 'Gate',
+    resourceKey: 'gate',
+    icon: '🚪',
+};
+
+export const WallDef: ResourceDef = {
+    name: 'Wall',
+    resourceKey: 'wall',
+    icon: '🧱',
+};
+
+// Camp and Settlement Icons
+export const CampDef: ResourceDef = {
+    name: 'Camp',
+    resourceKey: 'camp',
+    icon: '⛺',
+};
+
+export const TentDef: ResourceDef = {
+    name: 'Tent',
+    resourceKey: 'tent',
+    icon: '🏕️',
+};
+
+export const OutpostDef: ResourceDef = {
+    name: 'Outpost',
+    resourceKey: 'outpost',
+    icon: '🏘️',
+};
+
+export const VillageDef: ResourceDef = {
+    name: 'Village',
+    resourceKey: 'village',
+    icon: '🏘️',
+};
+
+export const FortDef: ResourceDef = {
+    name: 'Fort',
+    resourceKey: 'fort',
+    icon: '🏯',
+};
+
+export const WatchtowerDef: ResourceDef = {
+    name: 'Watchtower',
+    resourceKey: 'watchtower',
+    icon: '🗼',
+};
+
+// Food and Agriculture Icons
+export const FarmDef: ResourceDef = {
+    name: 'Farm',
+    resourceKey: 'farm',
+    icon: '🚜',
+};
+
+export const FieldDef: ResourceDef = {
+    name: 'Field',
+    resourceKey: 'field',
+    icon: '🌾',
+};
+
+export const OrchardDef: ResourceDef = {
+    name: 'Orchard',
+    resourceKey: 'orchard',
+    icon: '🍎',
+};
+
+export const GardenDef: ResourceDef = {
+    name: 'Garden',
+    resourceKey: 'garden',
+    icon: '🌻',
+};
+
+export const BarnDef: ResourceDef = {
+    name: 'Barn',
+    resourceKey: 'barn',
+    icon: '🏚️',
+};
+
+export const SiloDef: ResourceDef = {
+    name: 'Silo',
+    resourceKey: 'silo',
+    icon: '🏗️',
+};
+
+export const WellDef: ResourceDef = {
+    name: 'Well',
+    resourceKey: 'well',
+    icon: '🏺',
+};
+
+export const WindmillDef: ResourceDef = {
+    name: 'Windmill',
+    resourceKey: 'windmill',
+    icon: '🌾',
+};
+
+export const ApiaryDef: ResourceDef = {
+    name: 'Apiary',
+    resourceKey: 'apiary',
+    icon: '🍯',
+};
+
+export const FishPondDef: ResourceDef = {
+    name: 'Fish Pond',
+    resourceKey: 'fishPond',
+    icon: '🐟',
+};
+
 // Tool categories
 export type ToolCategory = 'axe' | 'pickaxe';
 
