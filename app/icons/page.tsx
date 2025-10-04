@@ -26,7 +26,7 @@ import {
 } from '@/app/models/ResourceDef';
 
 export default function Icons() {
-  const [isEmojiSectionOpen, setIsEmojiSectionOpen] = useState(true);
+  const [isEmojiSectionOpen, setIsEmojiSectionOpen] = useState(false);
 
   const townBuildings = [
     TownHallDef, MarketDef, BankDef, ChurchDef, SchoolDef, HospitalDef, 
