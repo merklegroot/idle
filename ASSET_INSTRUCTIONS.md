@@ -10,7 +10,7 @@
    - Download the file: `Cute_Fantasy_Free.zip`
 
 3. **Place the zip file**:
-   - Place the zip file at: `public/assets/cute-fantasy-rpg/Cute_Fantasy_Free.zip`
+   - Place the zip file at: `downloads/Cute_Fantasy_Free.zip`
 
 4. **Run the setup script**:
    ```bash

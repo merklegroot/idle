@@ -24,10 +24,17 @@ const log = (message, color = 'reset') => {
 
 // Configuration
 const ASSET_DIR = path.join(__dirname, '..', 'public', 'assets', 'cute-fantasy-rpg');
-const ZIP_FILE = path.join(ASSET_DIR, 'Cute_Fantasy_Free.zip');
+const DOWNLOADS_DIR = path.join(__dirname, '..', 'downloads');
+const ZIP_FILE = path.join(DOWNLOADS_DIR, 'Cute_Fantasy_Free.zip');
 
 async function checkZipFile() {
   log('🔍 Checking for zip file...', 'blue');
+  
+  // Create downloads directory if it doesn't exist
+  if (!fs.existsSync(DOWNLOADS_DIR)) {
+    fs.mkdirSync(DOWNLOADS_DIR, { recursive: true });
+    log(`📁 Created downloads directory: ${DOWNLOADS_DIR}`, 'blue');
+  }
   
   if (!fs.existsSync(ZIP_FILE)) {
     log('❌ Cute_Fantasy_Free.zip not found', 'red');
@@ -56,8 +63,8 @@ async function extractAssets() {
   log('📦 Extracting assets...', 'blue');
   
   try {
-    // Create a temporary extraction directory
-    const tempDir = path.join(ASSET_DIR, 'temp-extract');
+    // Create a temporary extraction directory in downloads
+    const tempDir = path.join(DOWNLOADS_DIR, 'temp-extract');
     if (fs.existsSync(tempDir)) {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

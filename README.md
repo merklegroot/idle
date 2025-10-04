@@ -18,7 +18,7 @@ An idle/incremental game built with Next.js, TypeScript, and Zustand.
 3. **Set up assets** (optional but recommended):
    - See [ASSET_INSTRUCTIONS.md](./ASSET_INSTRUCTIONS.md) for detailed setup
    - Download the free Cute Fantasy RPG assets from itch.io
-   - Place the zip file in `public/assets/cute-fantasy-rpg/`
+   - Place the zip file in `downloads/`
    - Run: `npm run setup-assets`
 
 4. **Start the development server**:
@@ -34,7 +34,6 @@ This project uses the **Cute Fantasy RPG** asset pack by Kenmi for pixel art gra
 
 - **Setup Guide**: See [ASSET_INSTRUCTIONS.md](./ASSET_INSTRUCTIONS.md) for detailed instructions
 - **Asset Showcase**: Visit `/icons` to see available assets
-- **Credits**: Visit `/credits` for full attribution information
 
 ## Game Overview
 
