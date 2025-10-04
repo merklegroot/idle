@@ -9,7 +9,8 @@
     "start": "next start",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "setup-assets": "node scripts/setup-assets.js"
   },
   "dependencies": {
     "next": "^15.5.2",

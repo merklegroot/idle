@@ -2,6 +2,40 @@
 
 An idle/incremental game built with Next.js, TypeScript, and Zustand.
 
+## 🚀 Quick Start
+
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+   cd idle
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Set up assets** (optional but recommended):
+   - See [ASSET_INSTRUCTIONS.md](./ASSET_INSTRUCTIONS.md) for detailed setup
+   - Download the free Cute Fantasy RPG assets from itch.io
+   - Place the zip file in `public/assets/cute-fantasy-rpg/`
+   - Run: `npm run setup-assets`
+
+4. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
+
+5. **Open your browser** and visit `http://localhost:3000`
+
+## 🎨 Assets
+
+This project uses the **Cute Fantasy RPG** asset pack by Kenmi for pixel art graphics. The assets are free for non-commercial use and are excluded from the repository.
+
+- **Setup Guide**: See [ASSET_INSTRUCTIONS.md](./ASSET_INSTRUCTIONS.md) for detailed instructions
+- **Asset Showcase**: Visit `/icons` to see available assets
+- **Credits**: Visit `/credits` for full attribution information
+
 ## Game Overview
 
 A resource gathering idle game where players collect materials, hire workers, and craft tools.
