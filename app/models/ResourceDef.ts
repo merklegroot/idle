@@ -99,6 +99,18 @@ export const GoldDef: ResourceDef = {
     icon: '🪙',
 };
 
+export const HouseDef: ResourceDef = {
+    name: 'House',
+    resourceKey: 'house',
+    icon: '🏠',
+};
+
+export const TownHallDef: ResourceDef = {
+    name: 'Town Hall',
+    resourceKey: 'townHall',
+    icon: '🏛️',
+};
+
 // Tool categories
 export type ToolCategory = 'axe' | 'pickaxe';
 

@@ -2,6 +2,7 @@
 
 import useGameStore from '@/stores/gameStore';
 import { formattingUtil } from '@/utils/formattingUtil';
+import { HouseDef, TownHallDef } from '@/app/models/ResourceDef';
 
 export default function Town() {
   const { 
@@ -29,7 +30,10 @@ export default function Town() {
     <div className="h-full flex flex-col">
       <div className="flex-none p-6">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold">Town</h1>
+          <div className="flex items-center gap-4">
+            <span className="text-5xl">{TownHallDef.icon}</span>
+            <h1 className="text-4xl font-bold">Town</h1>
+          </div>
           <div className="flex gap-6 text-lg">
             <div>
               Wood: <span className="font-semibold text-green-500">{formattingUtil.formatNumber(woodAmount)}</span>
@@ -85,6 +89,7 @@ export default function Town() {
           <h2 className="text-2xl font-semibold mb-4">Your Homes ({homes.length})</h2>
           {homes.length === 0 ? (
             <div className="bg-gray-800 rounded-lg p-8 text-center">
+              <div className="text-6xl mb-4">{HouseDef.icon}</div>
               <p className="text-white text-lg">No homes built yet</p>
               <p className="text-gray-300 mt-2">Build your first home to start your town!</p>
             </div>
@@ -133,7 +138,10 @@ function HomeCard({ home, onUpgrade, upgradeCost, canUpgrade, woodAmount, stoneA
   return (
     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-xl font-semibold text-white">Home #{home.id.split('-')[1]}</h3>
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">{HouseDef.icon}</span>
+          <h3 className="text-xl font-semibold text-white">Home #{home.id.split('-')[1]}</h3>
+        </div>
         <span className="bg-blue-600 text-white px-2 py-1 rounded text-sm">
           Level {home.level}
         </span>
