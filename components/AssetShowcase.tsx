@@ -141,7 +141,7 @@ export default function AssetShowcase() {
                           <img 
                             src={file.path} 
                             alt={file.name}
-                            className="w-full h-16 object-cover rounded bg-gray-700 cursor-pointer hover:opacity-80 transition-opacity"
+                            className="w-full h-16 object-contain rounded bg-gray-700 cursor-pointer hover:opacity-80 transition-opacity"
                             onClick={() => window.open(file.path, '_blank')}
                             onError={(e) => {
                               e.currentTarget.style.display = 'none';

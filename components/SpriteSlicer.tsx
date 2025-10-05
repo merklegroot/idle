@@ -51,6 +51,10 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
   const [saveMessage, setSaveMessage] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationMessage, setGenerationMessage] = useState('');
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   // Load saved definitions when component opens
   useEffect(() => {
@@ -58,6 +62,23 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
       loadSavedDefinitions();
     }
   }, [isOpen]);
+
+  // Handle escape key to close dialog
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   // Load image and get dimensions
   useEffect(() => {
@@ -143,18 +164,26 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
         return;
       }
       
-      // Set canvas size to show all sprites
-      const canvasWidth = cols * (gridWidth + 4); // 4px padding between sprites
-      const canvasHeight = rows * (gridHeight + 4);
+      // Set canvas size to show all sprites (base size)
+      const baseCanvasWidth = cols * (gridWidth + 4); // 4px padding between sprites
+      const baseCanvasHeight = rows * (gridHeight + 4);
+      
+      // Scale canvas size based on zoom level
+      const canvasWidth = baseCanvasWidth * zoomLevel;
+      const canvasHeight = baseCanvasHeight * zoomLevel;
       
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
+      
+      // Apply pan transformations (zoom is handled by canvas size)
+      ctx.save();
+      ctx.translate(panOffset.x, panOffset.y);
       
       // Clear canvas
       ctx.fillStyle = '#1f2937';
       ctx.fillRect(0, 0, canvasWidth, canvasHeight);
       
-      // Draw grid lines
+      // Draw grid lines (using base dimensions)
       ctx.strokeStyle = '#374151';
       ctx.lineWidth = 1;
       
@@ -162,7 +191,7 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
         const x = i * (gridWidth + 4);
         ctx.beginPath();
         ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvasHeight);
+        ctx.lineTo(x, baseCanvasHeight);
         ctx.stroke();
       }
       
@@ -170,7 +199,7 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
         const y = i * (gridHeight + 4);
         ctx.beginPath();
         ctx.moveTo(0, y);
-        ctx.lineTo(canvasWidth, y);
+        ctx.lineTo(baseCanvasWidth, y);
         ctx.stroke();
       }
       
@@ -187,7 +216,7 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
             const destX = col * (gridWidth + 4) + 2;
             const destY = row * (gridHeight + 4) + 2;
             
-            // Draw sprite
+            // Draw sprite (using base dimensions)
             ctx.drawImage(
               img,
               sourceX, sourceY, gridWidth, gridHeight,
@@ -212,9 +241,12 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
       }
       
       setSlicedSprites(sprites);
+      
+      // Restore context after drawing
+      ctx.restore();
     };
     img.src = imageSrc;
-  }, [imageLoaded, sliceSettings]);
+  }, [imageLoaded, sliceSettings, zoomLevel, panOffset]);
 
   const handleSettingChange = (key: keyof SliceSettings, value: number) => {
     // Prevent zero or negative values for grid dimensions
@@ -332,6 +364,35 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
     }
   };
 
+  const handleZoom = (delta: number) => {
+    const zoomFactor = 0.1;
+    const newZoom = Math.max(0.1, Math.min(5, zoomLevel - delta * zoomFactor));
+    setZoomLevel(newZoom);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - panOffset.x, y: e.clientY - panOffset.y });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging) {
+      setPanOffset({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const resetView = () => {
+    setZoomLevel(1);
+    setPanOffset({ x: 0, y: 0 });
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -340,14 +401,8 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
         <div className="flex flex-1 min-h-0">
           {/* Controls Panel */}
           <div className="w-80 p-6 border-r border-gray-700 overflow-y-auto flex-shrink-0 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-            <div className="flex items-center justify-between mb-6">
+            <div className="mb-6">
               <h2 className="text-xl font-bold text-white">Sprite Slicer</h2>
-              <button
-                onClick={onClose}
-                className="text-gray-400 hover:text-white text-2xl"
-              >
-                ×
-              </button>
             </div>
             
             <div className="space-y-4">
@@ -478,6 +533,16 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
           
           {/* Preview Panel */}
           <div className="flex-1 p-6 overflow-y-auto min-w-0 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-white">Preview & Definitions</h3>
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-white text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            
             {/* Saved Definitions */}
             {savedDefinitions.length > 0 && (
               <div className="mb-6">
@@ -516,13 +581,53 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
             )}
             
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-white mb-2">Preview</h3>
-              <div className="bg-gray-900 rounded p-4 overflow-auto">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-lg font-semibold text-white">Preview</h3>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleZoom(-1)}
+                    className="px-2 py-1 bg-gray-600 hover:bg-gray-500 text-white text-sm rounded"
+                  >
+                    -
+                  </button>
+                  <span className="text-sm text-gray-300 min-w-[3rem] text-center">
+                    {Math.round(zoomLevel * 100)}%
+                  </span>
+                  <button
+                    onClick={() => handleZoom(1)}
+                    className="px-2 py-1 bg-gray-600 hover:bg-gray-500 text-white text-sm rounded"
+                  >
+                    +
+                  </button>
+                  <button
+                    onClick={resetView}
+                    className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded"
+                  >
+                    Reset
+                  </button>
+                </div>
+              </div>
+              <div className="bg-gray-900 rounded p-4 overflow-auto" style={{ maxHeight: '400px' }}>
                 <canvas
                   ref={canvasRef}
-                  className="border border-gray-600"
-                  style={{ maxWidth: '100%', height: 'auto' }}
+                  className="border border-gray-600 cursor-grab active:cursor-grabbing"
+                  style={{ 
+                    maxWidth: 'none', 
+                    height: 'auto',
+                    minWidth: '100%'
+                  }}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}
+                  onWheel={(e) => {
+                    e.preventDefault();
+                    handleZoom(e.deltaY / 100);
+                  }}
                 />
+              </div>
+              <div className="text-xs text-gray-400 mt-2">
+                Mouse wheel to zoom • Click and drag to pan
               </div>
             </div>
             
