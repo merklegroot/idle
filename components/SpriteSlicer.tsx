@@ -11,6 +11,20 @@ interface SliceSettings {
   spacingY: number;
 }
 
+interface SliceDefinition {
+  id: string;
+  imagePath: string;
+  imageName: string;
+  gridWidth: number;
+  gridHeight: number;
+  offsetX: number;
+  offsetY: number;
+  spacingX: number;
+  spacingY: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface SpriteSlicerProps {
   imageSrc: string;
   imageName: string;
@@ -31,6 +45,19 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
   const [slicedSprites, setSlicedSprites] = useState<string[]>([]);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
+  const [savedDefinitions, setSavedDefinitions] = useState<SliceDefinition[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationMessage, setGenerationMessage] = useState('');
+
+  // Load saved definitions when component opens
+  useEffect(() => {
+    if (isOpen) {
+      loadSavedDefinitions();
+    }
+  }, [isOpen]);
 
   // Load image and get dimensions
   useEffect(() => {
@@ -44,6 +71,34 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
     };
     img.src = imageSrc;
   }, [imageSrc]);
+
+  // Load saved definitions
+  const loadSavedDefinitions = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/assets/slice-definitions');
+      const data = await response.json();
+      if (data.success) {
+        setSavedDefinitions(data.definitions);
+        // Check if there's a saved definition for this image
+        const existingDefinition = data.definitions.find((def: SliceDefinition) => def.imagePath === imageSrc);
+        if (existingDefinition) {
+          setSliceSettings({
+            gridWidth: existingDefinition.gridWidth,
+            gridHeight: existingDefinition.gridHeight,
+            offsetX: existingDefinition.offsetX,
+            offsetY: existingDefinition.offsetY,
+            spacingX: existingDefinition.spacingX,
+            spacingY: existingDefinition.spacingY
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error loading definitions:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Update preview when settings change
   useEffect(() => {
@@ -59,11 +114,34 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
       // Calculate how many sprites we can fit
       const { gridWidth, gridHeight, offsetX, offsetY, spacingX, spacingY } = sliceSettings;
       
+      // Safety checks to prevent crashes
+      if (gridWidth <= 0 || gridHeight <= 0) {
+        console.warn('Invalid grid dimensions, skipping preview');
+        return;
+      }
+      
+      if (offsetX < 0 || offsetY < 0 || spacingX < 0 || spacingY < 0) {
+        console.warn('Invalid offset or spacing values, skipping preview');
+        return;
+      }
+      
       const availableWidth = img.width - offsetX;
       const availableHeight = img.height - offsetY;
       
+      // Additional safety check
+      if (availableWidth <= 0 || availableHeight <= 0) {
+        console.warn('Invalid available dimensions, skipping preview');
+        return;
+      }
+      
       const cols = Math.floor((availableWidth + spacingX) / (gridWidth + spacingX));
       const rows = Math.floor((availableHeight + spacingY) / (gridHeight + spacingY));
+      
+      // Prevent infinite loops
+      if (cols <= 0 || rows <= 0 || cols > 1000 || rows > 1000) {
+        console.warn('Invalid grid calculation, skipping preview');
+        return;
+      }
       
       // Set canvas size to show all sprites
       const canvasWidth = cols * (gridWidth + 4); // 4px padding between sprites
@@ -139,9 +217,16 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
   }, [imageLoaded, sliceSettings]);
 
   const handleSettingChange = (key: keyof SliceSettings, value: number) => {
+    // Prevent zero or negative values for grid dimensions
+    if (key === 'gridWidth' || key === 'gridHeight') {
+      value = Math.max(1, value); // Minimum 1 pixel
+    } else {
+      value = Math.max(0, value); // Other values can be 0
+    }
+    
     setSliceSettings(prev => ({
       ...prev,
-      [key]: Math.max(0, value)
+      [key]: value
     }));
   };
 
@@ -161,6 +246,90 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
         link.click();
       }, index * 100); // Stagger downloads
     });
+  };
+
+  const saveDefinition = async () => {
+    setIsSaving(true);
+    setSaveMessage('');
+    
+    try {
+      const response = await fetch('/api/assets/slice-definitions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imagePath: imageSrc,
+          imageName,
+          ...sliceSettings
+        })
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        setSaveMessage('Definition saved successfully!');
+        // Reload definitions to get updated list
+        await loadSavedDefinitions();
+        setTimeout(() => setSaveMessage(''), 3000);
+      } else {
+        setSaveMessage(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error saving definition:', error);
+      setSaveMessage('Error saving definition');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const loadDefinition = (definition: SliceDefinition) => {
+    setSliceSettings({
+      gridWidth: definition.gridWidth,
+      gridHeight: definition.gridHeight,
+      offsetX: definition.offsetX,
+      offsetY: definition.offsetY,
+      spacingX: definition.spacingX,
+      spacingY: definition.spacingY
+    });
+  };
+
+  const deleteDefinition = async (definitionId: string) => {
+    try {
+      const response = await fetch(`/api/assets/slice-definitions?id=${definitionId}`, {
+        method: 'DELETE'
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        await loadSavedDefinitions();
+      }
+    } catch (error) {
+      console.error('Error deleting definition:', error);
+    }
+  };
+
+  const generateSpriteDefinitions = async () => {
+    setIsGenerating(true);
+    setGenerationMessage('');
+    
+    try {
+      const response = await fetch('/api/assets/generate-sprites', {
+        method: 'POST'
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        setGenerationMessage(data.message);
+        setTimeout(() => setGenerationMessage(''), 5000);
+      } else {
+        setGenerationMessage(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error generating sprite definitions:', error);
+      setGenerationMessage('Error generating sprite definitions');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -189,9 +358,10 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
                 <input
                   type="number"
                   value={sliceSettings.gridWidth}
-                  onChange={(e) => handleSettingChange('gridWidth', parseInt(e.target.value) || 0)}
+                  onChange={(e) => handleSettingChange('gridWidth', parseInt(e.target.value) || 1)}
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
                   min="1"
+                  step="1"
                 />
               </div>
               
@@ -202,9 +372,10 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
                 <input
                   type="number"
                   value={sliceSettings.gridHeight}
-                  onChange={(e) => handleSettingChange('gridHeight', parseInt(e.target.value) || 0)}
+                  onChange={(e) => handleSettingChange('gridHeight', parseInt(e.target.value) || 1)}
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
                   min="1"
+                  step="1"
                 />
               </div>
               
@@ -268,17 +439,82 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
               </div>
               
               <button
+                onClick={saveDefinition}
+                disabled={isSaving || slicedSprites.length === 0}
+                className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded font-medium"
+              >
+                {isSaving ? 'Saving...' : 'Save Definition'}
+              </button>
+              
+              {saveMessage && (
+                <div className={`text-sm ${saveMessage.includes('Error') ? 'text-red-400' : 'text-green-400'}`}>
+                  {saveMessage}
+                </div>
+              )}
+              
+              <button
                 onClick={downloadAllSprites}
                 disabled={slicedSprites.length === 0}
                 className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded font-medium"
               >
                 Download All Sprites ({slicedSprites.length})
               </button>
+              
+              <button
+                onClick={generateSpriteDefinitions}
+                disabled={isGenerating || savedDefinitions.length === 0}
+                className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded font-medium"
+              >
+                {isGenerating ? 'Generating...' : 'Generate Sprite Definitions'}
+              </button>
+              
+              {generationMessage && (
+                <div className={`text-sm ${generationMessage.includes('Error') ? 'text-red-400' : 'text-green-400'}`}>
+                  {generationMessage}
+                </div>
+              )}
             </div>
           </div>
           
           {/* Preview Panel */}
           <div className="flex-1 p-6 overflow-y-auto">
+            {/* Saved Definitions */}
+            {savedDefinitions.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-white mb-3">Saved Definitions</h3>
+                <div className="space-y-2 max-h-32 overflow-y-auto">
+                  {savedDefinitions.map((definition) => (
+                    <div key={definition.id} className="bg-gray-700 rounded p-3 flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm text-white truncate" title={definition.imageName}>
+                          {definition.imageName}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          {definition.gridWidth}×{definition.gridHeight} | 
+                          Offset: {definition.offsetX},{definition.offsetY} | 
+                          Spacing: {definition.spacingX},{definition.spacingY}
+                        </div>
+                      </div>
+                      <div className="flex gap-2 ml-3">
+                        <button
+                          onClick={() => loadDefinition(definition)}
+                          className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded"
+                        >
+                          Load
+                        </button>
+                        <button
+                          onClick={() => deleteDefinition(definition.id)}
+                          className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
             <div className="mb-4">
               <h3 className="text-lg font-semibold text-white mb-2">Preview</h3>
               <div className="bg-gray-900 rounded p-4 overflow-auto">

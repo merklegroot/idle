@@ -145,7 +145,10 @@ export default function AssetShowcase() {
                             onClick={() => window.open(file.path, '_blank')}
                             onError={(e) => {
                               e.currentTarget.style.display = 'none';
-                              e.currentTarget.nextElementSibling!.style.display = 'flex';
+                              const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                              if (nextElement) {
+                                nextElement.style.display = 'flex';
+                              }
                             }}
                           />
                           <div className="w-full h-16 bg-gray-700 rounded flex items-center justify-center text-2xl hidden">
