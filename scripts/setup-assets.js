@@ -63,6 +63,12 @@ async function extractAssets() {
   log('📦 Extracting assets...', 'blue');
   
   try {
+    // Create asset directory if it doesn't exist
+    if (!fs.existsSync(ASSET_DIR)) {
+      fs.mkdirSync(ASSET_DIR, { recursive: true });
+      log(`📁 Created asset directory: ${ASSET_DIR}`, 'blue');
+    }
+    
     // Create a temporary extraction directory in downloads
     const tempDir = path.join(DOWNLOADS_DIR, 'temp-extract');
     if (fs.existsSync(tempDir)) {
