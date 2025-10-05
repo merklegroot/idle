@@ -22,8 +22,6 @@ interface SliceDefinition {
   offsetY: number;
   spacingX: number;
   spacingY: number;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export default function SpriteEditor() {

@@ -1,4 +1,14 @@
-import { SliceDefinition } from '@/components/SpriteSlicer';
+interface SliceDefinition {
+  id: string;
+  imagePath: string;
+  imageName: string;
+  gridWidth: number;
+  gridHeight: number;
+  offsetX: number;
+  offsetY: number;
+  spacingX: number;
+  spacingY: number;
+}
 
 export interface GeneratedSprite {
   id: string;

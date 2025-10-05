@@ -12,8 +12,6 @@ interface SliceDefinition {
   offsetY: number;
   spacingX: number;
   spacingY: number;
-  createdAt: string;
-  updatedAt: string;
 }
 
 const DEFINITIONS_FILE = path.join(process.cwd(), 'data', 'sprite-slice-definitions.json');
@@ -100,7 +98,6 @@ export async function POST(request: Request) {
     }
 
     const definitions = loadDefinitions();
-    const now = new Date().toISOString();
     
     // Check if definition already exists for this image
     const existingIndex = definitions.findIndex(def => def.imagePath === imagePath);
@@ -114,9 +111,7 @@ export async function POST(request: Request) {
       offsetX: Number(offsetX) || 0,
       offsetY: Number(offsetY) || 0,
       spacingX: Number(spacingX) || 0,
-      spacingY: Number(spacingY) || 0,
-      createdAt: existingIndex >= 0 ? definitions[existingIndex].createdAt : now,
-      updatedAt: now
+      spacingY: Number(spacingY) || 0
     };
 
     if (existingIndex >= 0) {
