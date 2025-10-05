@@ -336,10 +336,10 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-800 rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
-        <div className="flex">
+      <div className="bg-gray-800 rounded-lg max-w-6xl w-full h-[90vh] overflow-hidden flex flex-col">
+        <div className="flex flex-1 min-h-0">
           {/* Controls Panel */}
-          <div className="w-80 p-6 border-r border-gray-700 overflow-y-auto">
+          <div className="w-80 p-6 border-r border-gray-700 overflow-y-auto flex-shrink-0 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-white">Sprite Slicer</h2>
               <button
@@ -477,7 +477,7 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
           </div>
           
           {/* Preview Panel */}
-          <div className="flex-1 p-6 overflow-y-auto">
+          <div className="flex-1 p-6 overflow-y-auto min-w-0 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
             {/* Saved Definitions */}
             {savedDefinitions.length > 0 && (
               <div className="mb-6">
