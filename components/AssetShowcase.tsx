@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import SpriteSlicer from './SpriteSlicer';
 
 interface AssetFile {
   name: string;
@@ -20,6 +21,8 @@ export default function AssetShowcase() {
   const [assetCategories, setAssetCategories] = useState<AssetCategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasAssets, setHasAssets] = useState(false);
+  const [slicerOpen, setSlicerOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{ src: string; name: string } | null>(null);
 
   // Check if assets are available
   useEffect(() => {
@@ -76,6 +79,16 @@ export default function AssetShowcase() {
   ];
 
   const displayAssets = hasAssets ? assetCategories : fallbackAssets;
+
+  const handleSliceImage = (imageSrc: string, imageName: string) => {
+    setSelectedImage({ src: imageSrc, name: imageName });
+    setSlicerOpen(true);
+  };
+
+  const closeSlicer = () => {
+    setSlicerOpen(false);
+    setSelectedImage(null);
+  };
 
   return (
     <div className="mb-8">
@@ -138,6 +151,20 @@ export default function AssetShowcase() {
                           <div className="w-full h-16 bg-gray-700 rounded flex items-center justify-center text-2xl hidden">
                             🖼️
                           </div>
+                          <div className="mt-2 space-y-1">
+                            <button
+                              onClick={() => window.open(file.path, '_blank')}
+                              className="w-full px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded"
+                            >
+                              View
+                            </button>
+                            <button
+                              onClick={() => handleSliceImage(file.path, file.name)}
+                              className="w-full px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded"
+                            >
+                              Slice
+                            </button>
+                          </div>
                         </div>
                       ) : (
                         <div className="w-full h-16 bg-gray-700 rounded flex items-center justify-center text-2xl mb-2">
@@ -189,6 +216,16 @@ export default function AssetShowcase() {
             </div>
           )}
         </div>
+      )}
+      
+      {/* Sprite Slicer Modal */}
+      {selectedImage && (
+        <SpriteSlicer
+          imageSrc={selectedImage.src}
+          imageName={selectedImage.name}
+          isOpen={slicerOpen}
+          onClose={closeSlicer}
+        />
       )}
     </div>
   );
