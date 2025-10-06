@@ -50,11 +50,18 @@ export default function SavedDefinitionsList({
           <div className="text-xs text-gray-300 mb-2">
             Image: {definition.imageWidth}×{definition.imageHeight}px
           </div>
-          <div className="text-xs text-gray-300 mb-4">
-            Grid: {definition.gridWidth}×{definition.gridHeight} | 
-            Offset: {definition.offsetX},{definition.offsetY} | 
-            Spacing: {definition.spacingX},{definition.spacingY}
-          </div>
+          {definition.gridWidth > 0 && definition.gridHeight > 0 ? (
+            <div className="text-xs text-gray-300 mb-4">
+              <span className="text-green-400">✓ Slicing Enabled</span> | 
+              Grid: {definition.gridWidth}×{definition.gridHeight} | 
+              Offset: {definition.offsetX},{definition.offsetY} | 
+              Spacing: {definition.spacingX},{definition.spacingY}
+            </div>
+          ) : (
+            <div className="text-xs text-gray-400 mb-4">
+              <span className="text-gray-500">○ No Slicing</span> - Image only, no grid slicing defined
+            </div>
+          )}
           <div className="flex gap-2">
             <button
               onClick={() => onLoadDefinition(definition)}

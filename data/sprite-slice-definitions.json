@@ -20,5 +20,27 @@
     "offsetY": 0,
     "spacingX": 0,
     "spacingY": 0
+  },
+  {
+    "id": "mgfp7wrqzcp1xfdg05",
+    "imagePath": "/assets/cute-fantasy-rpg/Tiles/Water_Tile.png",
+    "imageName": "Water_Tile.png",
+    "gridWidth": 16,
+    "gridHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  {
+    "id": "mgfp8xvp96vbufq6dys",
+    "imagePath": "/assets/cute-fantasy-rpg/Outdoor decoration/Fences.png",
+    "imageName": "Fences.png",
+    "gridWidth": 16,
+    "gridHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
   }
 ]

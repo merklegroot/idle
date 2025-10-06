@@ -60,6 +60,7 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [hasSlicingParams, setHasSlicingParams] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Load definitions
@@ -231,6 +232,10 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
             description: existingDefinition.description || '',
             type: existingDefinition.type || 'Unknown'
           });
+          // Check if this definition has slicing parameters (non-zero grid dimensions)
+          setHasSlicingParams(existingDefinition.gridWidth > 0 && existingDefinition.gridHeight > 0);
+        } else {
+          setHasSlicingParams(false);
         }
       }
     } catch (error) {
@@ -280,6 +285,7 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
           imageName: selectedImage.name,
           imageWidth: imageDimensions.width,
           imageHeight: imageDimensions.height,
+          hasSlicingParams,
           ...sliceSettings
         })
       });
@@ -311,6 +317,8 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       description: definition.description || '',
       type: definition.type || 'Unknown'
     });
+    // Check if this definition has slicing parameters
+    setHasSlicingParams(definition.gridWidth > 0 && definition.gridHeight > 0);
   };
 
   const deleteDefinition = async (definitionId: string) => {
@@ -358,6 +366,33 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
     setPanOffset({ x: 0, y: 0 });
   };
 
+  const toggleSlicing = () => {
+    if (hasSlicingParams) {
+      // Remove slicing - reset to default values
+      setSliceSettings(prev => ({
+        ...prev,
+        gridWidth: 32,
+        gridHeight: 32,
+        offsetX: 0,
+        offsetY: 0,
+        spacingX: 0,
+        spacingY: 0
+      }));
+    } else {
+      // Add slicing - keep current values or use defaults
+      setSliceSettings(prev => ({
+        ...prev,
+        gridWidth: prev.gridWidth || 32,
+        gridHeight: prev.gridHeight || 32,
+        offsetX: prev.offsetX || 0,
+        offsetY: prev.offsetY || 0,
+        spacingX: prev.spacingX || 0,
+        spacingY: prev.spacingY || 0
+      }));
+    }
+    setHasSlicingParams(!hasSlicingParams);
+  };
+
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Header */}
@@ -383,6 +418,8 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
                   isSaving={isSaving}
                   saveMessage={saveMessage}
                   slicedSpritesCount={slicedSprites.length}
+                  hasSlicingParams={hasSlicingParams}
+                  onToggleSlicing={toggleSlicing}
                 />
 
                 {/* Saved Definition */}

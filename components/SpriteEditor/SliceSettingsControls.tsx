@@ -16,6 +16,8 @@ interface SliceSettingsControlsProps {
   isSaving: boolean;
   saveMessage: string;
   slicedSpritesCount: number;
+  hasSlicingParams: boolean;
+  onToggleSlicing: () => void;
 }
 
 export default function SliceSettingsControls({
@@ -24,7 +26,9 @@ export default function SliceSettingsControls({
   onSave,
   isSaving,
   saveMessage,
-  slicedSpritesCount
+  slicedSpritesCount,
+  hasSlicingParams,
+  onToggleSlicing
 }: SliceSettingsControlsProps) {
   return (
     <div className="bg-gray-800 rounded-lg p-6">
@@ -58,7 +62,24 @@ export default function SliceSettingsControls({
         </select>
       </div>
       
-      <div className="grid grid-cols-2 gap-4">
+      {/* Slicing Parameters Section */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-lg font-semibold text-white">Slicing Parameters</h3>
+          <button
+            onClick={onToggleSlicing}
+            className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+              hasSlicingParams
+                ? 'bg-red-600 hover:bg-red-700 text-white'
+                : 'bg-green-600 hover:bg-green-700 text-white'
+            }`}
+          >
+            {hasSlicingParams ? '− Remove Slicing' : '+ Add Slicing'}
+          </button>
+        </div>
+        
+        {hasSlicingParams ? (
+          <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Grid Width
@@ -137,7 +158,13 @@ export default function SliceSettingsControls({
             className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
             min="0"
           />
-        </div>
+          </div>
+          </div>
+        ) : (
+          <div className="text-gray-400 text-sm italic">
+            No slicing parameters defined. Click "+ Add Slicing" to define grid dimensions and offsets.
+          </div>
+        )}
       </div>
       
       <div className="mt-6 flex items-center gap-4">
