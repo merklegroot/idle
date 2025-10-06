@@ -125,8 +125,8 @@ export default function SpriteEditor() {
       const baseCanvasHeight = rows * (gridHeight + 4);
       
       // Scale canvas size based on zoom level
-      const canvasWidth = baseCanvasWidth * zoomLevel;
-      const canvasHeight = baseCanvasHeight * zoomLevel;
+      const canvasWidth = baseCanvasWidth / zoomLevel;
+      const canvasHeight = baseCanvasHeight / zoomLevel;
       
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
@@ -508,7 +508,7 @@ export default function SpriteEditor() {
                   <h2 className="text-xl font-bold text-white">Preview</h2>
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => handleZoom(1)}
+                      onClick={() => handleZoom(-1)}
                       className="px-2 py-1 bg-gray-600 hover:bg-gray-500 text-white text-sm rounded"
                     >
                       -
@@ -517,7 +517,7 @@ export default function SpriteEditor() {
                       {Math.round(zoomLevel * 100)}%
                     </span>
                     <button
-                      onClick={() => handleZoom(-1)}
+                      onClick={() => handleZoom(1)}
                       className="px-2 py-1 bg-gray-600 hover:bg-gray-500 text-white text-sm rounded"
                     >
                       +
