@@ -57,7 +57,7 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
   // Load definitions
   useEffect(() => {
     loadSavedDefinitions();
-  }, []);
+  }, [selectedImage]);
 
   // Load image and get dimensions
   useEffect(() => {
@@ -207,7 +207,9 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       if (data.success) {
         setSavedDefinitions(data.definitions);
         // Find the definition for the current image
-        const existingDefinition = data.definitions.find((def: SliceDefinition) => def.imagePath === selectedImage?.src);
+        const existingDefinition = selectedImage?.src 
+          ? data.definitions.find((def: SliceDefinition) => def.imagePath === selectedImage.src)
+          : null;
         setCurrentDefinition(existingDefinition || null);
         
         if (existingDefinition) {
