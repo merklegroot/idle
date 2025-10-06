@@ -86,6 +86,13 @@ export default function Town() {
         </div>
 
         <div className="mb-6">
+          <h2 className="text-2xl font-semibold mb-4">Town Map</h2>
+          <div className="bg-gray-800 rounded-lg p-6 mb-6">
+            <TownMap />
+          </div>
+        </div>
+
+        <div className="mb-6">
           <h2 className="text-2xl font-semibold mb-4">Your Homes ({homes.length})</h2>
           {homes.length === 0 ? (
             <div className="bg-gray-800 rounded-lg p-8 text-center">
@@ -110,6 +117,44 @@ export default function Town() {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function TownMap() {
+  const tileSize = 32; // Size of each tile in pixels
+  const mapWidth = 16;
+  const mapHeight = 8;
+  
+  return (
+    <div className="flex justify-center">
+      <div 
+        className="grid gap-0 border-2 border-gray-600 bg-gray-900"
+        style={{
+          gridTemplateColumns: `repeat(${mapWidth}, ${tileSize}px)`,
+          gridTemplateRows: `repeat(${mapHeight}, ${tileSize}px)`,
+        }}
+      >
+        {Array.from({ length: mapHeight * mapWidth }, (_, index) => {
+          const row = Math.floor(index / mapWidth);
+          const col = index % mapWidth;
+          
+          return (
+            <div
+              key={`${row}-${col}`}
+              className="flex items-center justify-center bg-gray-800"
+              style={{ width: tileSize, height: tileSize }}
+            >
+              <img
+                src="/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree.png"
+                alt="Oak Tree"
+                className="w-full h-full object-contain"
+                style={{ maxWidth: tileSize - 2, maxHeight: tileSize - 2 }}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
