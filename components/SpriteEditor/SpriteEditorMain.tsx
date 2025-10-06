@@ -44,6 +44,7 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
   const [savedDefinitions, setSavedDefinitions] = useState<SliceDefinition[]>([]);
+  const [currentDefinition, setCurrentDefinition] = useState<SliceDefinition | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
@@ -205,8 +206,10 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       const data = await response.json();
       if (data.success) {
         setSavedDefinitions(data.definitions);
-        // Check if there's a saved definition for this image
+        // Find the definition for the current image
         const existingDefinition = data.definitions.find((def: SliceDefinition) => def.imagePath === selectedImage?.src);
+        setCurrentDefinition(existingDefinition || null);
+        
         if (existingDefinition) {
           setSliceSettings({
             gridWidth: existingDefinition.gridWidth,
@@ -293,6 +296,7 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       
       const data = await response.json();
       if (data.success) {
+        setCurrentDefinition(null);
         await loadSavedDefinitions();
       }
     } catch (error) {
@@ -335,7 +339,7 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       <div className="bg-gray-800 border-b border-gray-700 p-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white drop-shadow-sm">Sprite Editor</h1>
+            <h1 className="text-2xl font-bold !text-white drop-shadow-lg">Sprite Editor</h1>
           </div>
         </div>
       </div>
@@ -356,9 +360,9 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
                   slicedSpritesCount={slicedSprites.length}
                 />
 
-                {/* Saved Definitions */}
+                {/* Saved Definition */}
                 <SavedDefinitionsList
-                  definitions={savedDefinitions}
+                  definition={currentDefinition}
                   onLoadDefinition={loadDefinition}
                   onDeleteDefinition={deleteDefinition}
                 />

@@ -20,6 +20,25 @@ export default function AssetShowcase() {
   const [assetCategories, setAssetCategories] = useState<AssetCategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasAssets, setHasAssets] = useState(false);
+  const [savedDefinitions, setSavedDefinitions] = useState<any[]>([]);
+
+  // Load saved definitions
+  const loadSavedDefinitions = async () => {
+    try {
+      const response = await fetch('/api/assets/slice-definitions');
+      const data = await response.json();
+      if (data.success) {
+        setSavedDefinitions(data.definitions || []);
+      }
+    } catch (error) {
+      console.log('No saved definitions found');
+    }
+  };
+
+  // Check if an image has been sliced
+  const isImageSliced = (imagePath: string) => {
+    return savedDefinitions.some(def => def.imagePath === imagePath);
+  };
 
   // Check if assets are available
   useEffect(() => {
@@ -38,6 +57,7 @@ export default function AssetShowcase() {
 
     if (isOpen) {
       checkAssets();
+      loadSavedDefinitions();
     }
   }, [isOpen]);
 
@@ -121,51 +141,69 @@ export default function AssetShowcase() {
                   </span>
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                  {category.files.map((file, fileIndex) => (
-                    <div key={fileIndex} className="bg-gray-800 rounded-lg p-3 border border-gray-700 text-center">
-                      {file.type === 'image' ? (
-                        <div className="mb-2">
-                          <img 
-                            src={file.path} 
-                            alt={file.name}
-                            className="w-full h-16 object-contain rounded bg-gray-700 cursor-pointer hover:opacity-80 transition-opacity"
-                            onClick={() => window.open(file.path, '_blank')}
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                              const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
-                              if (nextElement) {
-                                nextElement.style.display = 'flex';
-                              }
-                            }}
-                          />
-                          <div className="w-full h-16 bg-gray-700 rounded flex items-center justify-center text-2xl hidden">
-                            🖼️
+                  {category.files.map((file, fileIndex) => {
+                    const isSliced = file.type === 'image' ? isImageSliced(file.path) : false;
+                    
+                    return (
+                      <div key={fileIndex} className={`bg-gray-800 rounded-lg p-3 border text-center relative ${
+                        isSliced ? 'border-green-500' : 'border-gray-700'
+                      }`}>
+                        {file.type === 'image' ? (
+                          <div className="mb-2">
+                            <div className="relative">
+                              <img 
+                                src={file.path} 
+                                alt={file.name}
+                                className="w-full h-16 object-contain rounded bg-gray-700 cursor-pointer hover:opacity-80 transition-opacity"
+                                onClick={() => window.open(file.path, '_blank')}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                                  if (nextElement) {
+                                    nextElement.style.display = 'flex';
+                                  }
+                                }}
+                              />
+                              <div className="w-full h-16 bg-gray-700 rounded flex items-center justify-center text-2xl hidden">
+                                🖼️
+                              </div>
+                              {isSliced && (
+                                <div className="absolute top-1 right-1 bg-green-600 text-white text-xs px-1.5 py-0.5 rounded-full flex items-center gap-1">
+                                  <span className="text-xs">✓</span>
+                                  <span className="text-xs">Sliced</span>
+                                </div>
+                              )}
+                            </div>
+                            <div className="mt-2 space-y-1">
+                              <button
+                                onClick={() => window.open(file.path, '_blank')}
+                                className="w-full px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded"
+                              >
+                                View
+                              </button>
+                              <button
+                                onClick={() => window.location.href = `/sprite-editor?image=${encodeURIComponent(file.path)}&name=${encodeURIComponent(file.name)}`}
+                                className={`w-full px-2 py-1 text-white text-xs rounded ${
+                                  isSliced 
+                                    ? 'bg-orange-600 hover:bg-orange-700' 
+                                    : 'bg-green-600 hover:bg-green-700'
+                                }`}
+                              >
+                                {isSliced ? 'Edit Slice' : 'Slice'}
+                              </button>
+                            </div>
                           </div>
-                          <div className="mt-2 space-y-1">
-                            <button
-                              onClick={() => window.open(file.path, '_blank')}
-                              className="w-full px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded"
-                            >
-                              View
-                            </button>
-                            <button
-                              onClick={() => window.location.href = `/sprite-editor?image=${encodeURIComponent(file.path)}&name=${encodeURIComponent(file.name)}`}
-                              className="w-full px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded"
-                            >
-                              Slice
-                            </button>
+                        ) : (
+                          <div className="w-full h-16 bg-gray-700 rounded flex items-center justify-center text-2xl mb-2">
+                            📁
                           </div>
+                        )}
+                        <div className="text-xs text-gray-300 truncate" title={file.name}>
+                          {file.name}
                         </div>
-                      ) : (
-                        <div className="w-full h-16 bg-gray-700 rounded flex items-center justify-center text-2xl mb-2">
-                          📁
-                        </div>
-                      )}
-                      <div className="text-xs text-gray-300 truncate" title={file.name}>
-                        {file.name}
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ))

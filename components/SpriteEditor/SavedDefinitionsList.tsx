@@ -11,53 +11,55 @@ interface SliceDefinition {
 }
 
 interface SavedDefinitionsListProps {
-  definitions: SliceDefinition[];
+  definition: SliceDefinition | null;
   onLoadDefinition: (definition: SliceDefinition) => void;
   onDeleteDefinition: (definitionId: string) => void;
 }
 
 export default function SavedDefinitionsList({
-  definitions,
+  definition,
   onLoadDefinition,
   onDeleteDefinition
 }: SavedDefinitionsListProps) {
-  if (definitions.length === 0) {
-    return null;
-  }
-
   return (
     <div className="bg-gray-800 rounded-lg p-6">
-      <h2 className="text-xl font-bold text-white mb-4">Saved Definitions</h2>
-      <div className="space-y-3 max-h-64 overflow-y-auto">
-        {definitions.map((definition) => (
-          <div key={definition.id} className="bg-gray-700 rounded p-3 flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <div className="text-sm text-white truncate" title={definition.imageName}>
-                {definition.imageName}
-              </div>
-              <div className="text-xs text-gray-400">
-                {definition.gridWidth}×{definition.gridHeight} | 
-                Offset: {definition.offsetX},{definition.offsetY} | 
-                Spacing: {definition.spacingX},{definition.spacingY}
-              </div>
-            </div>
-            <div className="flex gap-2 ml-3">
-              <button
-                onClick={() => onLoadDefinition(definition)}
-                className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded"
-              >
-                Load
-              </button>
-              <button
-                onClick={() => onDeleteDefinition(definition.id)}
-                className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded"
-              >
-                Delete
-              </button>
-            </div>
+      <h2 className="text-xl font-bold text-white mb-4">Saved Definition</h2>
+      {definition ? (
+        <div className="bg-green-900 border border-green-700 rounded p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+            <span className="text-sm font-medium text-green-300">Definition Saved</span>
           </div>
-        ))}
-      </div>
+          <div className="text-sm text-white mb-2">
+            {definition.imageName}
+          </div>
+          <div className="text-xs text-gray-300 mb-4">
+            {definition.gridWidth}×{definition.gridHeight} | 
+            Offset: {definition.offsetX},{definition.offsetY} | 
+            Spacing: {definition.spacingX},{definition.spacingY}
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => onLoadDefinition(definition)}
+              className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded"
+            >
+              Load Settings
+            </button>
+            <button
+              onClick={() => onDeleteDefinition(definition.id)}
+              className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded"
+            >
+              Remove Definition
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-gray-700 border border-gray-600 rounded p-4 text-center">
+          <div className="text-gray-400 text-sm">
+            No definition saved for this sprite sheet
+          </div>
+        </div>
+      )}
     </div>
   );
 }
