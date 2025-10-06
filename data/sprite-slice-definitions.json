@@ -3,12 +3,17 @@
     "id": "mge7kxfkzbi93wlqc9",
     "imagePath": "/assets/cute-fantasy-rpg/Player/Player.png",
     "imageName": "Player.png",
+    "imageWidth": 192,
+    "imageHeight": 320,
     "gridWidth": 32,
     "gridHeight": 32,
     "offsetX": 0,
     "offsetY": 0,
     "spacingX": 0,
-    "spacingY": 0
+    "spacingY": 0,
+    "description": "",
+    "type": "Sprite Sheet",
+    "hasSlicingParams": true
   },
   {
     "id": "mgfi0gmi86ljueiz83e",

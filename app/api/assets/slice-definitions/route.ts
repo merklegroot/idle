@@ -6,12 +6,17 @@ interface SliceDefinition {
   id: string;
   imagePath: string;
   imageName: string;
+  imageWidth: number;
+  imageHeight: number;
   gridWidth: number;
   gridHeight: number;
   offsetX: number;
   offsetY: number;
   spacingX: number;
   spacingY: number;
+  description: string;
+  type: 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet';
+  hasSlicingParams: boolean;
 }
 
 const DEFINITIONS_FILE = path.join(process.cwd(), 'data', 'sprite-slice-definitions.json');
@@ -81,19 +86,24 @@ export async function POST(request: Request) {
     const {
       imagePath,
       imageName,
+      imageWidth,
+      imageHeight,
       gridWidth,
       gridHeight,
       offsetX,
       offsetY,
       spacingX,
-      spacingY
+      spacingY,
+      description,
+      type,
+      hasSlicingParams
     } = body;
 
     // Validate required fields
-    if (!imagePath || !imageName || gridWidth === undefined || gridHeight === undefined) {
+    if (!imagePath || !imageName) {
       return NextResponse.json({
         success: false,
-        error: 'Missing required fields'
+        error: 'Missing required fields: imagePath and imageName'
       }, { status: 400 });
     }
 
@@ -106,12 +116,17 @@ export async function POST(request: Request) {
       id: existingIndex >= 0 ? definitions[existingIndex].id : generateId(),
       imagePath,
       imageName,
+      imageWidth: Number(imageWidth) || 0,
+      imageHeight: Number(imageHeight) || 0,
       gridWidth: Number(gridWidth),
       gridHeight: Number(gridHeight),
       offsetX: Number(offsetX) || 0,
       offsetY: Number(offsetY) || 0,
       spacingX: Number(spacingX) || 0,
-      spacingY: Number(spacingY) || 0
+      spacingY: Number(spacingY) || 0,
+      description: description || '',
+      type: type || 'Unknown',
+      hasSlicingParams: Boolean(hasSlicingParams)
     };
 
     if (existingIndex >= 0) {
