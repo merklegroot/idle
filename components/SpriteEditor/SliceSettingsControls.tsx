@@ -5,11 +5,13 @@ interface SliceSettings {
   offsetY: number;
   spacingX: number;
   spacingY: number;
+  description: string;
+  type: 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet';
 }
 
 interface SliceSettingsControlsProps {
   sliceSettings: SliceSettings;
-  onSettingChange: (key: keyof SliceSettings, value: number) => void;
+  onSettingChange: (key: keyof SliceSettings, value: number | string) => void;
   onSave: () => void;
   isSaving: boolean;
   saveMessage: string;
@@ -27,6 +29,35 @@ export default function SliceSettingsControls({
   return (
     <div className="bg-gray-800 rounded-lg p-6">
       <h2 className="text-xl font-bold text-white mb-4">Slice Settings</h2>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          Description (Optional)
+        </label>
+        <input
+          type="text"
+          value={sliceSettings.description}
+          onChange={(e) => onSettingChange('description', e.target.value)}
+          placeholder="Enter a description for this sprite sheet..."
+          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
+        />
+      </div>
+      
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          Type
+        </label>
+        <select
+          value={sliceSettings.type}
+          onChange={(e) => onSettingChange('type', e.target.value as 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet')}
+          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
+        >
+          <option value="Unknown">Unknown</option>
+          <option value="Image">Image</option>
+          <option value="Tile Sheet">Tile Sheet</option>
+          <option value="Sprite Sheet">Sprite Sheet</option>
+        </select>
+      </div>
+      
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">

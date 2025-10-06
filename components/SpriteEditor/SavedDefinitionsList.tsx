@@ -2,12 +2,16 @@ interface SliceDefinition {
   id: string;
   imagePath: string;
   imageName: string;
+  imageWidth: number;
+  imageHeight: number;
   gridWidth: number;
   gridHeight: number;
   offsetX: number;
   offsetY: number;
   spacingX: number;
   spacingY: number;
+  description: string;
+  type: 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet';
 }
 
 interface SavedDefinitionsListProps {
@@ -30,11 +34,24 @@ export default function SavedDefinitionsList({
             <div className="w-2 h-2 bg-green-400 rounded-full"></div>
             <span className="text-sm font-medium text-green-300">Definition Saved</span>
           </div>
-          <div className="text-sm text-white mb-2">
-            {definition.imageName}
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-sm text-white">
+              {definition.imageName}
+            </div>
+            <div className="text-xs bg-blue-600 text-white px-2 py-1 rounded">
+              {definition.type}
+            </div>
+          </div>
+          {definition.description && (
+            <div className="text-xs text-gray-200 mb-2 italic">
+              "{definition.description}"
+            </div>
+          )}
+          <div className="text-xs text-gray-300 mb-2">
+            Image: {definition.imageWidth}×{definition.imageHeight}px
           </div>
           <div className="text-xs text-gray-300 mb-4">
-            {definition.gridWidth}×{definition.gridHeight} | 
+            Grid: {definition.gridWidth}×{definition.gridHeight} | 
             Offset: {definition.offsetX},{definition.offsetY} | 
             Spacing: {definition.spacingX},{definition.spacingY}
           </div>

@@ -13,18 +13,24 @@ interface SliceSettings {
   offsetY: number;
   spacingX: number;
   spacingY: number;
+  description: string;
+  type: 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet';
 }
 
 interface SliceDefinition {
   id: string;
   imagePath: string;
   imageName: string;
+  imageWidth: number;
+  imageHeight: number;
   gridWidth: number;
   gridHeight: number;
   offsetX: number;
   offsetY: number;
   spacingX: number;
   spacingY: number;
+  description: string;
+  type: 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet';
 }
 
 interface SpriteEditorMainProps {
@@ -38,7 +44,9 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
     offsetX: 0,
     offsetY: 0,
     spacingX: 0,
-    spacingY: 0
+    spacingY: 0,
+    description: '',
+    type: 'Unknown'
   });
   const [slicedSprites, setSlicedSprites] = useState<string[]>([]);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -219,7 +227,9 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
             offsetX: existingDefinition.offsetX,
             offsetY: existingDefinition.offsetY,
             spacingX: existingDefinition.spacingX,
-            spacingY: existingDefinition.spacingY
+            spacingY: existingDefinition.spacingY,
+            description: existingDefinition.description || '',
+            type: existingDefinition.type || 'Unknown'
           });
         }
       }
@@ -230,8 +240,17 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
     }
   };
 
-  const handleSettingChange = (key: keyof SliceSettings, value: number) => {
-    // Prevent zero or negative values for grid dimensions
+  const handleSettingChange = (key: keyof SliceSettings, value: number | string) => {
+    // Handle string values (like description)
+    if (typeof value === 'string') {
+      setSliceSettings(prev => ({
+        ...prev,
+        [key]: value
+      }));
+      return;
+    }
+    
+    // Handle number values with validation
     if (key === 'gridWidth' || key === 'gridHeight') {
       value = Math.max(1, value); // Minimum 1 pixel
     } else {
@@ -259,6 +278,8 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
         body: JSON.stringify({
           imagePath: selectedImage.src,
           imageName: selectedImage.name,
+          imageWidth: imageDimensions.width,
+          imageHeight: imageDimensions.height,
           ...sliceSettings
         })
       });
@@ -286,7 +307,9 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       offsetX: definition.offsetX,
       offsetY: definition.offsetY,
       spacingX: definition.spacingX,
-      spacingY: definition.spacingY
+      spacingY: definition.spacingY,
+      description: definition.description || '',
+      type: definition.type || 'Unknown'
     });
   };
 
