@@ -201,7 +201,7 @@ export default function SpriteEditor() {
       // Restore context after drawing
       ctx.restore();
     };
-    img.src = selectedImage.src;
+    img.src = selectedImage!.src;
   }, [imageLoaded, sliceSettings, zoomLevel, panOffset, selectedImage]);
 
   const loadSavedDefinitions = async () => {
