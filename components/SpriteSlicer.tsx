@@ -211,28 +211,32 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
           const sourceX = offsetX + col * (gridWidth + spacingX);
           const sourceY = offsetY + row * (gridHeight + spacingY);
           
-          // Check if this sprite is within bounds
-          if (sourceX + gridWidth <= img.width && sourceY + gridHeight <= img.height) {
+          // Check if this sprite starts within bounds (allow partial tiles)
+          if (sourceX < img.width && sourceY < img.height) {
             const destX = col * (gridWidth + 4) + 2;
             const destY = row * (gridHeight + 4) + 2;
             
-            // Draw sprite (using base dimensions)
+            // Calculate actual dimensions for partial tiles
+            const actualWidth = Math.min(gridWidth, img.width - sourceX);
+            const actualHeight = Math.min(gridHeight, img.height - sourceY);
+            
+            // Draw sprite (using actual dimensions for partial tiles)
             ctx.drawImage(
               img,
-              sourceX, sourceY, gridWidth, gridHeight,
-              destX, destY, gridWidth, gridHeight
+              sourceX, sourceY, actualWidth, actualHeight,
+              destX, destY, actualWidth, actualHeight
             );
             
             // Store sprite data URL for download
             const spriteCanvas = document.createElement('canvas');
             const spriteCtx = spriteCanvas.getContext('2d');
             if (spriteCtx) {
-              spriteCanvas.width = gridWidth;
-              spriteCanvas.height = gridHeight;
+              spriteCanvas.width = actualWidth;
+              spriteCanvas.height = actualHeight;
               spriteCtx.drawImage(
                 img,
-                sourceX, sourceY, gridWidth, gridHeight,
-                0, 0, gridWidth, gridHeight
+                sourceX, sourceY, actualWidth, actualHeight,
+                0, 0, actualWidth, actualHeight
               );
               sprites.push(spriteCanvas.toDataURL());
             }

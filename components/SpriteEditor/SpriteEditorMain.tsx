@@ -92,6 +92,43 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
+      // If no slicing parameters, show the full image
+      if (!hasSlicingParams) {
+        // Set canvas size to show the full image
+        const canvasWidth = img.width / zoomLevel;
+        const canvasHeight = img.height / zoomLevel;
+        
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        
+        // Apply pan transformations
+        ctx.save();
+        ctx.translate(panOffset.x, panOffset.y);
+        
+        // Clear canvas
+        ctx.fillStyle = '#1f2937';
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        
+        // Draw the full image
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height);
+        
+        // Store the full image as a single sprite
+        const spriteCanvas = document.createElement('canvas');
+        const spriteCtx = spriteCanvas.getContext('2d');
+        if (spriteCtx) {
+          spriteCanvas.width = img.width;
+          spriteCanvas.height = img.height;
+          spriteCtx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height);
+          setSlicedSprites([spriteCanvas.toDataURL()]);
+        } else {
+          setSlicedSprites([]);
+        }
+        
+        // Restore context after drawing
+        ctx.restore();
+        return;
+      }
+      
       // Calculate how many sprites we can fit
       const { gridWidth, gridHeight, offsetX, offsetY, spacingX, spacingY } = sliceSettings;
       
@@ -171,28 +208,32 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
           const sourceX = offsetX + col * (gridWidth + spacingX);
           const sourceY = offsetY + row * (gridHeight + spacingY);
           
-          // Check if this sprite is within bounds
-          if (sourceX + gridWidth <= img.width && sourceY + gridHeight <= img.height) {
+          // Check if this sprite starts within bounds (allow partial tiles)
+          if (sourceX < img.width && sourceY < img.height) {
             const destX = col * (gridWidth + 4) + 2;
             const destY = row * (gridHeight + 4) + 2;
             
-            // Draw sprite (using base dimensions)
+            // Calculate actual dimensions for partial tiles
+            const actualWidth = Math.min(gridWidth, img.width - sourceX);
+            const actualHeight = Math.min(gridHeight, img.height - sourceY);
+            
+            // Draw sprite (using actual dimensions for partial tiles)
             ctx.drawImage(
               img,
-              sourceX, sourceY, gridWidth, gridHeight,
-              destX, destY, gridWidth, gridHeight
+              sourceX, sourceY, actualWidth, actualHeight,
+              destX, destY, actualWidth, actualHeight
             );
             
             // Store sprite data URL for download
             const spriteCanvas = document.createElement('canvas');
             const spriteCtx = spriteCanvas.getContext('2d');
             if (spriteCtx) {
-              spriteCanvas.width = gridWidth;
-              spriteCanvas.height = gridHeight;
+              spriteCanvas.width = actualWidth;
+              spriteCanvas.height = actualHeight;
               spriteCtx.drawImage(
                 img,
-                sourceX, sourceY, gridWidth, gridHeight,
-                0, 0, gridWidth, gridHeight
+                sourceX, sourceY, actualWidth, actualHeight,
+                0, 0, actualWidth, actualHeight
               );
               sprites.push(spriteCanvas.toDataURL());
             }
@@ -206,7 +247,7 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       ctx.restore();
     };
     img.src = selectedImage!.src;
-  }, [imageLoaded, sliceSettings, zoomLevel, panOffset, selectedImage]);
+  }, [imageLoaded, sliceSettings, zoomLevel, panOffset, selectedImage, hasSlicingParams]);
 
   const loadSavedDefinitions = async () => {
     setIsLoading(true);
