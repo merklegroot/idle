@@ -34,7 +34,7 @@ interface SliceDefinition {
 }
 
 interface SpriteEditorMainProps {
-  selectedImage: { src: string; name: string } | null;
+  selectedImage: { src: string; name: string; assetPack?: string; category?: string } | null;
 }
 
 export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProps) {
@@ -528,6 +528,18 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold !text-white drop-shadow-lg">Sprite Editor</h1>
+            {selectedImage && (
+              <div className="mt-2 text-sm text-gray-300">
+                <span className="text-gray-400">Asset Pack:</span> 
+                <span className="ml-1 font-medium text-blue-300">{selectedImage.assetPack || 'Unknown'}</span>
+                <span className="mx-2 text-gray-500">•</span>
+                <span className="text-gray-400">Category:</span> 
+                <span className="ml-1 font-medium text-green-300">{selectedImage.category || 'Unknown'}</span>
+                <span className="mx-2 text-gray-500">•</span>
+                <span className="text-gray-400">File:</span> 
+                <span className="ml-1 font-medium text-yellow-300">{selectedImage.name}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

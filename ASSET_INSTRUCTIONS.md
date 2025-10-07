@@ -36,7 +36,7 @@ public/assets/cute-fantasy-rpg/
 
 Once you've placed the assets:
 1. Start your development server: `npm run dev`
-2. Visit `/icons` to see the asset showcase
+2. Visit `/assets` to see the asset showcase
 3. The assets will be available for use in your game
 
 ## License

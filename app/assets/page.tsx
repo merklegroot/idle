@@ -24,8 +24,9 @@ import {
   // Existing Resources
   WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, GoldDef, HouseDef
 } from '@/app/models/ResourceDef';
+import { AssetsGrid } from './AssetsGrid';
 
-export default function Icons() {
+export default function Assets() {
   const [isEmojiSectionOpen, setIsEmojiSectionOpen] = useState(false);
 
   const townBuildings = [
@@ -54,21 +55,6 @@ export default function Icons() {
   const existingResources = [
     WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, GoldDef, HouseDef
   ];
-
-  const IconGrid = ({ title, icons }: { title: string, icons: any[] }) => (
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4 text-white">{title}</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-        {icons.map((iconDef) => (
-          <div key={iconDef.resourceKey} className="bg-gray-800 rounded-lg p-4 border border-gray-700 text-center">
-            <div className="text-4xl mb-2">{iconDef.icon}</div>
-            <div className="text-sm text-gray-300">{iconDef.name}</div>
-            <div className="text-xs text-gray-500 mt-1">{iconDef.resourceKey}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-gray-900 p-6">
@@ -99,12 +85,12 @@ export default function Icons() {
           
           {isEmojiSectionOpen && (
             <div className="space-y-8">
-              <IconGrid title="🏛️ Town Buildings" icons={townBuildings} />
-              <IconGrid title="🌍 Land & Terrain" icons={landTerrain} />
-              <IconGrid title="🛣️ Paths & Roads" icons={pathsRoads} />
-              <IconGrid title="⛺ Camps & Settlements" icons={campsSettlements} />
-              <IconGrid title="🌾 Food & Agriculture" icons={foodAgriculture} />
-              <IconGrid title="🛠️ Existing Resources" icons={existingResources} />
+              <AssetsGrid title="🏛️ Town Buildings" icons={townBuildings} />
+              <AssetsGrid title="🌍 Land & Terrain" icons={landTerrain} />
+              <AssetsGrid title="🛣️ Paths & Roads" icons={pathsRoads} />
+              <AssetsGrid title="⛺ Camps & Settlements" icons={campsSettlements} />
+              <AssetsGrid title="🌾 Food & Agriculture" icons={foodAgriculture} />
+              <AssetsGrid title="🛠️ Existing Resources" icons={existingResources} />
             </div>
           )}
         </div>

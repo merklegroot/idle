@@ -19,12 +19,17 @@
     "id": "mgfi0gmi86ljueiz83e",
     "imagePath": "/assets/cute-fantasy-rpg/Tiles/Path_Tile.png",
     "imageName": "Path_Tile.png",
+    "imageWidth": 48,
+    "imageHeight": 96,
     "gridWidth": 16,
     "gridHeight": 16,
     "offsetX": 0,
     "offsetY": 0,
     "spacingX": 0,
-    "spacingY": 0
+    "spacingY": 0,
+    "description": "",
+    "type": "Tile Sheet",
+    "hasSlicingParams": true
   },
   {
     "id": "mgfp7wrqzcp1xfdg05",
