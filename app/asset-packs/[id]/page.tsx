@@ -21,6 +21,14 @@ const assetPacks: AssetPack[] = [
     image: '/assets/cute-fantasy-rpg/Player/Player.png',
     categories: ['Animals', 'Enemies', 'Decorations', 'Player', 'Tiles'],
     totalAssets: 20
+  },
+  {
+    id: 'emoji-assets',
+    name: 'Emoji Assets',
+    description: 'A comprehensive collection of emoji-based assets for buildings, terrain, resources, and more',
+    image: '🏛️',
+    categories: ['Town Buildings', 'Land & Terrain', 'Paths & Roads', 'Camps & Settlements', 'Food & Agriculture', 'Resources'],
+    totalAssets: 51
   }
 ];
 
@@ -61,6 +69,73 @@ const cuteFantasyAssets = {
   ]
 };
 
+// Emoji assets data
+const emojiAssets = {
+  'Town Buildings': [
+    { name: 'Town Hall', icon: '🏛️' },
+    { name: 'Market', icon: '🏪' },
+    { name: 'Bank', icon: '🏦' },
+    { name: 'Church', icon: '⛪' },
+    { name: 'School', icon: '🏫' },
+    { name: 'Hospital', icon: '🏥' },
+    { name: 'Library', icon: '📚' },
+    { name: 'Barracks', icon: '🏰' },
+    { name: 'Tavern', icon: '🍺' },
+    { name: 'Workshop', icon: '🔨' },
+    { name: 'Mill', icon: '🏭' },
+    { name: 'Tower', icon: '🗼' },
+    { name: 'Castle', icon: '🏰' }
+  ],
+  'Land & Terrain': [
+    { name: 'Plains', icon: '🌾' },
+    { name: 'Forest', icon: '🌲' },
+    { name: 'Mountain', icon: '⛰️' },
+    { name: 'Hill', icon: '🏔️' },
+    { name: 'Desert', icon: '🏜️' },
+    { name: 'Swamp', icon: '🌿' },
+    { name: 'Lake', icon: '🏞️' },
+    { name: 'River', icon: '🌊' },
+    { name: 'Coast', icon: '🏖️' },
+    { name: 'Cave', icon: '🕳️' }
+  ],
+  'Paths & Roads': [
+    { name: 'Road', icon: '🛣️' },
+    { name: 'Path', icon: '🛤️' },
+    { name: 'Bridge', icon: '🌉' },
+    { name: 'Gate', icon: '🚪' },
+    { name: 'Wall', icon: '🧱' }
+  ],
+  'Camps & Settlements': [
+    { name: 'Camp', icon: '⛺' },
+    { name: 'Tent', icon: '🏕️' },
+    { name: 'Outpost', icon: '🏘️' },
+    { name: 'Village', icon: '🏘️' },
+    { name: 'Fort', icon: '🏯' },
+    { name: 'Watchtower', icon: '🗼' }
+  ],
+  'Food & Agriculture': [
+    { name: 'Farm', icon: '🚜' },
+    { name: 'Field', icon: '🌾' },
+    { name: 'Orchard', icon: '🍎' },
+    { name: 'Garden', icon: '🌻' },
+    { name: 'Barn', icon: '🏚️' },
+    { name: 'Silo', icon: '🏗️' },
+    { name: 'Well', icon: '🏺' },
+    { name: 'Windmill', icon: '🌾' },
+    { name: 'Apiary', icon: '🍯' },
+    { name: 'Fish Pond', icon: '🐟' }
+  ],
+  'Resources': [
+    { name: 'Wood', icon: '🪵' },
+    { name: 'Berries', icon: '🫐' },
+    { name: 'Stone', icon: '🪨' },
+    { name: 'Hatchet', icon: '🪓' },
+    { name: 'Pickaxe', icon: '⛏️' },
+    { name: 'Gold', icon: '🪙' },
+    { name: 'House', icon: '🏠' }
+  ]
+};
+
 export default function AssetPackDetails() {
   const params = useParams();
   const [assetPack, setAssetPack] = useState<AssetPack | null>(null);
@@ -69,6 +144,10 @@ export default function AssetPackDetails() {
   useEffect(() => {
     const pack = assetPacks.find(p => p.id === params.id);
     setAssetPack(pack || null);
+    if (pack) {
+      // Set the first category as default
+      setSelectedCategory(pack.categories[0]);
+    }
   }, [params.id]);
 
   if (!assetPack) {
@@ -89,7 +168,11 @@ export default function AssetPackDetails() {
     );
   }
 
-  const currentAssets = cuteFantasyAssets[selectedCategory as keyof typeof cuteFantasyAssets] || [];
+  // Determine which assets to show based on pack type
+  const isEmojiPack = assetPack.id === 'emoji-assets';
+  const currentAssets = isEmojiPack 
+    ? emojiAssets[selectedCategory as keyof typeof emojiAssets] || []
+    : cuteFantasyAssets[selectedCategory as keyof typeof cuteFantasyAssets] || [];
 
   return (
     <div className="min-h-screen bg-gray-900 p-6">
@@ -143,11 +226,17 @@ export default function AssetPackDetails() {
                 className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-colors group"
               >
                 <div className="aspect-square bg-gray-700 rounded-lg mb-3 flex items-center justify-center overflow-hidden">
-                  <img
-                    src={asset.path}
-                    alt={asset.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                  />
+                  {isEmojiPack ? (
+                    <div className="text-6xl group-hover:scale-110 transition-transform">
+                      {(asset as any).icon}
+                    </div>
+                  ) : (
+                    <img
+                      src={(asset as any).path}
+                      alt={asset.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    />
+                  )}
                 </div>
                 <div className="text-sm text-gray-300 text-center">{asset.name}</div>
               </div>
