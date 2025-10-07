@@ -34,7 +34,7 @@ interface SliceDefinition {
 }
 
 interface SpriteEditorMainProps {
-  selectedImage: { src: string; name: string; assetPack?: string; category?: string } | null;
+  selectedImage: { src: string; name: string; assetPack?: string; category?: string; assetId?: string } | null;
 }
 
 export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProps) {
@@ -538,6 +538,19 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
                 <span className="mx-2 text-gray-500">•</span>
                 <span className="text-gray-400">File:</span> 
                 <span className="ml-1 font-medium text-yellow-300">{selectedImage.name}</span>
+                {selectedImage.assetId && (
+                  <>
+                    <span className="mx-2 text-gray-500">•</span>
+                    <span className="text-gray-400">ID:</span> 
+                    <span 
+                      className="ml-1 font-medium text-purple-300 font-mono cursor-pointer hover:text-purple-200 transition-colors"
+                      onClick={() => navigator.clipboard.writeText(selectedImage.assetId!)}
+                      title="Click to copy Asset ID"
+                    >
+                      {selectedImage.assetId}
+                    </span>
+                  </>
+                )}
               </div>
             )}
           </div>

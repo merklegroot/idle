@@ -116,5 +116,21 @@
     "description": "Chest",
     "type": "Image",
     "hasSlicingParams": false
+  },
+  {
+    "id": "mgh6jk4zq2ccg75liwo",
+    "imagePath": "/assets/cute-fantasy-rpg/Animals/Pig/Pig.png",
+    "imageName": "Pig",
+    "imageWidth": 64,
+    "imageHeight": 64,
+    "gridWidth": 32,
+    "gridHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "description": "Pig",
+    "type": "Sprite Sheet",
+    "hasSlicingParams": true
   }
 ]
