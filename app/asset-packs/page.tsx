@@ -42,7 +42,7 @@ export default function AssetPacks() {
           {assetPacks.map((pack) => (
             <Link
               key={pack.id}
-              href={`/asset-packs/${pack.id}`}
+              href={`/asset-pack-details/${pack.id}`}
               className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-purple-500 transition-colors group"
             >
               <div className="aspect-square bg-gray-700 rounded-lg mb-4 flex items-center justify-center overflow-hidden">

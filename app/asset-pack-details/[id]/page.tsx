@@ -165,7 +165,7 @@ export default function AssetPackDetails() {
       setEditingId(false);
       
       // Update the URL to reflect the new ID
-      window.history.replaceState(null, '', `/asset-packs/${newId.trim()}`);
+      window.history.replaceState(null, '', `/asset-pack-details/${newId.trim()}`);
     }
   };
 
