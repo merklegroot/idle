@@ -63,5 +63,53 @@
     "description": "",
     "type": "Sprite Sheet",
     "hasSlicingParams": true
+  },
+  {
+    "id": "mgfu84pxtxf8atljij",
+    "imagePath": "/assets/cute-fantasy-rpg/Outdoor decoration/Bridge_Wood.png",
+    "imageName": "Bridge_Wood.png",
+    "imageWidth": 144,
+    "imageHeight": 64,
+    "gridWidth": 48,
+    "gridHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "description": "",
+    "type": "Tile Sheet",
+    "hasSlicingParams": true
+  },
+  {
+    "id": "mgfv2ao553bglycuosl",
+    "imagePath": "/assets/cute-fantasy-rpg/Outdoor decoration/House.png",
+    "imageName": "House.png",
+    "imageWidth": 80,
+    "imageHeight": 112,
+    "gridWidth": 32,
+    "gridHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "description": "",
+    "type": "Image",
+    "hasSlicingParams": false
+  },
+  {
+    "id": "mgfv3nbzq7zlm2x00a",
+    "imagePath": "/assets/cute-fantasy-rpg/Outdoor decoration/Chest.png",
+    "imageName": "Chest.png",
+    "imageWidth": 16,
+    "imageHeight": 16,
+    "gridWidth": 32,
+    "gridHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "description": "",
+    "type": "Image",
+    "hasSlicingParams": false
   }
 ]

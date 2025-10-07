@@ -252,6 +252,22 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
               destX, destY, actualWidth, actualHeight
             );
             
+            // Add visual indicator for partial tiles
+            if (actualWidth < gridWidth || actualHeight < gridHeight) {
+              // Draw a semi-transparent overlay only on the empty remainder area
+              ctx.fillStyle = 'rgba(255, 165, 0, 0.4)'; // Orange with 40% opacity
+              
+              // Highlight the empty area to the right if width is partial
+              if (actualWidth < gridWidth) {
+                ctx.fillRect(destX + actualWidth, destY, gridWidth - actualWidth, actualHeight);
+              }
+              
+              // Highlight the empty area below if height is partial
+              if (actualHeight < gridHeight) {
+                ctx.fillRect(destX, destY + actualHeight, gridWidth, gridHeight - actualHeight);
+              }
+            }
+            
             // Store sprite data URL for download
             const spriteCanvas = document.createElement('canvas');
             const spriteCtx = spriteCanvas.getContext('2d');
@@ -281,9 +297,26 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
     setIsLoading(true);
     try {
       const response = await fetch('/api/assets/slice-definitions');
-      const data = await response.json();
+      
+      // Check if response is ok before parsing JSON
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error Response (load):', errorText);
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      }
+      
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('JSON Parse Error (load):', jsonError);
+        const responseText = await response.text();
+        console.error('Response Text (load):', responseText);
+        throw new Error('Invalid JSON response from server');
+      }
+      
       if (data.success) {
-        setSavedDefinitions(data.definitions);
+        setSavedDefinitions(data.definitions || []);
         // Find the definition for the current image
         const existingDefinition = selectedImage?.src 
           ? data.definitions.find((def: SliceDefinition) => def.imagePath === selectedImage.src)
@@ -310,6 +343,10 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       }
     } catch (error) {
       console.error('Error loading definitions:', error);
+      // Set empty array as fallback
+      setSavedDefinitions([]);
+      setCurrentDefinition(null);
+      setHasSlicingParams(false);
     } finally {
       setIsLoading(false);
     }
@@ -374,10 +411,31 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
         })
       });
       
-      const data = await response.json();
+      // Check if response is ok before parsing JSON
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText);
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      }
+      
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('JSON Parse Error:', jsonError);
+        const responseText = await response.text();
+        console.error('Response Text:', responseText);
+        throw new Error('Invalid JSON response from server');
+      }
+      
       if (data.success) {
         setSaveMessage('Definition saved successfully!');
-        await loadSavedDefinitions();
+        try {
+          await loadSavedDefinitions();
+        } catch (loadError) {
+          console.error('Error reloading definitions after save:', loadError);
+          // Don't show this error to user since save was successful
+        }
         setTimeout(() => setSaveMessage(''), 3000);
       } else {
         setSaveMessage(`Error: ${data.error}`);

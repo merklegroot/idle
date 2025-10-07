@@ -232,6 +232,22 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
               destX, destY, actualWidth, actualHeight
             );
             
+            // Add visual indicator for partial tiles
+            if (actualWidth < gridWidth || actualHeight < gridHeight) {
+              // Draw a semi-transparent overlay only on the empty remainder area
+              ctx.fillStyle = 'rgba(255, 165, 0, 0.4)'; // Orange with 40% opacity
+              
+              // Highlight the empty area to the right if width is partial
+              if (actualWidth < gridWidth) {
+                ctx.fillRect(destX + actualWidth, destY, gridWidth - actualWidth, actualHeight);
+              }
+              
+              // Highlight the empty area below if height is partial
+              if (actualHeight < gridHeight) {
+                ctx.fillRect(destX, destY + actualHeight, gridWidth, gridHeight - actualHeight);
+              }
+            }
+            
             // Store sprite data URL for download
             const spriteCanvas = document.createElement('canvas');
             const spriteCtx = spriteCanvas.getContext('2d');
