@@ -250,7 +250,7 @@ export default function AssetPackDetails() {
                 className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-colors group cursor-pointer"
                 onClick={() => {
                   // Navigate directly to sprite editor with clean URL
-                  window.open(`/sprite-editor?packId=${assetPack.id}&assetId=${(asset as any).id}`, '_blank');
+                  window.location.href = `/sprite-editor?packId=${assetPack.id}&assetId=${(asset as any).id}`;
                 }}
                 title="Click to open in Sprite Editor"
               >
