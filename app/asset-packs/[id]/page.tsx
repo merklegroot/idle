@@ -35,104 +35,104 @@ const assetPacks: AssetPack[] = [
 // Asset data for the cute-fantasy-rpg pack
 const cuteFantasyAssets = {
   'Animals': [
-    { name: 'Chicken', path: '/assets/cute-fantasy-rpg/Animals/Chicken/Chicken.png' },
-    { name: 'Cow', path: '/assets/cute-fantasy-rpg/Animals/Cow/Cow.png' },
-    { name: 'Pig', path: '/assets/cute-fantasy-rpg/Animals/Pig/Pig.png' },
-    { name: 'Sheep', path: '/assets/cute-fantasy-rpg/Animals/Sheep/Sheep.png' }
+    { name: 'Chicken', path: '/assets/cute-fantasy-rpg/Animals/Chicken/Chicken.png', id: 'chicken' },
+    { name: 'Cow', path: '/assets/cute-fantasy-rpg/Animals/Cow/Cow.png', id: 'cow' },
+    { name: 'Pig', path: '/assets/cute-fantasy-rpg/Animals/Pig/Pig.png', id: 'pig' },
+    { name: 'Sheep', path: '/assets/cute-fantasy-rpg/Animals/Sheep/Sheep.png', id: 'sheep' }
   ],
   'Enemies': [
-    { name: 'Skeleton', path: '/assets/cute-fantasy-rpg/Enemies/Skeleton.png' },
-    { name: 'Slime Green', path: '/assets/cute-fantasy-rpg/Enemies/Slime_Green.png' }
+    { name: 'Skeleton', path: '/assets/cute-fantasy-rpg/Enemies/Skeleton.png', id: 'skeleton' },
+    { name: 'Slime Green', path: '/assets/cute-fantasy-rpg/Enemies/Slime_Green.png', id: 'slime_green' }
   ],
   'Decorations': [
-    { name: 'Bridge Wood', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Bridge_Wood.png' },
-    { name: 'Chest', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Chest.png' },
-    { name: 'Fences', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Fences.png' },
-    { name: 'House', path: '/assets/cute-fantasy-rpg/Outdoor decoration/House.png' },
-    { name: 'Oak Tree Small', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree_Small.png' },
-    { name: 'Oak Tree', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree.png' },
-    { name: 'Outdoor Decor Free', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Outdoor_Decor_Free.png' }
+    { name: 'Bridge Wood', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Bridge_Wood.png', id: 'bridge_wood' },
+    { name: 'Chest', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Chest.png', id: 'chest' },
+    { name: 'Fences', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Fences.png', id: 'fences' },
+    { name: 'House', path: '/assets/cute-fantasy-rpg/Outdoor decoration/House.png', id: 'house' },
+    { name: 'Oak Tree Small', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree_Small.png', id: 'oak_tree_small' },
+    { name: 'Oak Tree', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree.png', id: 'oak_tree' },
+    { name: 'Outdoor Decor Free', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Outdoor_Decor_Free.png', id: 'outdoor_decor_free' }
   ],
   'Player': [
-    { name: 'Player Actions', path: '/assets/cute-fantasy-rpg/Player/Player_Actions.png' },
-    { name: 'Player', path: '/assets/cute-fantasy-rpg/Player/Player.png' }
+    { name: 'Player Actions', path: '/assets/cute-fantasy-rpg/Player/Player_Actions.png', id: 'player_actions' },
+    { name: 'Player', path: '/assets/cute-fantasy-rpg/Player/Player.png', id: 'player' }
   ],
   'Tiles': [
-    { name: 'Beach Tile', path: '/assets/cute-fantasy-rpg/Tiles/Beach_Tile.png' },
-    { name: 'Cliff Tile', path: '/assets/cute-fantasy-rpg/Tiles/Cliff_Tile.png' },
-    { name: 'FarmLand Tile', path: '/assets/cute-fantasy-rpg/Tiles/FarmLand_Tile.png' },
-    { name: 'Grass Middle', path: '/assets/cute-fantasy-rpg/Tiles/Grass_Middle.png' },
-    { name: 'Path Middle', path: '/assets/cute-fantasy-rpg/Tiles/Path_Middle.png' },
-    { name: 'Path Tile', path: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png' },
-    { name: 'Water Middle', path: '/assets/cute-fantasy-rpg/Tiles/Water_Middle.png' },
-    { name: 'Water Tile', path: '/assets/cute-fantasy-rpg/Tiles/Water_Tile.png' }
+    { name: 'Beach Tile', path: '/assets/cute-fantasy-rpg/Tiles/Beach_Tile.png', id: 'beach_tile' },
+    { name: 'Cliff Tile', path: '/assets/cute-fantasy-rpg/Tiles/Cliff_Tile.png', id: 'cliff_tile' },
+    { name: 'FarmLand Tile', path: '/assets/cute-fantasy-rpg/Tiles/FarmLand_Tile.png', id: 'farmland_tile' },
+    { name: 'Grass Middle', path: '/assets/cute-fantasy-rpg/Tiles/Grass_Middle.png', id: 'grass_middle' },
+    { name: 'Path Middle', path: '/assets/cute-fantasy-rpg/Tiles/Path_Middle.png', id: 'path_middle' },
+    { name: 'Path Tile', path: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png', id: 'path_tile' },
+    { name: 'Water Middle', path: '/assets/cute-fantasy-rpg/Tiles/Water_Middle.png', id: 'water_middle' },
+    { name: 'Water Tile', path: '/assets/cute-fantasy-rpg/Tiles/Water_Tile.png', id: 'water_tile' }
   ]
 };
 
 // Emoji assets data
 const emojiAssets = {
   'Town Buildings': [
-    { name: 'Town Hall', icon: '🏛️' },
-    { name: 'Market', icon: '🏪' },
-    { name: 'Bank', icon: '🏦' },
-    { name: 'Church', icon: '⛪' },
-    { name: 'School', icon: '🏫' },
-    { name: 'Hospital', icon: '🏥' },
-    { name: 'Library', icon: '📚' },
-    { name: 'Barracks', icon: '🏰' },
-    { name: 'Tavern', icon: '🍺' },
-    { name: 'Workshop', icon: '🔨' },
-    { name: 'Mill', icon: '🏭' },
-    { name: 'Tower', icon: '🗼' },
-    { name: 'Castle', icon: '🏰' }
+    { name: 'Town Hall', icon: '🏛️', id: 'town_hall' },
+    { name: 'Market', icon: '🏪', id: 'market' },
+    { name: 'Bank', icon: '🏦', id: 'bank' },
+    { name: 'Church', icon: '⛪', id: 'church' },
+    { name: 'School', icon: '🏫', id: 'school' },
+    { name: 'Hospital', icon: '🏥', id: 'hospital' },
+    { name: 'Library', icon: '📚', id: 'library' },
+    { name: 'Barracks', icon: '🏰', id: 'barracks' },
+    { name: 'Tavern', icon: '🍺', id: 'tavern' },
+    { name: 'Workshop', icon: '🔨', id: 'workshop' },
+    { name: 'Mill', icon: '🏭', id: 'mill' },
+    { name: 'Tower', icon: '🗼', id: 'tower' },
+    { name: 'Castle', icon: '🏰', id: 'castle' }
   ],
   'Land & Terrain': [
-    { name: 'Plains', icon: '🌾' },
-    { name: 'Forest', icon: '🌲' },
-    { name: 'Mountain', icon: '⛰️' },
-    { name: 'Hill', icon: '🏔️' },
-    { name: 'Desert', icon: '🏜️' },
-    { name: 'Swamp', icon: '🌿' },
-    { name: 'Lake', icon: '🏞️' },
-    { name: 'River', icon: '🌊' },
-    { name: 'Coast', icon: '🏖️' },
-    { name: 'Cave', icon: '🕳️' }
+    { name: 'Plains', icon: '🌾', id: 'plains' },
+    { name: 'Forest', icon: '🌲', id: 'forest' },
+    { name: 'Mountain', icon: '⛰️', id: 'mountain' },
+    { name: 'Hill', icon: '🏔️', id: 'hill' },
+    { name: 'Desert', icon: '🏜️', id: 'desert' },
+    { name: 'Swamp', icon: '🌿', id: 'swamp' },
+    { name: 'Lake', icon: '🏞️', id: 'lake' },
+    { name: 'River', icon: '🌊', id: 'river' },
+    { name: 'Coast', icon: '🏖️', id: 'coast' },
+    { name: 'Cave', icon: '🕳️', id: 'cave' }
   ],
   'Paths & Roads': [
-    { name: 'Road', icon: '🛣️' },
-    { name: 'Path', icon: '🛤️' },
-    { name: 'Bridge', icon: '🌉' },
-    { name: 'Gate', icon: '🚪' },
-    { name: 'Wall', icon: '🧱' }
+    { name: 'Road', icon: '🛣️', id: 'road' },
+    { name: 'Path', icon: '🛤️', id: 'path' },
+    { name: 'Bridge', icon: '🌉', id: 'bridge' },
+    { name: 'Gate', icon: '🚪', id: 'gate' },
+    { name: 'Wall', icon: '🧱', id: 'wall' }
   ],
   'Camps & Settlements': [
-    { name: 'Camp', icon: '⛺' },
-    { name: 'Tent', icon: '🏕️' },
-    { name: 'Outpost', icon: '🏘️' },
-    { name: 'Village', icon: '🏘️' },
-    { name: 'Fort', icon: '🏯' },
-    { name: 'Watchtower', icon: '🗼' }
+    { name: 'Camp', icon: '⛺', id: 'camp' },
+    { name: 'Tent', icon: '🏕️', id: 'tent' },
+    { name: 'Outpost', icon: '🏘️', id: 'outpost' },
+    { name: 'Village', icon: '🏘️', id: 'village' },
+    { name: 'Fort', icon: '🏯', id: 'fort' },
+    { name: 'Watchtower', icon: '🗼', id: 'watchtower' }
   ],
   'Food & Agriculture': [
-    { name: 'Farm', icon: '🚜' },
-    { name: 'Field', icon: '🌾' },
-    { name: 'Orchard', icon: '🍎' },
-    { name: 'Garden', icon: '🌻' },
-    { name: 'Barn', icon: '🏚️' },
-    { name: 'Silo', icon: '🏗️' },
-    { name: 'Well', icon: '🏺' },
-    { name: 'Windmill', icon: '🌾' },
-    { name: 'Apiary', icon: '🍯' },
-    { name: 'Fish Pond', icon: '🐟' }
+    { name: 'Farm', icon: '🚜', id: 'farm' },
+    { name: 'Field', icon: '🌾', id: 'field' },
+    { name: 'Orchard', icon: '🍎', id: 'orchard' },
+    { name: 'Garden', icon: '🌻', id: 'garden' },
+    { name: 'Barn', icon: '🏚️', id: 'barn' },
+    { name: 'Silo', icon: '🏗️', id: 'silo' },
+    { name: 'Well', icon: '🏺', id: 'well' },
+    { name: 'Windmill', icon: '🌾', id: 'windmill' },
+    { name: 'Apiary', icon: '🍯', id: 'apiary' },
+    { name: 'Fish Pond', icon: '🐟', id: 'fish_pond' }
   ],
   'Resources': [
-    { name: 'Wood', icon: '🪵' },
-    { name: 'Berries', icon: '🫐' },
-    { name: 'Stone', icon: '🪨' },
-    { name: 'Hatchet', icon: '🪓' },
-    { name: 'Pickaxe', icon: '⛏️' },
-    { name: 'Gold', icon: '🪙' },
-    { name: 'House', icon: '🏠' }
+    { name: 'Wood', icon: '🪵', id: 'wood' },
+    { name: 'Berries', icon: '🫐', id: 'berries' },
+    { name: 'Stone', icon: '🪨', id: 'stone' },
+    { name: 'Hatchet', icon: '🪓', id: 'hatchet' },
+    { name: 'Pickaxe', icon: '⛏️', id: 'pickaxe' },
+    { name: 'Gold', icon: '🪙', id: 'gold' },
+    { name: 'House', icon: '🏠', id: 'house' }
   ]
 };
 
@@ -140,6 +140,8 @@ export default function AssetPackDetails() {
   const params = useParams();
   const [assetPack, setAssetPack] = useState<AssetPack | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('Animals');
+  const [editingId, setEditingId] = useState<boolean>(false);
+  const [newId, setNewId] = useState<string>('');
 
   useEffect(() => {
     const pack = assetPacks.find(p => p.id === params.id);
@@ -147,8 +149,30 @@ export default function AssetPackDetails() {
     if (pack) {
       // Set the first category as default
       setSelectedCategory(pack.categories[0]);
+      setNewId(pack.id);
     }
   }, [params.id]);
+
+  const handleEditId = () => {
+    setEditingId(true);
+  };
+
+  const handleSaveId = () => {
+    if (newId.trim() && assetPack) {
+      // Update the asset pack ID
+      const updatedPack = { ...assetPack, id: newId.trim() };
+      setAssetPack(updatedPack);
+      setEditingId(false);
+      
+      // Update the URL to reflect the new ID
+      window.history.replaceState(null, '', `/asset-packs/${newId.trim()}`);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setNewId(assetPack?.id || '');
+    setEditingId(false);
+  };
 
   if (!assetPack) {
     return (
@@ -223,7 +247,12 @@ export default function AssetPackDetails() {
             {currentAssets.map((asset, index) => (
               <div
                 key={index}
-                className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-colors group"
+                className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-colors group cursor-pointer"
+                onClick={() => {
+                  // Navigate to the clean asset detail page
+                  window.location.href = `/asset-packs/${assetPack.id}/assets/${(asset as any).id}`;
+                }}
+                title="Click to view asset details"
               >
                 <div className="aspect-square bg-gray-700 rounded-lg mb-3 flex items-center justify-center overflow-hidden">
                   {isEmojiPack ? (
@@ -238,7 +267,17 @@ export default function AssetPackDetails() {
                     />
                   )}
                 </div>
-                <div className="text-sm text-gray-300 text-center">{asset.name}</div>
+                <div className="text-sm text-gray-300 text-center mb-2">{asset.name}</div>
+                <div 
+                  className="text-xs text-purple-400 text-center cursor-pointer hover:text-purple-300 transition-colors font-mono bg-gray-700 px-2 py-1 rounded"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent opening sprite editor when clicking ID
+                    navigator.clipboard.writeText((asset as any).id);
+                  }}
+                  title="Click to copy ID"
+                >
+                  {(asset as any).id}
+                </div>
               </div>
             ))}
           </div>
@@ -265,6 +304,66 @@ export default function AssetPackDetails() {
               <h4 className="text-lg font-semibold text-gray-300 mb-2">Total Assets</h4>
               <p className="text-white">{assetPack.totalAssets}</p>
             </div>
+          </div>
+          
+          <div className="mt-6 pt-6 border-t border-gray-600">
+            <h4 className="text-lg font-semibold text-gray-300 mb-2">Asset Pack ID</h4>
+            
+            {editingId ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={newId}
+                    onChange={(e) => setNewId(e.target.value)}
+                    className="text-lg text-white font-mono bg-gray-700 px-3 py-2 rounded border border-gray-600 focus:border-purple-500 focus:outline-none flex-1"
+                    placeholder="Enter asset pack ID"
+                    autoFocus
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSaveId}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium transition-colors"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={handleCancelEdit}
+                    className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm font-medium transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div 
+                    className="text-lg text-purple-400 font-mono bg-gray-700 px-3 py-2 rounded cursor-pointer hover:text-purple-300 transition-colors"
+                    onClick={() => navigator.clipboard.writeText(assetPack.id)}
+                    title="Click to copy Asset Pack ID"
+                  >
+                    {assetPack.id}
+                  </div>
+                  <button
+                    onClick={handleEditId}
+                    className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm font-medium transition-colors"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-400">Click ID to copy</span>
+                  <span className="text-gray-500">•</span>
+                  <span className="text-sm text-gray-400">Click Edit to change</span>
+                </div>
+              </div>
+            )}
+            
+            <p className="text-sm text-gray-400 mt-3">
+              Use this ID to reference this asset pack in your game code
+            </p>
           </div>
         </div>
       </div>
