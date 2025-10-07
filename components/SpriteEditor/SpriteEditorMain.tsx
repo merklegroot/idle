@@ -88,26 +88,22 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    
+    // Disable image smoothing for pixel art
+    ctx.imageSmoothingEnabled = false;
 
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
       // If no slicing parameters, show the full image
       if (!hasSlicingParams) {
-        // Set canvas size to show the full image
-        const canvasWidth = img.width / zoomLevel;
-        const canvasHeight = img.height / zoomLevel;
-        
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
-        
-        // Apply pan transformations
-        ctx.save();
-        ctx.translate(panOffset.x, panOffset.y);
+        // Set canvas size to actual pixel dimensions for crisp rendering
+        canvas.width = img.width;
+        canvas.height = img.height;
         
         // Clear canvas
         ctx.fillStyle = '#1f2937';
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        ctx.fillRect(0, 0, img.width, img.height);
         
         // Draw the full image
         ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height);
@@ -161,25 +157,17 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
         return;
       }
       
-      // Set canvas size to show all sprites (base size)
+      // Set canvas size to actual pixel dimensions for crisp rendering
       // Use the actual image dimensions to ensure we show the complete image
       const baseCanvasWidth = Math.max(cols * (gridWidth + 4), img.width + 4);
       const baseCanvasHeight = Math.max(rows * (gridHeight + 4), img.height + 4);
       
-      // Scale canvas size based on zoom level
-      const canvasWidth = baseCanvasWidth / zoomLevel;
-      const canvasHeight = baseCanvasHeight / zoomLevel;
-      
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
-      
-      // Apply pan transformations (zoom is handled by canvas size)
-      ctx.save();
-      ctx.translate(panOffset.x, panOffset.y);
+      canvas.width = baseCanvasWidth;
+      canvas.height = baseCanvasHeight;
       
       // Clear canvas
       ctx.fillStyle = '#1f2937';
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      ctx.fillRect(0, 0, baseCanvasWidth, baseCanvasHeight);
       
       // Draw grid lines (using base dimensions)
       ctx.strokeStyle = '#374151';
@@ -286,9 +274,6 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       }
       
       setSlicedSprites(sprites);
-      
-      // Restore context after drawing
-      ctx.restore();
     };
     img.src = selectedImage!.src;
   }, [imageLoaded, sliceSettings, zoomLevel, panOffset, selectedImage, hasSlicingParams]);
@@ -599,6 +584,8 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUp}
+                  zoomLevel={zoomLevel}
+                  panOffset={panOffset}
                 />
               </div>
             ) : (

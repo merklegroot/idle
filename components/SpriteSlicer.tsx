@@ -128,6 +128,9 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    
+    // Disable image smoothing for pixel art
+    ctx.imageSmoothingEnabled = false;
 
     const img = new Image();
     img.crossOrigin = 'anonymous';
@@ -164,25 +167,17 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
         return;
       }
       
-      // Set canvas size to show all sprites (base size)
+      // Set canvas size to actual pixel dimensions for crisp rendering
       // Use the actual image dimensions to ensure we show the complete image
       const baseCanvasWidth = Math.max(cols * (gridWidth + 4), img.width + 4);
       const baseCanvasHeight = Math.max(rows * (gridHeight + 4), img.height + 4);
       
-      // Scale canvas size based on zoom level
-      const canvasWidth = baseCanvasWidth * zoomLevel;
-      const canvasHeight = baseCanvasHeight * zoomLevel;
-      
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
-      
-      // Apply pan transformations (zoom is handled by canvas size)
-      ctx.save();
-      ctx.translate(panOffset.x, panOffset.y);
+      canvas.width = baseCanvasWidth;
+      canvas.height = baseCanvasHeight;
       
       // Clear canvas
       ctx.fillStyle = '#1f2937';
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      ctx.fillRect(0, 0, baseCanvasWidth, baseCanvasHeight);
       
       // Draw grid lines (using base dimensions)
       ctx.strokeStyle = '#374151';
@@ -266,9 +261,6 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
       }
       
       setSlicedSprites(sprites);
-      
-      // Restore context after drawing
-      ctx.restore();
     };
     img.src = imageSrc;
   }, [imageLoaded, sliceSettings, zoomLevel, panOffset]);
@@ -639,7 +631,10 @@ export default function SpriteSlicer({ imageSrc, imageName, isOpen, onClose }: S
                   style={{ 
                     maxWidth: 'none', 
                     height: 'auto',
-                    minWidth: '100%'
+                    minWidth: '100%',
+                    imageRendering: 'pixelated',
+                    transform: `scale(${zoomLevel}) translate(${panOffset.x / zoomLevel}px, ${panOffset.y / zoomLevel}px)`,
+                    transformOrigin: 'top left'
                   }}
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
