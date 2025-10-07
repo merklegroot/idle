@@ -249,10 +249,10 @@ export default function AssetPackDetails() {
                 key={index}
                 className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-colors group cursor-pointer"
                 onClick={() => {
-                  // Navigate to the clean asset detail page
-                  window.location.href = `/asset-packs/${assetPack.id}/assets/${(asset as any).id}`;
+                  // Navigate directly to sprite editor with clean URL
+                  window.open(`/sprite-editor?packId=${assetPack.id}&assetId=${(asset as any).id}`, '_blank');
                 }}
-                title="Click to view asset details"
+                title="Click to open in Sprite Editor"
               >
                 <div className="aspect-square bg-gray-700 rounded-lg mb-3 flex items-center justify-center overflow-hidden">
                   {isEmojiPack ? (
