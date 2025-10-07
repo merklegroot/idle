@@ -152,8 +152,8 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
         return;
       }
       
-      const cols = Math.floor((availableWidth + spacingX) / (gridWidth + spacingX));
-      const rows = Math.floor((availableHeight + spacingY) / (gridHeight + spacingY));
+      const cols = Math.ceil((availableWidth + spacingX) / (gridWidth + spacingX));
+      const rows = Math.ceil((availableHeight + spacingY) / (gridHeight + spacingY));
       
       // Prevent infinite loops
       if (cols <= 0 || rows <= 0 || cols > 1000 || rows > 1000) {
@@ -162,8 +162,9 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       }
       
       // Set canvas size to show all sprites (base size)
-      const baseCanvasWidth = cols * (gridWidth + 4); // 4px padding between sprites
-      const baseCanvasHeight = rows * (gridHeight + 4);
+      // Use the actual image dimensions to ensure we show the complete image
+      const baseCanvasWidth = Math.max(cols * (gridWidth + 4), img.width + 4);
+      const baseCanvasHeight = Math.max(rows * (gridHeight + 4), img.height + 4);
       
       // Scale canvas size based on zoom level
       const canvasWidth = baseCanvasWidth / zoomLevel;
@@ -184,6 +185,7 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       ctx.strokeStyle = '#374151';
       ctx.lineWidth = 1;
       
+      // Draw vertical grid lines
       for (let i = 0; i <= cols; i++) {
         const x = i * (gridWidth + 4);
         ctx.beginPath();
@@ -192,6 +194,7 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
         ctx.stroke();
       }
       
+      // Draw horizontal grid lines
       for (let i = 0; i <= rows; i++) {
         const y = i * (gridHeight + 4);
         ctx.beginPath();
@@ -203,8 +206,33 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       // Draw sprite previews
       const sprites: string[] = [];
       
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
+      // Use the maximum number of rows and columns to cover the full image
+      const maxCols = Math.ceil(img.width / (gridWidth + spacingX));
+      const maxRows = Math.ceil(img.height / (gridHeight + spacingY));
+      
+      // Draw additional grid lines to cover the full image area
+      for (let i = cols + 1; i <= maxCols; i++) {
+        const x = i * (gridWidth + 4);
+        if (x <= baseCanvasWidth) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, baseCanvasHeight);
+          ctx.stroke();
+        }
+      }
+      
+      for (let i = rows + 1; i <= maxRows; i++) {
+        const y = i * (gridHeight + 4);
+        if (y <= baseCanvasHeight) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(baseCanvasWidth, y);
+          ctx.stroke();
+        }
+      }
+      
+      for (let row = 0; row < maxRows; row++) {
+        for (let col = 0; col < maxCols; col++) {
           const sourceX = offsetX + col * (gridWidth + spacingX);
           const sourceY = offsetY + row * (gridHeight + spacingY);
           
