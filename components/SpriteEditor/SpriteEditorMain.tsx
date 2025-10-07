@@ -232,8 +232,9 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
             description: existingDefinition.description || '',
             type: existingDefinition.type || 'Unknown'
           });
-          // Check if this definition has slicing parameters (non-zero grid dimensions)
-          setHasSlicingParams(existingDefinition.gridWidth > 0 && existingDefinition.gridHeight > 0);
+          // Check if this definition has slicing parameters and type allows slicing
+          const typeAllowsSlicing = existingDefinition.type === 'Tile Sheet' || existingDefinition.type === 'Sprite Sheet';
+          setHasSlicingParams(typeAllowsSlicing && existingDefinition.gridWidth > 0 && existingDefinition.gridHeight > 0);
         } else {
           setHasSlicingParams(false);
         }
@@ -252,6 +253,20 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
         ...prev,
         [key]: value
       }));
+      
+      // If type is changed to Unknown or Image, disable slicing
+      if (key === 'type' && (value === 'Unknown' || value === 'Image')) {
+        setHasSlicingParams(false);
+        setSliceSettings(prev => ({
+          ...prev,
+          gridWidth: 32,
+          gridHeight: 32,
+          offsetX: 0,
+          offsetY: 0,
+          spacingX: 0,
+          spacingY: 0
+        }));
+      }
       return;
     }
     
@@ -317,8 +332,9 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       description: definition.description || '',
       type: definition.type || 'Unknown'
     });
-    // Check if this definition has slicing parameters
-    setHasSlicingParams(definition.gridWidth > 0 && definition.gridHeight > 0);
+    // Check if this definition has slicing parameters and type allows slicing
+    const typeAllowsSlicing = definition.type === 'Tile Sheet' || definition.type === 'Sprite Sheet';
+    setHasSlicingParams(typeAllowsSlicing && definition.gridWidth > 0 && definition.gridHeight > 0);
   };
 
   const deleteDefinition = async (definitionId: string) => {

@@ -47,5 +47,21 @@
     "offsetY": 0,
     "spacingX": 0,
     "spacingY": 0
+  },
+  {
+    "id": "mgfsnz8bn64wfq35chp",
+    "imagePath": "/assets/cute-fantasy-rpg/Player/Player_Actions.png",
+    "imageName": "Player_Actions.png",
+    "imageWidth": 96,
+    "imageHeight": 576,
+    "gridWidth": 48,
+    "gridHeight": 48,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "description": "",
+    "type": "Sprite Sheet",
+    "hasSlicingParams": true
   }
 ]

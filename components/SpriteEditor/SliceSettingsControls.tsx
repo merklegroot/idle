@@ -62,21 +62,22 @@ export default function SliceSettingsControls({
         </select>
       </div>
       
-      {/* Slicing Parameters Section */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-white">Slicing Parameters</h3>
-          <button
-            onClick={onToggleSlicing}
-            className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-              hasSlicingParams
-                ? 'bg-red-600 hover:bg-red-700 text-white'
-                : 'bg-green-600 hover:bg-green-700 text-white'
-            }`}
-          >
-            {hasSlicingParams ? '− Remove Slicing' : '+ Add Slicing'}
-          </button>
-        </div>
+      {/* Slicing Parameters Section - Only show for Tile Sheet and Sprite Sheet */}
+      {(sliceSettings.type === 'Tile Sheet' || sliceSettings.type === 'Sprite Sheet') && (
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-semibold text-white">Slicing Parameters</h3>
+            <button
+              onClick={onToggleSlicing}
+              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                hasSlicingParams
+                  ? 'bg-red-600 hover:bg-red-700 text-white'
+                  : 'bg-green-600 hover:bg-green-700 text-white'
+              }`}
+            >
+              {hasSlicingParams ? '− Remove Slicing' : '+ Add Slicing'}
+            </button>
+          </div>
         
         {hasSlicingParams ? (
           <div className="grid grid-cols-2 gap-4">
@@ -165,7 +166,8 @@ export default function SliceSettingsControls({
             No slicing parameters defined. Click "+ Add Slicing" to define grid dimensions and offsets.
           </div>
         )}
-      </div>
+        </div>
+      )}
       
       <div className="mt-6 flex items-center gap-4">
         <button
