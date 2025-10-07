@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { AssetsGrid } from '@/app/assets/AssetsGrid';
+import { AssetsGrid } from '@/app/asset-packs/AssetsGrid';
 import { 
   // Town Buildings
   TownHallDef, MarketDef, BankDef, ChurchDef, SchoolDef, HospitalDef, 

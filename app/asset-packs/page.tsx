@@ -1,9 +1,9 @@
 'use client';
 
-import AssetShowcase from '@/components/AssetShowcase';
-import EmojiAssetsSection from '@/components/EmojiAssetsSection';
+import AssetShowcase from '@/components/Assets/AssetShowcase';
+import EmojiAssetsSection from '@/components/Assets/EmojiAssetsSection';
 
-export default function Assets() {
+export default function AssetPacks() {
 
   return (
     <div className="min-h-screen bg-gray-900 p-6">
