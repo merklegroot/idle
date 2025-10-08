@@ -105,6 +105,7 @@ export default function MapPage() {
   const [loading, setLoading] = useState(true)
   const [debugMode, setDebugMode] = useState(false)
   const [showGrid, setShowGrid] = useState(false)
+  const [showTileLetters, setShowTileLetters] = useState(false)
 
   useEffect(() => {
     const loadMapData = async () => {
@@ -149,7 +150,7 @@ export default function MapPage() {
   // Calculate map dimensions
   const maxX = Math.max(...mapData.map(tile => tile.x))
   const maxY = Math.max(...mapData.map(tile => tile.y))
-  const tileSize = 32 // Size of each tile in pixels
+  const tileSize = 64 // Size of each tile in pixels (doubled from 32)
 
   return (
     <div className="p-6">
@@ -165,6 +166,16 @@ export default function MapPage() {
             }`}
           >
             {showGrid ? 'Hide Grid' : 'Show Grid'}
+          </button>
+          <button
+            onClick={() => setShowTileLetters(!showTileLetters)}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
+              showTileLetters 
+                ? 'bg-green-600 hover:bg-green-700 text-white' 
+                : 'bg-gray-600 hover:bg-gray-700 text-white'
+            }`}
+          >
+            {showTileLetters ? 'Hide Letters' : 'Show Letters'}
           </button>
           <button
             onClick={() => setDebugMode(!debugMode)}
@@ -213,13 +224,23 @@ export default function MapPage() {
                 }}
               >
                 {variant === 'grass' ? (
-                  <Image
-                    src={tileVariant.src}
-                    alt="Grass"
-                    width={tileSize}
-                    height={tileSize}
-                    className="block"
-                  />
+                  <div className="relative">
+                    <Image
+                      src={tileVariant.src}
+                      alt="Grass"
+                      width={tileSize}
+                      height={tileSize}
+                      className="block"
+                    />
+                    {showTileLetters && (
+                      <div 
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                        style={{ fontSize: `${tileSize * 0.8}px` }}
+                      >
+                        <span className="text-white font-bold drop-shadow-lg">g</span>
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <div 
                     className="relative overflow-hidden"
@@ -228,19 +249,27 @@ export default function MapPage() {
                     <Image
                       src={tileVariant.src}
                       alt="Path"
-                      width={96} // 3 * 32 = 96 pixels for the full sprite sheet
-                      height={96}
+                      width={192} // 3 * 64 = 192 pixels for the full sprite sheet
+                      height={192}
                       className="absolute"
                       style={{
                         left: -tileVariant.offsetX * tileSize,
                         top: -tileVariant.offsetY * tileSize,
-                        width: 96,
-                        height: 96
+                        width: 192,
+                        height: 192
                       }}
                     />
                     {debugMode && (
                       <div className="absolute top-0 left-0 bg-black bg-opacity-75 text-white text-[8px] p-0.5 pointer-events-none leading-none">
                         {variant}
+                      </div>
+                    )}
+                    {showTileLetters && (
+                      <div 
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                        style={{ fontSize: `${tileSize * 0.8}px` }}
+                      >
+                        <span className="text-white font-bold drop-shadow-lg">p</span>
                       </div>
                     )}
                   </div>
@@ -251,18 +280,35 @@ export default function MapPage() {
           
           {/* Grid overlay - placed after tiles so it renders on top */}
           {showGrid && (
-            <div 
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                backgroundImage: `
-                  linear-gradient(to right, rgba(0, 0, 0, 0.8) 2px, transparent 2px),
-                  linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 2px, transparent 2px)
-                `,
-                backgroundSize: `${tileSize}px ${tileSize}px`,
-                width: `${(maxX + 1) * tileSize}px`,
-                height: `${(maxY + 1) * tileSize}px`
-              }}
-            />
+            <>
+              {/* Main grid (tile boundaries) */}
+              <div 
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(to right, rgba(0, 0, 0, 0.8) 2px, transparent 2px),
+                    linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 2px, transparent 2px)
+                  `,
+                  backgroundSize: `${tileSize}px ${tileSize}px`,
+                  width: `${(maxX + 1) * tileSize}px`,
+                  height: `${(maxY + 1) * tileSize}px`
+                }}
+              />
+              
+              {/* Sub-grid for split tiles (3x3 subdivisions within each tile) */}
+              <div 
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(to right, rgba(255, 0, 0, 0.6) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255, 0, 0, 0.6) 1px, transparent 1px)
+                  `,
+                  backgroundSize: `${tileSize / 3}px ${tileSize / 3}px`,
+                  width: `${(maxX + 1) * tileSize}px`,
+                  height: `${(maxY + 1) * tileSize}px`
+                }}
+              />
+            </>
           )}
         </div>
       </div>
