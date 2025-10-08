@@ -15,9 +15,7 @@ interface TileVariant {
   offsetY: number
 }
 
-// Tile mapping for the 3x3 Path_Tile.png grid
-// The Path_Tile.png contains a 3x3 grid of tiles in a single image
-// Each sub-tile is 32x32 pixels, so the full sprite sheet is 96x96 pixels
+// Tile mapping using individual sliced PNG files
 const TILE_VARIANTS: { [key: string]: TileVariant } = {
   // Pure grass tile
   'grass': {
@@ -25,21 +23,20 @@ const TILE_VARIANTS: { [key: string]: TileVariant } = {
     offsetX: 0,
     offsetY: 0
   },
-  // Pure path tile (center of 3x3 grid)
+  // Path tiles using individual sliced files
   'path': {
-    src: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png',
-    offsetX: 1,
-    offsetY: 1
+    src: '/sliced-tiles/path/m.png',
+    offsetX: 0,
+    offsetY: 0
   },
-  // Transition tiles from Path_Tile.png 3x3 grid
-  'path-top-left': { src: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png', offsetX: 0, offsetY: 0 },
-  'path-top': { src: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png', offsetX: 1, offsetY: 0 },
-  'path-top-right': { src: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png', offsetX: 2, offsetY: 0 },
-  'path-left': { src: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png', offsetX: 0, offsetY: 1 },
-  'path-right': { src: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png', offsetX: 2, offsetY: 1 },
-  'path-bottom-left': { src: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png', offsetX: 0, offsetY: 2 },
-  'path-bottom': { src: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png', offsetX: 1, offsetY: 2 },
-  'path-bottom-right': { src: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png', offsetX: 2, offsetY: 2 },
+  'path-top-left': { src: '/sliced-tiles/path/tl.png', offsetX: 0, offsetY: 0 },
+  'path-top': { src: '/sliced-tiles/path/tm.png', offsetX: 0, offsetY: 0 },
+  'path-top-right': { src: '/sliced-tiles/path/tr.png', offsetX: 0, offsetY: 0 },
+  'path-left': { src: '/sliced-tiles/path/ml.png', offsetX: 0, offsetY: 0 },
+  'path-right': { src: '/sliced-tiles/path/mr.png', offsetX: 0, offsetY: 0 },
+  'path-bottom-left': { src: '/sliced-tiles/path/bl.png', offsetX: 0, offsetY: 0 },
+  'path-bottom': { src: '/sliced-tiles/path/bm.png', offsetX: 0, offsetY: 0 },
+  'path-bottom-right': { src: '/sliced-tiles/path/br.png', offsetX: 0, offsetY: 0 },
 }
 
 // Function to determine tile variant based on neighbors
@@ -240,16 +237,16 @@ export default function MapPage() {
           >
             {showTileVariants ? 'Hide Variants' : 'Show Variants'}
           </button>
-          <button
-            onClick={() => setDebugMode(!debugMode)}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
-              debugMode 
-                ? 'bg-red-600 hover:bg-red-700 text-white' 
-                : 'bg-gray-600 hover:bg-gray-700 text-white'
-            }`}
-          >
-            {debugMode ? 'Hide Debug' : 'Show Debug'}
-          </button>
+        <button
+          onClick={() => setDebugMode(!debugMode)}
+          className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
+            debugMode 
+              ? 'bg-red-600 hover:bg-red-700 text-white' 
+              : 'bg-gray-600 hover:bg-gray-700 text-white'
+          }`}
+        >
+          {debugMode ? 'Hide Debug' : 'Show Debug'}
+        </button>
         </div>
       </div>
       
@@ -288,13 +285,13 @@ export default function MapPage() {
               >
                 {variant === 'grass' ? (
                   <div className="relative">
-                    <Image
-                      src={tileVariant.src}
-                      alt="Grass"
-                      width={tileSize}
-                      height={tileSize}
-                      className="block"
-                    />
+                  <Image
+                    src={tileVariant.src}
+                    alt="Grass"
+                    width={tileSize}
+                    height={tileSize}
+                    className="block"
+                  />
                     {showTileLetters && (
                       <div 
                         className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -320,15 +317,9 @@ export default function MapPage() {
                     <Image
                       src={tileVariant.src}
                       alt="Path"
-                      width={192} // 3 * 64 = 192 pixels for the full sprite sheet
-                      height={192}
-                      className="absolute"
-                      style={{
-                        left: -tileVariant.offsetX * tileSize,
-                        top: -tileVariant.offsetY * tileSize,
-                        width: 192,
-                        height: 192
-                      }}
+                      width={tileSize}
+                      height={tileSize}
+                      className="block"
                     />
                     {debugMode && (
                       <div className="absolute top-0 left-0 bg-black bg-opacity-75 text-white text-[8px] p-0.5 pointer-events-none leading-none">
@@ -409,10 +400,121 @@ export default function MapPage() {
       
       <div className="mt-4 text-sm text-gray-600">
         <p>Map size: {maxX + 1} × {maxY + 1} tiles</p>
-        <p>Legend: 🟢 Grass (g) | 🟤 Path with smooth transitions (p)</p>
-        <p className="text-xs text-gray-500 mt-1">
-          Path tiles automatically blend with grass using 3x3 transition tiles
-        </p>
+        <div className="mt-2">
+          <p className="font-semibold mb-2">Legend:</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="font-medium mb-1">Grass Tiles:</p>
+              <div className="flex items-center gap-2">
+                <div className="relative" style={{ width: '32px', height: '32px' }}>
+                  <Image
+                    src="/assets/cute-fantasy-rpg/Tiles/Grass_Middle.png"
+                    alt="Grass"
+                    width={32}
+                    height={32}
+                    className="block"
+                  />
+                </div>
+                <span>g - Grass</span>
+              </div>
+            </div>
+            <div>
+              <p className="font-medium mb-1">Path Tiles:</p>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/sliced-tiles/path/m.png"
+                    alt="Path"
+                    width={32}
+                    height={32}
+                    className="block"
+                  />
+                  <span>p - Pure path</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/sliced-tiles/path/tl.png"
+                    alt="Path Top Left"
+                    width={32}
+                    height={32}
+                    className="block"
+                  />
+                  <span>tl - Top left</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/sliced-tiles/path/tm.png"
+                    alt="Path Top"
+                    width={32}
+                    height={32}
+                    className="block"
+                  />
+                  <span>tm - Top middle</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/sliced-tiles/path/tr.png"
+                    alt="Path Top Right"
+                    width={32}
+                    height={32}
+                    className="block"
+                  />
+                  <span>tr - Top right</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/sliced-tiles/path/ml.png"
+                    alt="Path Left"
+                    width={32}
+                    height={32}
+                    className="block"
+                  />
+                  <span>ml - Middle left</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/sliced-tiles/path/mr.png"
+                    alt="Path Right"
+                    width={32}
+                    height={32}
+                    className="block"
+                  />
+                  <span>mr - Middle right</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/sliced-tiles/path/bl.png"
+                    alt="Path Bottom Left"
+                    width={32}
+                    height={32}
+                    className="block"
+                  />
+                  <span>bl - Bottom left</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/sliced-tiles/path/bm.png"
+                    alt="Path Bottom"
+                    width={32}
+                    height={32}
+                    className="block"
+                  />
+                  <span>bm - Bottom middle</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/sliced-tiles/path/br.png"
+                    alt="Path Bottom Right"
+                    width={32}
+                    height={32}
+                    className="block"
+                  />
+                  <span>br - Bottom right</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
