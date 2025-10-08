@@ -153,28 +153,42 @@ function getPathTile3x3Grid(variant: string, tile: MapTile, mapData: MapTile[], 
     bottomRight: getTileAt(tile.x + 1, tile.y + 1, mapData),
   }
 
-  // Start with all path tiles
+  // Create a 3x3 grid with the correct pattern
+  // The pattern should be based on the tile's neighbors, not individual sub-tile neighbors
   const grid = [
-    ['p', 'p', 'p'],
-    ['p', 'p', 'p'],
-    ['p', 'p', 'p']
+    ['tl', 'tm', 'tr'],
+    ['ml', 'm', 'mr'],
+    ['bl', 'bm', 'br']
   ]
   
-  // For each sub-tile, determine the appropriate mnemonic based on neighbors
-  // Top row
-  grid[0][0] = (neighbors.top?.type === 'g' || neighbors.top === null || neighbors.left?.type === 'g' || neighbors.left === null || neighbors.topLeft?.type === 'g' || neighbors.topLeft === null) ? 'tl' : 'p'
-  grid[0][1] = (neighbors.top?.type === 'g' || neighbors.top === null) ? 'tm' : 'p'
-  grid[0][2] = (neighbors.top?.type === 'g' || neighbors.top === null || neighbors.right?.type === 'g' || neighbors.right === null || neighbors.topRight?.type === 'g' || neighbors.topRight === null) ? 'tr' : 'p'
+  // For a center tile surrounded by grass, all sub-tiles should be middle path except edges
+  // Top row: corners and edges based on neighbors
+  if (neighbors.top?.type === 'g' || neighbors.top === null) {
+    grid[0][1] = 'tm' // Top middle
+  }
+  if (neighbors.left?.type === 'g' || neighbors.left === null) {
+    grid[1][0] = 'ml' // Middle left
+  }
+  if (neighbors.right?.type === 'g' || neighbors.right === null) {
+    grid[1][2] = 'mr' // Middle right
+  }
+  if (neighbors.bottom?.type === 'g' || neighbors.bottom === null) {
+    grid[2][1] = 'bm' // Bottom middle
+  }
   
-  // Middle row
-  grid[1][0] = (neighbors.left?.type === 'g' || neighbors.left === null) ? 'ml' : 'p'
-  grid[1][1] = 'm' // Center is always middle path
-  grid[1][2] = (neighbors.right?.type === 'g' || neighbors.right === null) ? 'mr' : 'p'
-  
-  // Bottom row
-  grid[2][0] = (neighbors.bottom?.type === 'g' || neighbors.bottom === null || neighbors.left?.type === 'g' || neighbors.left === null || neighbors.bottomLeft?.type === 'g' || neighbors.bottomLeft === null) ? 'bl' : 'p'
-  grid[2][1] = (neighbors.bottom?.type === 'g' || neighbors.bottom === null) ? 'bm' : 'p'
-  grid[2][2] = (neighbors.bottom?.type === 'g' || neighbors.bottom === null || neighbors.right?.type === 'g' || neighbors.right === null || neighbors.bottomRight?.type === 'g' || neighbors.bottomRight === null) ? 'br' : 'p'
+  // Corners based on diagonal neighbors
+  if ((neighbors.top?.type === 'g' || neighbors.top === null) && (neighbors.left?.type === 'g' || neighbors.left === null)) {
+    grid[0][0] = 'tl' // Top left
+  }
+  if ((neighbors.top?.type === 'g' || neighbors.top === null) && (neighbors.right?.type === 'g' || neighbors.right === null)) {
+    grid[0][2] = 'tr' // Top right
+  }
+  if ((neighbors.bottom?.type === 'g' || neighbors.bottom === null) && (neighbors.left?.type === 'g' || neighbors.left === null)) {
+    grid[2][0] = 'bl' // Bottom left
+  }
+  if ((neighbors.bottom?.type === 'g' || neighbors.bottom === null) && (neighbors.right?.type === 'g' || neighbors.right === null)) {
+    grid[2][2] = 'br' // Bottom right
+  }
   
   return grid
 }
