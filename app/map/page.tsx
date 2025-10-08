@@ -179,25 +179,9 @@ export default function MapPage() {
   useEffect(() => {
     const loadMapData = async () => {
       try {
-        const response = await fetch('/data/town-map.txt')
-        const text = await response.text()
-        
-        const lines = text.trim().split('\n')
-        const tiles: MapTile[] = []
-        
-        lines.forEach((line, y) => {
-          line.split('').forEach((char, x) => {
-            if (char === 'g' || char === 'p') {
-              tiles.push({
-                type: char as 'g' | 'p',
-                x,
-                y
-              })
-            }
-          })
-        })
-        
-        setMapData(tiles)
+        const response = await fetch('/api/map-data')
+        const data = await response.json()
+        setMapData(data)
       } catch (error) {
         console.error('Failed to load map data:', error)
       } finally {
