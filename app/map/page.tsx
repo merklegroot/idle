@@ -100,12 +100,81 @@ function getTileAt(x: number, y: number, mapData: MapTile[]): MapTile | null {
   return mapData.find(tile => tile.x === x && tile.y === y) || null
 }
 
+// Function to map tile variants to their mnemonics
+function getTileVariantMnemonic(variant: string): string {
+  switch (variant) {
+    case 'grass':
+      return 'g'
+    case 'path':
+      return 'p'
+    case 'path-top-left':
+      return 'tl'
+    case 'path-top':
+      return 'tm'
+    case 'path-top-right':
+      return 'tr'
+    case 'path-left':
+      return 'ml'
+    case 'path-right':
+      return 'mr'
+    case 'path-bottom-left':
+      return 'bl'
+    case 'path-bottom':
+      return 'bm'
+    case 'path-bottom-right':
+      return 'br'
+    default:
+      return '?'
+  }
+}
+
+// Function to get 3x3 grid of mnemonics for path tiles
+function getPathTile3x3Grid(variant: string, tile: MapTile, mapData: MapTile[], maxX: number, maxY: number): string[][] {
+  // Get neighboring tiles
+  const neighbors = {
+    top: getTileAt(tile.x, tile.y - 1, mapData),
+    bottom: getTileAt(tile.x, tile.y + 1, mapData),
+    left: getTileAt(tile.x - 1, tile.y, mapData),
+    right: getTileAt(tile.x + 1, tile.y, mapData),
+    topLeft: getTileAt(tile.x - 1, tile.y - 1, mapData),
+    topRight: getTileAt(tile.x + 1, tile.y - 1, mapData),
+    bottomLeft: getTileAt(tile.x - 1, tile.y + 1, mapData),
+    bottomRight: getTileAt(tile.x + 1, tile.y + 1, mapData),
+  }
+
+  // Start with all path tiles
+  const grid = [
+    ['p', 'p', 'p'],
+    ['p', 'p', 'p'],
+    ['p', 'p', 'p']
+  ]
+  
+  // For each sub-tile, determine the appropriate mnemonic based on neighbors
+  // Top row
+  grid[0][0] = (neighbors.top?.type === 'g' || neighbors.top === null || neighbors.left?.type === 'g' || neighbors.left === null || neighbors.topLeft?.type === 'g' || neighbors.topLeft === null) ? 'tl' : 'p'
+  grid[0][1] = (neighbors.top?.type === 'g' || neighbors.top === null) ? 'tm' : 'p'
+  grid[0][2] = (neighbors.top?.type === 'g' || neighbors.top === null || neighbors.right?.type === 'g' || neighbors.right === null || neighbors.topRight?.type === 'g' || neighbors.topRight === null) ? 'tr' : 'p'
+  
+  // Middle row
+  grid[1][0] = (neighbors.left?.type === 'g' || neighbors.left === null) ? 'ml' : 'p'
+  grid[1][1] = 'm' // Center is always middle path
+  grid[1][2] = (neighbors.right?.type === 'g' || neighbors.right === null) ? 'mr' : 'p'
+  
+  // Bottom row
+  grid[2][0] = (neighbors.bottom?.type === 'g' || neighbors.bottom === null || neighbors.left?.type === 'g' || neighbors.left === null || neighbors.bottomLeft?.type === 'g' || neighbors.bottomLeft === null) ? 'bl' : 'p'
+  grid[2][1] = (neighbors.bottom?.type === 'g' || neighbors.bottom === null) ? 'bm' : 'p'
+  grid[2][2] = (neighbors.bottom?.type === 'g' || neighbors.bottom === null || neighbors.right?.type === 'g' || neighbors.right === null || neighbors.bottomRight?.type === 'g' || neighbors.bottomRight === null) ? 'br' : 'p'
+  
+  return grid
+}
+
 export default function MapPage() {
   const [mapData, setMapData] = useState<MapTile[]>([])
   const [loading, setLoading] = useState(true)
   const [debugMode, setDebugMode] = useState(false)
   const [showGrid, setShowGrid] = useState(false)
   const [showTileLetters, setShowTileLetters] = useState(false)
+  const [showTileVariants, setShowTileVariants] = useState(false)
 
   useEffect(() => {
     const loadMapData = async () => {
@@ -178,6 +247,16 @@ export default function MapPage() {
             {showTileLetters ? 'Hide Letters' : 'Show Letters'}
           </button>
           <button
+            onClick={() => setShowTileVariants(!showTileVariants)}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
+              showTileVariants 
+                ? 'bg-purple-600 hover:bg-purple-700 text-white' 
+                : 'bg-gray-600 hover:bg-gray-700 text-white'
+            }`}
+          >
+            {showTileVariants ? 'Hide Variants' : 'Show Variants'}
+          </button>
+          <button
             onClick={() => setDebugMode(!debugMode)}
             className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
               debugMode 
@@ -240,6 +319,14 @@ export default function MapPage() {
                         <span className="text-white font-bold drop-shadow-lg">g</span>
                       </div>
                     )}
+                    {showTileVariants && (
+                      <div 
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                        style={{ fontSize: `${tileSize * 0.4}px` }}
+                      >
+                        <span className="text-yellow-300 font-bold drop-shadow-lg">g</span>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div 
@@ -270,6 +357,29 @@ export default function MapPage() {
                         style={{ fontSize: `${tileSize * 0.8}px` }}
                       >
                         <span className="text-white font-bold drop-shadow-lg">p</span>
+                      </div>
+                    )}
+                    {showTileVariants && (
+                      <div 
+                        className="absolute inset-0 pointer-events-none"
+                        style={{ 
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr 1fr',
+                          gridTemplateRows: '1fr 1fr 1fr',
+                          gap: '1px'
+                        }}
+                      >
+                        {getPathTile3x3Grid(variant, tile, mapData, maxX, maxY).map((row, rowIndex) =>
+                          row.map((cell, colIndex) => (
+                            <div
+                              key={`${rowIndex}-${colIndex}`}
+                              className="flex items-center justify-center"
+                              style={{ fontSize: `${tileSize * 0.2}px` }}
+                            >
+                              <span className="text-yellow-300 font-bold drop-shadow-lg">{cell}</span>
+                            </div>
+                          ))
+                        )}
                       </div>
                     )}
                   </div>
