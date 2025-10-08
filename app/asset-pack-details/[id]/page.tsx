@@ -142,6 +142,7 @@ export default function AssetPackDetails() {
   const [selectedCategory, setSelectedCategory] = useState<string>('Animals');
   const [editingId, setEditingId] = useState<boolean>(false);
   const [newId, setNewId] = useState<string>('');
+  const [sliceDefinitions, setSliceDefinitions] = useState<any[]>([]);
 
   useEffect(() => {
     const pack = assetPacks.find(p => p.id === params.id);
@@ -152,6 +153,29 @@ export default function AssetPackDetails() {
       setNewId(pack.id);
     }
   }, [params.id]);
+
+  // Load slice definitions
+  useEffect(() => {
+    const loadSliceDefinitions = async () => {
+      try {
+        const response = await fetch('/api/assets/slice-definitions');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            setSliceDefinitions(data.definitions || []);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading slice definitions:', error);
+      }
+    };
+    loadSliceDefinitions();
+  }, []);
+
+  // Function to check if an asset has been sliced
+  const isAssetSliced = (assetPath: string) => {
+    return sliceDefinitions.some(def => def.imagePath === assetPath);
+  };
 
   const handleEditId = () => {
     setEditingId(true);
@@ -268,6 +292,24 @@ export default function AssetPackDetails() {
                   )}
                 </div>
                 <div className="text-sm text-gray-300 text-center mb-2">{asset.name}</div>
+                
+                {/* Slicing Status Indicator */}
+                {!isEmojiPack && 'path' in asset && (
+                  <div className="mb-2">
+                    {isAssetSliced(asset.path) ? (
+                      <div className="flex items-center justify-center gap-1 text-xs text-green-400 bg-green-900/20 px-2 py-1 rounded">
+                        <span>✓</span>
+                        <span>Sliced</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center gap-1 text-xs text-yellow-400 bg-yellow-900/20 px-2 py-1 rounded">
+                        <span>○</span>
+                        <span>Not Sliced</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
                 <div 
                   className="text-xs text-purple-400 text-center cursor-pointer hover:text-purple-300 transition-colors font-mono bg-gray-700 px-2 py-1 rounded"
                   onClick={(e) => {

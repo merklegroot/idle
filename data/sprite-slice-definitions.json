@@ -132,5 +132,53 @@
     "description": "Pig",
     "type": "Sprite Sheet",
     "hasSlicingParams": true
+  },
+  {
+    "id": "mgh73c6o1xkqj2f5o32",
+    "imagePath": "/assets/cute-fantasy-rpg/Animals/Cow/Cow.png",
+    "imageName": "Cow",
+    "imageWidth": 64,
+    "imageHeight": 64,
+    "gridWidth": 32,
+    "gridHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "description": "Cow",
+    "type": "Sprite Sheet",
+    "hasSlicingParams": true
+  },
+  {
+    "id": "mgh7audkblq4n25rbuq",
+    "imagePath": "/assets/cute-fantasy-rpg/Animals/Chicken/Chicken.png",
+    "imageName": "Chicken",
+    "imageWidth": 64,
+    "imageHeight": 64,
+    "gridWidth": 32,
+    "gridHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "description": "Chicken",
+    "type": "Sprite Sheet",
+    "hasSlicingParams": true
+  },
+  {
+    "id": "mgh8m9a4blxuzn8u8du",
+    "imagePath": "/assets/cute-fantasy-rpg/Animals/Sheep/Sheep.png",
+    "imageName": "Sheep",
+    "imageWidth": 64,
+    "imageHeight": 64,
+    "gridWidth": 32,
+    "gridHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "description": "Sheep",
+    "type": "Sprite Sheet",
+    "hasSlicingParams": true
   }
 ]
