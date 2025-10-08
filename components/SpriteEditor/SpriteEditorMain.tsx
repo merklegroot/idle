@@ -573,6 +573,8 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
                   slicedSpritesCount={slicedSprites.length}
                   hasSlicingParams={hasSlicingParams}
                   onToggleSlicing={toggleSlicing}
+                  slicedSprites={slicedSprites}
+                  imageName={selectedImage.name}
                 />
 
                 {/* Saved Definition */}

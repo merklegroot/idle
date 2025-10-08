@@ -1,3 +1,5 @@
+import JSZip from 'jszip';
+
 interface SliceSettings {
   gridWidth: number;
   gridHeight: number;
@@ -18,6 +20,8 @@ interface SliceSettingsControlsProps {
   slicedSpritesCount: number;
   hasSlicingParams: boolean;
   onToggleSlicing: () => void;
+  slicedSprites: string[];
+  imageName: string;
 }
 
 export default function SliceSettingsControls({
@@ -28,8 +32,49 @@ export default function SliceSettingsControls({
   saveMessage,
   slicedSpritesCount,
   hasSlicingParams,
-  onToggleSlicing
+  onToggleSlicing,
+  slicedSprites,
+  imageName
 }: SliceSettingsControlsProps) {
+  const downloadSlicedTiles = async () => {
+    if (slicedSprites.length === 0) {
+      alert('No sliced tiles available to download. Please configure slicing parameters first.');
+      return;
+    }
+
+    try {
+      const zip = new JSZip();
+      
+      // Add each sliced sprite to the ZIP
+      slicedSprites.forEach((spriteDataUrl, index) => {
+        // Convert data URL to blob
+        const base64Data = spriteDataUrl.split(',')[1];
+        const binaryData = atob(base64Data);
+        const bytes = new Uint8Array(binaryData.length);
+        for (let i = 0; i < binaryData.length; i++) {
+          bytes[i] = binaryData.charCodeAt(i);
+        }
+        
+        // Add to ZIP with a descriptive filename
+        const fileName = `${imageName.replace(/\.[^/.]+$/, '')}_slice_${String(index + 1).padStart(3, '0')}.png`;
+        zip.file(fileName, bytes);
+      });
+
+      // Generate and download the ZIP file
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(zipBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${imageName.replace(/\.[^/.]+$/, '')}_sliced_tiles.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error creating ZIP file:', error);
+    }
+  };
+
   return (
     <div className="bg-gray-800 rounded-lg p-6">
       <h2 className="text-xl font-bold text-white mb-4">Slice Settings</h2>
@@ -176,6 +221,17 @@ export default function SliceSettingsControls({
           className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded font-medium"
         >
           {isSaving ? 'Saving...' : 'Save Definition'}
+        </button>
+        
+        <button
+          onClick={downloadSlicedTiles}
+          disabled={slicedSpritesCount === 0}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded font-medium flex items-center gap-2"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Download Tiles ({slicedSpritesCount})
         </button>
         
         {saveMessage && (
