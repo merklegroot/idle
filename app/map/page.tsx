@@ -2,12 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-
-interface MapTile {
-  type: 'g' | 'p'
-  x: number
-  y: number
-}
+import type { MapTile } from '@/models/MapTile'
+import { pathUtil } from '@/utils/pathUtil'
 
 interface TileVariant {
   src: string
@@ -46,21 +42,21 @@ const TILE_VARIANTS: { [key: string]: TileVariant } = {
 }
 
 // Function to determine tile variant based on neighbors
-function getTileVariant(tile: MapTile, mapData: MapTile[], maxX: number, maxY: number): string {
+function getTileVariant(tile: MapTile, mapData: MapTile[]): string {
   if (tile.type === 'g') {
     return 'grass'
   }
 
   // For path tiles, determine the appropriate transition tile based on neighbors
   const neighbors = {
-    top: getTileAt(tile.x, tile.y - 1, mapData),
-    bottom: getTileAt(tile.x, tile.y + 1, mapData),
-    left: getTileAt(tile.x - 1, tile.y, mapData),
-    right: getTileAt(tile.x + 1, tile.y, mapData),
-    topLeft: getTileAt(tile.x - 1, tile.y - 1, mapData),
-    topRight: getTileAt(tile.x + 1, tile.y - 1, mapData),
-    bottomLeft: getTileAt(tile.x - 1, tile.y + 1, mapData),
-    bottomRight: getTileAt(tile.x + 1, tile.y + 1, mapData),
+    top: pathUtil.getTileAt(tile.x, tile.y - 1, mapData),
+    bottom: pathUtil.getTileAt(tile.x, tile.y + 1, mapData),
+    left: pathUtil.getTileAt(tile.x - 1, tile.y, mapData),
+    right: pathUtil.getTileAt(tile.x + 1, tile.y, mapData),
+    topLeft: pathUtil.getTileAt(tile.x - 1, tile.y - 1, mapData),
+    topRight: pathUtil.getTileAt(tile.x + 1, tile.y - 1, mapData),
+    bottomLeft: pathUtil.getTileAt(tile.x - 1, tile.y + 1, mapData),
+    bottomRight: pathUtil.getTileAt(tile.x + 1, tile.y + 1, mapData),
   }
 
   // Determine transition tile based on which sides have grass neighbors
@@ -102,95 +98,6 @@ function getTileVariant(tile: MapTile, mapData: MapTile[], maxX: number, maxY: n
 
   // Default to center path tile
   return 'path'
-}
-
-// Helper function to get tile at specific coordinates
-function getTileAt(x: number, y: number, mapData: MapTile[]): MapTile | null {
-  return mapData.find(tile => tile.x === x && tile.y === y) || null
-}
-
-// Function to map tile variants to their mnemonics
-function getTileVariantMnemonic(variant: string): string {
-  switch (variant) {
-    case 'grass':
-      return 'g'
-    case 'path':
-      return 'p'
-    case 'path-center-grass':
-      return 'pcg'
-    case 'path-top-left':
-      return 'tl'
-    case 'path-top':
-      return 'tm'
-    case 'path-top-right':
-      return 'tr'
-    case 'path-left':
-      return 'ml'
-    case 'path-right':
-      return 'mr'
-    case 'path-bottom-left':
-      return 'bl'
-    case 'path-bottom':
-      return 'bm'
-    case 'path-bottom-right':
-      return 'br'
-    default:
-      return '?'
-  }
-}
-
-// Function to get 3x3 grid of mnemonics for path tiles
-function getPathTile3x3Grid(variant: string, tile: MapTile, mapData: MapTile[], maxX: number, maxY: number): string[][] {
-  // Get neighboring tiles
-  const neighbors = {
-    top: getTileAt(tile.x, tile.y - 1, mapData),
-    bottom: getTileAt(tile.x, tile.y + 1, mapData),
-    left: getTileAt(tile.x - 1, tile.y, mapData),
-    right: getTileAt(tile.x + 1, tile.y, mapData),
-    topLeft: getTileAt(tile.x - 1, tile.y - 1, mapData),
-    topRight: getTileAt(tile.x + 1, tile.y - 1, mapData),
-    bottomLeft: getTileAt(tile.x - 1, tile.y + 1, mapData),
-    bottomRight: getTileAt(tile.x + 1, tile.y + 1, mapData),
-  }
-
-  // Create a 3x3 grid with the correct pattern
-  // The pattern should be based on the tile's neighbors, not individual sub-tile neighbors
-  const grid = [
-    ['tl', 'tm', 'tr'],
-    ['ml', 'm', 'mr'],
-    ['bl', 'bm', 'br']
-  ]
-  
-  // For a center tile surrounded by grass, all sub-tiles should be middle path except edges
-  // Top row: corners and edges based on neighbors
-  if (neighbors.top?.type === 'g' || neighbors.top === null) {
-    grid[0][1] = 'tm' // Top middle
-  }
-  if (neighbors.left?.type === 'g' || neighbors.left === null) {
-    grid[1][0] = 'ml' // Middle left
-  }
-  if (neighbors.right?.type === 'g' || neighbors.right === null) {
-    grid[1][2] = 'mr' // Middle right
-  }
-  if (neighbors.bottom?.type === 'g' || neighbors.bottom === null) {
-    grid[2][1] = 'bm' // Bottom middle
-  }
-  
-  // Corners based on diagonal neighbors
-  if ((neighbors.top?.type === 'g' || neighbors.top === null) && (neighbors.left?.type === 'g' || neighbors.left === null)) {
-    grid[0][0] = 'tl' // Top left
-  }
-  if ((neighbors.top?.type === 'g' || neighbors.top === null) && (neighbors.right?.type === 'g' || neighbors.right === null)) {
-    grid[0][2] = 'tr' // Top right
-  }
-  if ((neighbors.bottom?.type === 'g' || neighbors.bottom === null) && (neighbors.left?.type === 'g' || neighbors.left === null)) {
-    grid[2][0] = 'bl' // Bottom left
-  }
-  if ((neighbors.bottom?.type === 'g' || neighbors.bottom === null) && (neighbors.right?.type === 'g' || neighbors.right === null)) {
-    grid[2][2] = 'br' // Bottom right
-  }
-  
-  return grid
 }
 
 export default function MapPage() {
@@ -287,16 +194,16 @@ export default function MapPage() {
           }}
         >
           {mapData.map((tile, index) => {
-            const variant = getTileVariant(tile, mapData, maxX, maxY)
+            const variant = getTileVariant(tile, mapData)
             const tileVariant = TILE_VARIANTS[variant]
             
             // Debug logging for bottom row
             if (tile.y === 3 && tile.type === 'p') {
               const neighbors = {
-                top: getTileAt(tile.x, tile.y - 1, mapData),
-                bottom: getTileAt(tile.x, tile.y + 1, mapData),
-                left: getTileAt(tile.x - 1, tile.y, mapData),
-                right: getTileAt(tile.x + 1, tile.y, mapData),
+                top: pathUtil.getTileAt(tile.x, tile.y - 1, mapData),
+                bottom: pathUtil.getTileAt(tile.x, tile.y + 1, mapData),
+                left: pathUtil.getTileAt(tile.x - 1, tile.y, mapData),
+                right: pathUtil.getTileAt(tile.x + 1, tile.y, mapData),
               }
               console.log(`Tile at (${tile.x}, ${tile.y}): variant=${variant}`)
               console.log(`  Neighbors: top=${neighbors.top?.type || 'null'}, bottom=${neighbors.bottom?.type || 'null'}, left=${neighbors.left?.type || 'null'}, right=${neighbors.right?.type || 'null'}`)
@@ -357,7 +264,7 @@ export default function MapPage() {
                           gap: '0px'
                         }}
                       >
-                        {getPathTile3x3Grid(variant, tile, mapData, maxX, maxY).map((row, rowIndex) =>
+                        {pathUtil.getPathTile3x3Grid(tile, mapData).map((row, rowIndex) =>
                           row.map((cell, colIndex) => {
                             const subTileSrc = `/sliced-tiles/path/${cell}.png`;
                             return (
@@ -413,7 +320,7 @@ export default function MapPage() {
                           gap: '1px'
                         }}
                       >
-                        {getPathTile3x3Grid(variant, tile, mapData, maxX, maxY).map((row, rowIndex) =>
+                        {pathUtil.getPathTile3x3Grid(tile, mapData).map((row, rowIndex) =>
                           row.map((cell, colIndex) => (
                             <div
                               key={`${rowIndex}-${colIndex}`}
