@@ -52,6 +52,7 @@ export default function Navigation() {
             <NavLink href="/home" label="Home" />
             <NavLink href="/equipment" label="Equipment" />
             <NavLink href="/town" label="Town" />
+            <NavLink href="/map" label="Map" />
             <NavLink href="/numbers" label="Numbers" />
             <NavLink href="/asset-packs" label="Assets" />
           </ul>

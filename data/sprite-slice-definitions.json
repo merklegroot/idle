@@ -18,7 +18,7 @@
   {
     "id": "mgfi0gmi86ljueiz83e",
     "imagePath": "/assets/cute-fantasy-rpg/Tiles/Path_Tile.png",
-    "imageName": "Path_Tile.png",
+    "imageName": "Path Tile",
     "imageWidth": 48,
     "imageHeight": 96,
     "gridWidth": 16,
@@ -27,7 +27,7 @@
     "offsetY": 0,
     "spacingX": 0,
     "spacingY": 0,
-    "description": "",
+    "description": "Grass-Path edges",
     "type": "Tile Sheet",
     "hasSlicingParams": true
   },
@@ -180,5 +180,37 @@
     "description": "Sheep",
     "type": "Sprite Sheet",
     "hasSlicingParams": true
+  },
+  {
+    "id": "mghc1nrzgecdz4c2m27",
+    "imagePath": "/assets/cute-fantasy-rpg/Tiles/Grass_Middle.png",
+    "imageName": "Grass Middle",
+    "imageWidth": 16,
+    "imageHeight": 16,
+    "gridWidth": 32,
+    "gridHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "description": "Grass",
+    "type": "Image",
+    "hasSlicingParams": false
+  },
+  {
+    "id": "mghc20c0z9sa5q567q",
+    "imagePath": "/assets/cute-fantasy-rpg/Tiles/Path_Middle.png",
+    "imageName": "Path Middle",
+    "imageWidth": 16,
+    "imageHeight": 16,
+    "gridWidth": 32,
+    "gridHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "description": "",
+    "type": "Image",
+    "hasSlicingParams": false
   }
 ]
