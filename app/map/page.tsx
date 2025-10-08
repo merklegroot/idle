@@ -291,6 +291,10 @@ export default function MapPage() {
                     width={tileSize}
                     height={tileSize}
                     className="block"
+                    unoptimized
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
                   />
                     {showTileLetters && (
                       <div 
@@ -320,6 +324,10 @@ export default function MapPage() {
                       width={tileSize}
                       height={tileSize}
                       className="block"
+                      unoptimized
+                      style={{
+                        imageRendering: 'pixelated'
+                      }}
                     />
                     {debugMode && (
                       <div className="absolute top-0 left-0 bg-black bg-opacity-75 text-white text-[8px] p-0.5 pointer-events-none leading-none">
@@ -413,6 +421,9 @@ export default function MapPage() {
                     width={32}
                     height={32}
                     className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
                   />
                 </div>
                 <span>g - Grass</span>
@@ -428,6 +439,9 @@ export default function MapPage() {
                     width={32}
                     height={32}
                     className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
                   />
                   <span>p - Pure path</span>
                 </div>
@@ -438,6 +452,9 @@ export default function MapPage() {
                     width={32}
                     height={32}
                     className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
                   />
                   <span>tl - Top left</span>
                 </div>
@@ -448,6 +465,9 @@ export default function MapPage() {
                     width={32}
                     height={32}
                     className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
                   />
                   <span>tm - Top middle</span>
                 </div>
@@ -458,6 +478,9 @@ export default function MapPage() {
                     width={32}
                     height={32}
                     className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
                   />
                   <span>tr - Top right</span>
                 </div>
@@ -468,6 +491,9 @@ export default function MapPage() {
                     width={32}
                     height={32}
                     className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
                   />
                   <span>ml - Middle left</span>
                 </div>
@@ -478,6 +504,9 @@ export default function MapPage() {
                     width={32}
                     height={32}
                     className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
                   />
                   <span>mr - Middle right</span>
                 </div>
@@ -488,6 +517,9 @@ export default function MapPage() {
                     width={32}
                     height={32}
                     className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
                   />
                   <span>bl - Bottom left</span>
                 </div>
@@ -498,6 +530,9 @@ export default function MapPage() {
                     width={32}
                     height={32}
                     className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
                   />
                   <span>bm - Bottom middle</span>
                 </div>
@@ -508,6 +543,9 @@ export default function MapPage() {
                     width={32}
                     height={32}
                     className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
                   />
                   <span>br - Bottom right</span>
                 </div>
