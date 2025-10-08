@@ -29,6 +29,12 @@ const TILE_VARIANTS: { [key: string]: TileVariant } = {
     offsetX: 0,
     offsetY: 0
   },
+  // Center path tile surrounded by grass - use the original path tile
+  'path-center-grass': {
+    src: '/assets/cute-fantasy-rpg/Tiles/Path_Middle.png',
+    offsetX: 0,
+    offsetY: 0
+  },
   'path-top-left': { src: '/sliced-tiles/path/tl.png', offsetX: 0, offsetY: 0 },
   'path-top': { src: '/sliced-tiles/path/tm.png', offsetX: 0, offsetY: 0 },
   'path-top-right': { src: '/sliced-tiles/path/tr.png', offsetX: 0, offsetY: 0 },
@@ -57,12 +63,6 @@ function getTileVariant(tile: MapTile, mapData: MapTile[], maxX: number, maxY: n
     bottomRight: getTileAt(tile.x + 1, tile.y + 1, mapData),
   }
 
-  // Check if all 8 neighbors are path tiles (pure path)
-  const allNeighborsArePath = Object.values(neighbors).every(neighbor => neighbor?.type === 'p')
-  if (allNeighborsArePath) {
-    return 'path'
-  }
-
   // Determine transition tile based on which sides have grass neighbors
   // Note: null neighbors (outside map bounds) are treated as grass for edge transitions
   const hasGrassTop = neighbors.top?.type === 'g' || neighbors.top === null
@@ -75,6 +75,18 @@ function getTileVariant(tile: MapTile, mapData: MapTile[], maxX: number, maxY: n
   const hasGrassTopRight = neighbors.topRight?.type === 'g' || neighbors.topRight === null
   const hasGrassBottomLeft = neighbors.bottomLeft?.type === 'g' || neighbors.bottomLeft === null
   const hasGrassBottomRight = neighbors.bottomRight?.type === 'g' || neighbors.bottomRight === null
+
+  // Check if all 8 neighbors are grass (center path tile with grass transitions)
+  const allNeighborsAreGrass = Object.values(neighbors).every(neighbor => neighbor?.type === 'g' || neighbor === null)
+  if (allNeighborsAreGrass) {
+    return 'path-center-grass' // Use a special variant for center tiles surrounded by grass
+  }
+
+  // Check if all 8 neighbors are path tiles (pure path)
+  const allNeighborsArePath = Object.values(neighbors).every(neighbor => neighbor?.type === 'p')
+  if (allNeighborsArePath) {
+    return 'path'
+  }
 
   // Corner transitions - check both the direct neighbors and diagonal neighbors
   if (hasGrassTop && hasGrassLeft && hasGrassTopLeft) return 'path-top-left'
@@ -104,6 +116,8 @@ function getTileVariantMnemonic(variant: string): string {
       return 'g'
     case 'path':
       return 'p'
+    case 'path-center-grass':
+      return 'pcg'
     case 'path-top-left':
       return 'tl'
     case 'path-top':
@@ -318,17 +332,50 @@ export default function MapPage() {
                     className="relative overflow-hidden"
                     style={{ width: tileSize, height: tileSize }}
                   >
-                    <Image
-                      src={tileVariant.src}
-                      alt="Path"
-                      width={tileSize}
-                      height={tileSize}
-                      className="block"
-                      unoptimized
-                      style={{
-                        imageRendering: 'pixelated'
-                      }}
-                    />
+                    {variant === 'path-center-grass' ? (
+                      // Render composite 3x3 grid for center tiles surrounded by grass
+                      <div 
+                        className="absolute inset-0"
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr 1fr',
+                          gridTemplateRows: '1fr 1fr 1fr',
+                          gap: '0px'
+                        }}
+                      >
+                        {getPathTile3x3Grid(variant, tile, mapData, maxX, maxY).map((row, rowIndex) =>
+                          row.map((cell, colIndex) => {
+                            const subTileSrc = `/sliced-tiles/path/${cell}.png`;
+                            return (
+                              <Image
+                                key={`${rowIndex}-${colIndex}`}
+                                src={subTileSrc}
+                                alt={`Path ${cell}`}
+                                width={tileSize / 3}
+                                height={tileSize / 3}
+                                className="block"
+                                unoptimized
+                                style={{
+                                  imageRendering: 'pixelated'
+                                }}
+                              />
+                            );
+                          })
+                        )}
+                      </div>
+                    ) : (
+                      <Image
+                        src={tileVariant.src}
+                        alt="Path"
+                        width={tileSize}
+                        height={tileSize}
+                        className="block"
+                        unoptimized
+                        style={{
+                          imageRendering: 'pixelated'
+                        }}
+                      />
+                    )}
                     {debugMode && (
                       <div className="absolute top-0 left-0 bg-black bg-opacity-75 text-white text-[8px] p-0.5 pointer-events-none leading-none">
                         {variant}
