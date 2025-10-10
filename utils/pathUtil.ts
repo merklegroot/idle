@@ -59,14 +59,22 @@ function getSubTileAt(
     
     if (subTileCoord.x === 2 && subTileCoord.y === 0) {
         // Top-right corner
-        if (hasPathTop && hasPathRight) {
-            return 'm'; // All path tiles around
+        if (hasPathTop && hasPathRight && hasPathTopRight) {
+            return 'm'; // All path tiles around including diagonal
+        }
+        if (hasPathTop && hasPathRight && !hasPathTopRight) {
+            return 'gbl'; // Path above and right, but grass top-right diagonal
         }
         if (hasPathRight) {
             return 'tm'; // Path to the right only - prioritize horizontal connection
         }
         if (hasPathTop) {
-            return 'mr'; // Path above only - connect to path above, transition to grass right
+            // Path above only - check diagonal neighbors for more specific transitions
+            if (hasPathTopRight) {
+                return 'mr'; // Path above and top-right - connect to path above, transition to grass right
+            } else {
+                return 'gbl'; // Path above but grass top-right - transition to grass bottom-left
+            }
         }
         return 'tr'; // No path connections
     }

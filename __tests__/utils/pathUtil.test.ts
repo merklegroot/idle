@@ -121,6 +121,19 @@ describe('pathUtil', () => {
     });
   });
 
+  describe('getSubTileAt', () => {
+    it('2x2 path with top right as grass', () => {
+      const mapData = pathUtil.parseMapData([
+        'gggg',
+        'gpgg',
+        'gppg',
+        'gggg'
+      ].join(os.EOL));
+
+      expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 0}, tile: {x: 1, y: 2}, mapData})).toBe('gbl');
+    });
+  });
+
   describe('parseMapData', () => {
     it('should parse map data string into MapTile array', () => {
       const mapString = 'gggg\ngppg\ngggg';
