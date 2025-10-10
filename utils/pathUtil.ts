@@ -44,7 +44,7 @@ function getSubTileAt(
             return 'tm'; // Path to the left only - prioritize horizontal connection
         }
         if (hasPathTop) {
-            return 'tm'; // Path above only
+            return 'ml'; // Path above only - connect to path above, transition to grass left
         }
         return 'tl'; // No path connections
     }
@@ -66,7 +66,7 @@ function getSubTileAt(
             return 'tm'; // Path to the right only - prioritize horizontal connection
         }
         if (hasPathTop) {
-            return 'tm'; // Path above only
+            return 'mr'; // Path above only - connect to path above, transition to grass right
         }
         return 'tr'; // No path connections
     }
@@ -101,7 +101,7 @@ function getSubTileAt(
             return 'bm'; // Path to the left only - prioritize horizontal connection
         }
         if (hasPathBottom) {
-            return 'bm'; // Path below only
+            return 'ml'; // Path below only - connect to path below, transition to grass left
         }
         return 'bl'; // No path connections
     }
@@ -123,7 +123,7 @@ function getSubTileAt(
             return 'bm'; // Path to the right only - prioritize horizontal connection
         }
         if (hasPathBottom) {
-            return 'bm'; // Path below only
+            return 'mr'; // Path below only - connect to path below, transition to grass right
         }
         return 'br'; // No path connections
     }
