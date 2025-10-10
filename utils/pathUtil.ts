@@ -124,8 +124,11 @@ function getSubTileAt(
     
     if (subTileCoord.x === 2 && subTileCoord.y === 2) {
         // Bottom-right corner
-        if (hasPathBottom && hasPathRight) {
-            return 'm'; // All path tiles around
+        if (hasPathBottom && hasPathRight && hasPathBottomRight) {
+            return 'm'; // All path tiles around including diagonal
+        }
+        if (hasPathBottom && hasPathRight && !hasPathBottomRight) {
+            return 'gtl'; // Path below and right, but grass bottom-right diagonal
         }
         if (hasPathRight) {
             return 'bm'; // Path to the right only - prioritize horizontal connection
