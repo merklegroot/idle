@@ -47,57 +47,8 @@ function getTileVariant(tile: MapTile, mapData: MapTile[]): string {
     return 'grass'
   }
 
-  // For path tiles, determine the appropriate transition tile based on neighbors
-  const neighbors = {
-    top: pathUtil.getTileAt(tile.x, tile.y - 1, mapData),
-    bottom: pathUtil.getTileAt(tile.x, tile.y + 1, mapData),
-    left: pathUtil.getTileAt(tile.x - 1, tile.y, mapData),
-    right: pathUtil.getTileAt(tile.x + 1, tile.y, mapData),
-    topLeft: pathUtil.getTileAt(tile.x - 1, tile.y - 1, mapData),
-    topRight: pathUtil.getTileAt(tile.x + 1, tile.y - 1, mapData),
-    bottomLeft: pathUtil.getTileAt(tile.x - 1, tile.y + 1, mapData),
-    bottomRight: pathUtil.getTileAt(tile.x + 1, tile.y + 1, mapData),
-  }
-
-  // Determine transition tile based on which sides have grass neighbors
-  // Note: null neighbors (outside map bounds) are treated as grass for edge transitions
-  const hasGrassTop = neighbors.top?.type === 'g' || neighbors.top === null
-  const hasGrassBottom = neighbors.bottom?.type === 'g' || neighbors.bottom === null
-  const hasGrassLeft = neighbors.left?.type === 'g' || neighbors.left === null
-  const hasGrassRight = neighbors.right?.type === 'g' || neighbors.right === null
-
-  // Corner transitions (check both direct neighbors and diagonal neighbors)
-  const hasGrassTopLeft = neighbors.topLeft?.type === 'g' || neighbors.topLeft === null
-  const hasGrassTopRight = neighbors.topRight?.type === 'g' || neighbors.topRight === null
-  const hasGrassBottomLeft = neighbors.bottomLeft?.type === 'g' || neighbors.bottomLeft === null
-  const hasGrassBottomRight = neighbors.bottomRight?.type === 'g' || neighbors.bottomRight === null
-
-  // Check if all 8 neighbors are grass (center path tile with grass transitions)
-  const allNeighborsAreGrass = Object.values(neighbors).every(neighbor => neighbor?.type === 'g' || neighbor === null)
-  if (allNeighborsAreGrass) {
-    return 'path-center-grass' // Use a special variant for center tiles surrounded by grass
-  }
-
-  // Check if all 8 neighbors are path tiles (pure path)
-  const allNeighborsArePath = Object.values(neighbors).every(neighbor => neighbor?.type === 'p')
-  if (allNeighborsArePath) {
-    return 'path'
-  }
-
-  // Corner transitions - check both the direct neighbors and diagonal neighbors
-  if (hasGrassTop && hasGrassLeft && hasGrassTopLeft) return 'path-top-left'
-  if (hasGrassTop && hasGrassRight && hasGrassTopRight) return 'path-top-right'
-  if (hasGrassBottom && hasGrassLeft && hasGrassBottomLeft) return 'path-bottom-left'
-  if (hasGrassBottom && hasGrassRight && hasGrassBottomRight) return 'path-bottom-right'
-
-  // Edge transitions
-  if (hasGrassTop) return 'path-top'
-  if (hasGrassBottom) return 'path-bottom'
-  if (hasGrassLeft) return 'path-left'
-  if (hasGrassRight) return 'path-right'
-
-  // Default to center path tile
-  return 'path'
+  // For path tiles, always use the 3x3 grid approach
+  return 'path-3x3-grid'
 }
 
 export default function MapPage() {
@@ -253,8 +204,8 @@ export default function MapPage() {
                     className="relative overflow-hidden"
                     style={{ width: tileSize, height: tileSize }}
                   >
-                    {variant === 'path-center-grass' ? (
-                      // Render composite 3x3 grid for center tiles surrounded by grass
+                    {variant === 'path-3x3-grid' ? (
+                      // Render composite 3x3 grid for all path tiles
                       <div 
                         className="absolute inset-0"
                         style={{
