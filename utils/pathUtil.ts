@@ -40,8 +40,11 @@ function getSubTileAt(
         if (hasPathTop && hasPathLeft) {
             return 'm'; // All path tiles around
         }
-        if (hasPathTop || hasPathLeft) {
-            return 'm'; // Partial path connection
+        if (hasPathLeft) {
+            return 'tm'; // Path to the left only - prioritize horizontal connection
+        }
+        if (hasPathTop) {
+            return 'tm'; // Path above only
         }
         return 'tl'; // No path connections
     }
@@ -59,8 +62,11 @@ function getSubTileAt(
         if (hasPathTop && hasPathRight) {
             return 'm'; // All path tiles around
         }
-        if (hasPathTop || hasPathRight) {
-            return 'm'; // Partial path connection
+        if (hasPathRight) {
+            return 'tm'; // Path to the right only - prioritize horizontal connection
+        }
+        if (hasPathTop) {
+            return 'tm'; // Path above only
         }
         return 'tr'; // No path connections
     }
@@ -91,8 +97,11 @@ function getSubTileAt(
         if (hasPathBottom && hasPathLeft) {
             return 'm'; // All path tiles around
         }
-        if (hasPathBottom || hasPathLeft) {
-            return 'm'; // Partial path connection
+        if (hasPathLeft) {
+            return 'bm'; // Path to the left only - prioritize horizontal connection
+        }
+        if (hasPathBottom) {
+            return 'bm'; // Path below only
         }
         return 'bl'; // No path connections
     }
@@ -110,8 +119,11 @@ function getSubTileAt(
         if (hasPathBottom && hasPathRight) {
             return 'm'; // All path tiles around
         }
-        if (hasPathBottom || hasPathRight) {
-            return 'm'; // Partial path connection
+        if (hasPathRight) {
+            return 'bm'; // Path to the right only - prioritize horizontal connection
+        }
+        if (hasPathBottom) {
+            return 'bm'; // Path below only
         }
         return 'br'; // No path connections
     }

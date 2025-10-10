@@ -82,6 +82,26 @@ describe('pathUtil', () => {
       expect(pathUtil.getSubTileAt({subTile: {x: 0, y: 0}, tile: {x: 1, y: 1}, mapData})).toBe('tl');
       expect(pathUtil.getSubTileAt({subTile: {x: 1, y: 0}, tile: {x: 1, y: 1}, mapData})).toBe('tm');
       expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 0}, tile: {x: 1, y: 1}, mapData})).toBe('tm');
+
+      expect(pathUtil.getSubTileAt({subTile: {x: 0, y: 1}, tile: {x: 1, y: 1}, mapData})).toBe('ml');
+      expect(pathUtil.getSubTileAt({subTile: {x: 1, y: 1}, tile: {x: 1, y: 1}, mapData})).toBe('m');
+      expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 1}, tile: {x: 1, y: 1}, mapData})).toBe('m');
+
+      expect(pathUtil.getSubTileAt({subTile: {x: 0, y: 2}, tile: {x: 1, y: 1}, mapData})).toBe('bl');
+      expect(pathUtil.getSubTileAt({subTile: {x: 1, y: 2}, tile: {x: 1, y: 1}, mapData})).toBe('bm');
+      expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 2}, tile: {x: 1, y: 1}, mapData})).toBe('bm');
+
+      expect(pathUtil.getSubTileAt({subTile: {x: 0, y: 0}, tile: {x: 2, y: 1}, mapData})).toBe('tm');
+      expect(pathUtil.getSubTileAt({subTile: {x: 1, y: 0}, tile: {x: 2, y: 1}, mapData})).toBe('tm');
+      expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 0}, tile: {x: 2, y: 1}, mapData})).toBe('tr');
+
+      expect(pathUtil.getSubTileAt({subTile: {x: 0, y: 1}, tile: {x: 2, y: 1}, mapData})).toBe('m');
+      expect(pathUtil.getSubTileAt({subTile: {x: 1, y: 1}, tile: {x: 2, y: 1}, mapData})).toBe('m');
+      expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 1}, tile: {x: 2, y: 1}, mapData})).toBe('mr');
+
+      expect(pathUtil.getSubTileAt({subTile: {x: 0, y: 2}, tile: {x: 2, y: 1}, mapData})).toBe('bm');
+      expect(pathUtil.getSubTileAt({subTile: {x: 1, y: 2}, tile: {x: 2, y: 1}, mapData})).toBe('bm');
+      expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 2}, tile: {x: 2, y: 1}, mapData})).toBe('br');
     });
   });
 
