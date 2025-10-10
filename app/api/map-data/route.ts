@@ -1,32 +1,14 @@
 import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
-
-interface MapTile {
-  type: 'g' | 'p'
-  x: number
-  y: number
-}
+import { pathUtil } from '@/utils/pathUtil'
 
 export async function GET() {
   try {
     const filePath = path.join(process.cwd(), 'data', 'town-map.txt')
     const fileContents = fs.readFileSync(filePath, 'utf8')
     
-    const lines = fileContents.trim().split('\n')
-    const tiles: MapTile[] = []
-    
-    lines.forEach((line, y) => {
-      line.split('').forEach((char, x) => {
-        if (char === 'g' || char === 'p') {
-          tiles.push({
-            type: char as 'g' | 'p',
-            x,
-            y
-          })
-        }
-      })
-    })
+    const tiles = pathUtil.parseMapData(fileContents)
     
     return NextResponse.json(tiles)
   } catch (error) {
