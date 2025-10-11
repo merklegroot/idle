@@ -26,8 +26,6 @@ describe('pathUtil', () => {
       expect(result[2][1]).toBe('bm');
       expect(result[2][2]).toBe('br');      
     });
-
-    // it('path surrounded by path', () => {
     //   const mapData: MapTile[] = [
     //     { type: 'p', x: 0, y: 0 }, { type: 'p', x: 1, y: 0 }, { type: 'p', x: 2, y: 0 },
     //     { type: 'p', x: 0, y: 1 }, { type: 'p', x: 1, y: 1 }, { type: 'p', x: 2, y: 1 },
@@ -69,9 +67,7 @@ describe('pathUtil', () => {
       expect(pathUtil.getSubTileAt({subTile: {x: 1, y: 2}, tile: {x: 1, y: 1}, mapData})).toBe('bm');
       expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 2}, tile: {x: 1, y: 1}, mapData})).toBe('br');
     });
-  });
 
-  describe('getSubTileAt', () => {
     it('two horitontal paths surrounded by grass', () => {
       const mapData = pathUtil.parseMapData([
         'gggg',
@@ -103,9 +99,7 @@ describe('pathUtil', () => {
       expect(pathUtil.getSubTileAt({subTile: {x: 1, y: 2}, tile: {x: 2, y: 1}, mapData})).toBe('bm');
       expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 2}, tile: {x: 2, y: 1}, mapData})).toBe('br');
     });
-  });
 
-  describe('getSubTileAt', () => {
     it('3x3 path', () => {
       const mapData = pathUtil.parseMapData([
         'ggggg',
@@ -119,9 +113,7 @@ describe('pathUtil', () => {
       expect(pathUtil.getSubTileAt({subTile: {x: 0, y: 1}, tile: {x: 1, y: 2}, mapData})).toBe('ml');
       expect(pathUtil.getSubTileAt({subTile: {x: 0, y: 2}, tile: {x: 1, y: 2}, mapData})).toBe('ml');
     });
-  });
 
-  describe('getSubTileAt', () => {
     it('2x2 path with top right as grass', () => {
       const mapData = pathUtil.parseMapData([
         'gggg',
@@ -132,9 +124,7 @@ describe('pathUtil', () => {
 
       expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 0}, tile: {x: 1, y: 2}, mapData})).toBe('gbl');
     });
-  });
-
-  describe('getSubTileAt', () => {
+    
     it('2x2 path with bottom right as grass', () => {
       const mapData = pathUtil.parseMapData([
         'gggg',
