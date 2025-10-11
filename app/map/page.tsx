@@ -352,7 +352,8 @@ export default function MapPage() {
                       className="block"
                       unoptimized
                       style={{
-                        imageRendering: 'pixelated'
+                        imageRendering: 'pixelated',
+                        transform: 'translateY(-8px)'
                       }}
                     />
                     {showTileLetters && (
