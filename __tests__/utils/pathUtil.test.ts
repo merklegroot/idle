@@ -166,6 +166,7 @@ describe('pathUtil', () => {
       ].join(os.EOL));
 
       expect(pathUtil.getSubTileAt({subTile: {x: 0, y: 2}, tile: {x: 2, y: 1}, mapData})).toBe('gtr');
+      expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 0}, tile: {x: 2, y: 2}, mapData})).toBe('mr');
     });
   });
 

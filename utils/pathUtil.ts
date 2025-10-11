@@ -76,7 +76,7 @@ function getSubTileAt(
             if (hasPathTopRight) {
                 return 'mr'; // Path above and top-right - connect to path above, transition to grass right
             } else {
-                return 'gbl'; // Path above but grass top-right - transition to grass bottom-left
+                return 'mr'; // Path above but grass top-right - still connect to path above, transition to grass right
             }
         }
         return 'tr'; // No path connections
