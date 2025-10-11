@@ -145,6 +145,28 @@ describe('pathUtil', () => {
 
       expect(pathUtil.getSubTileAt({subTile: {x: 2, y: 2}, tile: {x: 1, y: 1}, mapData})).toBe('gtl');
     });
+
+    it('2x2 path with top left as grass', () => {
+      const mapData = pathUtil.parseMapData([
+        'gggg',
+        'ggpg',
+        'gppg',
+        'gggg'
+      ].join(os.EOL));
+
+      expect(pathUtil.getSubTileAt({subTile: {x: 0, y: 0}, tile: {x: 2, y: 2}, mapData})).toBe('gbr');
+    });
+
+    it('2x2 path with bottom left as grass', () => {
+      const mapData = pathUtil.parseMapData([
+        'gggg',
+        'gppg',
+        'ggpg',
+        'gggg'
+      ].join(os.EOL));
+
+      expect(pathUtil.getSubTileAt({subTile: {x: 0, y: 2}, tile: {x: 2, y: 1}, mapData})).toBe('gtr');
+    });
   });
 
   describe('parseMapData', () => {

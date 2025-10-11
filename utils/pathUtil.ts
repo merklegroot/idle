@@ -37,8 +37,11 @@ function getSubTileAt(
     // Determine the sub-tile variant based on position and neighbors
     if (subTileCoord.x === 0 && subTileCoord.y === 0) {
         // Top-left corner
-        if (hasPathTop && hasPathLeft) {
-            return 'm'; // All path tiles around
+        if (hasPathTop && hasPathLeft && hasPathTopLeft) {
+            return 'm'; // All path tiles around including diagonal
+        }
+        if (hasPathTop && hasPathLeft && !hasPathTopLeft) {
+            return 'gbr'; // Path above and left, but grass top-left diagonal
         }
         if (hasPathLeft) {
             return 'tm'; // Path to the left only - prioritize horizontal connection
@@ -102,8 +105,11 @@ function getSubTileAt(
     
     if (subTileCoord.x === 0 && subTileCoord.y === 2) {
         // Bottom-left corner
-        if (hasPathBottom && hasPathLeft) {
-            return 'm'; // All path tiles around
+        if (hasPathBottom && hasPathLeft && hasPathBottomLeft) {
+            return 'm'; // All path tiles around including diagonal
+        }
+        if (hasPathBottom && hasPathLeft && !hasPathBottomLeft) {
+            return 'gtr'; // Path below and left, but grass bottom-left diagonal
         }
         if (hasPathLeft) {
             return 'bm'; // Path to the left only - prioritize horizontal connection
