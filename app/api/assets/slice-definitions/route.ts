@@ -14,6 +14,8 @@ interface SliceDefinition {
   offsetY: number;
   spacingX: number;
   spacingY: number;
+  drawingOffsetX?: number;
+  drawingOffsetY?: number;
   description: string;
   type: 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet';
   hasSlicingParams: boolean;
@@ -94,6 +96,8 @@ export async function POST(request: Request) {
       offsetY,
       spacingX,
       spacingY,
+      drawingOffsetX,
+      drawingOffsetY,
       description,
       type,
       hasSlicingParams
@@ -124,6 +128,8 @@ export async function POST(request: Request) {
       offsetY: Number(offsetY) || 0,
       spacingX: Number(spacingX) || 0,
       spacingY: Number(spacingY) || 0,
+      drawingOffsetX: Number(drawingOffsetX) || 0,
+      drawingOffsetY: Number(drawingOffsetY) || 0,
       description: description || '',
       type: type || 'Unknown',
       hasSlicingParams: Boolean(hasSlicingParams)

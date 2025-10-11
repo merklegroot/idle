@@ -225,7 +225,9 @@
     "offsetY": 0,
     "spacingX": 0,
     "spacingY": 0,
-    "description": "Oak Tree",
+    "drawingOffsetX": 0,
+    "drawingOffsetY": 8,
+    "description": "Test with drawing offset",
     "type": "Image",
     "hasSlicingParams": false
   }

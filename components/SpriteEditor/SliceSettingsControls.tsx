@@ -7,6 +7,8 @@ interface SliceSettings {
   offsetY: number;
   spacingX: number;
   spacingY: number;
+  drawingOffsetX: number;
+  drawingOffsetY: number;
   description: string;
   type: 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet';
 }
@@ -204,7 +206,7 @@ export default function SliceSettingsControls({
             className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
             min="0"
           />
-          </div>
+        </div>
           </div>
         ) : (
           <div className="text-gray-400 text-sm italic">
@@ -213,6 +215,41 @@ export default function SliceSettingsControls({
         )}
         </div>
       )}
+      
+      {/* Drawing Offset Section - Always visible for all image types */}
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold text-white mb-3">Drawing Offset</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Drawing Offset X
+            </label>
+            <input
+              type="number"
+              value={sliceSettings.drawingOffsetX ?? 0}
+              onChange={(e) => onSettingChange('drawingOffsetX', parseInt(e.target.value) || 0)}
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
+              step="1"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Drawing Offset Y
+            </label>
+            <input
+              type="number"
+              value={sliceSettings.drawingOffsetY ?? 0}
+              onChange={(e) => onSettingChange('drawingOffsetY', parseInt(e.target.value) || 0)}
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
+              step="1"
+            />
+          </div>
+        </div>
+        <p className="text-gray-400 text-sm mt-2">
+          Additional offset applied when drawing this image on the map (in addition to automatic centering)
+        </p>
+      </div>
       
       <div className="mt-6 flex items-center gap-4">
         <button

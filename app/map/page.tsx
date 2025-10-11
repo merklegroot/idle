@@ -85,6 +85,7 @@ function calculateVerticalOffset(imageWidth: number, imageHeight: number, tileSi
 // Tree image component that handles dynamic sizing
 function TreeImage({ src, alt, tileSize }: { src: string, alt: string, tileSize: number }) {
   const [imageDimensions, setImageDimensions] = useState<{ width: number, height: number } | null>(null)
+  const [drawingOffset, setDrawingOffset] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
   
   useEffect(() => {
     const img = document.createElement('img')
@@ -94,9 +95,31 @@ function TreeImage({ src, alt, tileSize }: { src: string, alt: string, tileSize:
     img.src = src
   }, [src])
   
-  const verticalOffset = imageDimensions 
+  // Fetch drawing offset from sprite definitions
+  useEffect(() => {
+    const fetchDrawingOffset = async () => {
+      try {
+        const response = await fetch('/api/sprite-definitions')
+        const definitions = await response.json()
+        
+        // Find the definition for this image
+        const definition = definitions.find((def: any) => def.imagePath === src)
+        if (definition && definition.drawingOffsetX !== undefined && definition.drawingOffsetY !== undefined) {
+          setDrawingOffset({ x: definition.drawingOffsetX, y: definition.drawingOffsetY })
+        }
+      } catch (error) {
+        console.error('Failed to fetch sprite definitions:', error)
+      }
+    }
+    
+    fetchDrawingOffset()
+  }, [src])
+  
+  const calculatedOffset = imageDimensions 
     ? calculateVerticalOffset(imageDimensions.width, imageDimensions.height, tileSize)
     : 0
+  
+  const totalOffset = calculatedOffset + drawingOffset.y
   
   return (
     <Image
@@ -108,7 +131,7 @@ function TreeImage({ src, alt, tileSize }: { src: string, alt: string, tileSize:
       unoptimized
       style={{
         imageRendering: 'pixelated',
-        transform: `translateY(${verticalOffset}px)`
+        transform: `translate(${drawingOffset.x}px, ${totalOffset}px)`
       }}
     />
   )

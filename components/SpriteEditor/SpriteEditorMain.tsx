@@ -13,6 +13,8 @@ interface SliceSettings {
   offsetY: number;
   spacingX: number;
   spacingY: number;
+  drawingOffsetX: number;
+  drawingOffsetY: number;
   description: string;
   type: 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet';
 }
@@ -29,6 +31,8 @@ interface SliceDefinition {
   offsetY: number;
   spacingX: number;
   spacingY: number;
+  drawingOffsetX?: number;
+  drawingOffsetY?: number;
   description: string;
   type: 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet';
 }
@@ -45,6 +49,8 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
     offsetY: 0,
     spacingX: 0,
     spacingY: 0,
+    drawingOffsetX: 0,
+    drawingOffsetY: 0,
     description: '',
     type: 'Unknown'
   });
@@ -316,6 +322,8 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
             offsetY: existingDefinition.offsetY,
             spacingX: existingDefinition.spacingX,
             spacingY: existingDefinition.spacingY,
+            drawingOffsetX: existingDefinition.drawingOffsetX ?? 0,
+            drawingOffsetY: existingDefinition.drawingOffsetY ?? 0,
             description: existingDefinition.description || '',
             type: existingDefinition.type || 'Unknown'
           });
@@ -441,6 +449,8 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
       offsetY: definition.offsetY,
       spacingX: definition.spacingX,
       spacingY: definition.spacingY,
+      drawingOffsetX: definition.drawingOffsetX ?? 0,
+      drawingOffsetY: definition.drawingOffsetY ?? 0,
       description: definition.description || '',
       type: definition.type || 'Unknown'
     });
