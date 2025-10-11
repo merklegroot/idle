@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import type { MapTile } from '@/models/MapTile'
+import type { TreeMapTile } from '@/models/TreeMapTile'
 import { pathUtil } from '@/utils/pathUtil'
 
 interface TileVariant {
@@ -45,6 +46,12 @@ const TILE_VARIANTS: { [key: string]: TileVariant } = {
     offsetX: 0,
     offsetY: 0
   },
+  // Tree tile
+  'tree': {
+    src: '/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree.png',
+    offsetX: 0,
+    offsetY: 0
+  },
 }
 
 // Function to determine tile variant based on neighbors
@@ -61,8 +68,14 @@ function getTileVariant(tile: MapTile, mapData: MapTile[]): string {
   return 'path-3x3-grid'
 }
 
+// Helper function to check if there's a tree at specific coordinates
+function hasTreeAt(x: number, y: number, treeData: TreeMapTile[]): boolean {
+  return treeData.some(tree => tree.x === x && tree.y === y && tree.type === 't')
+}
+
 export default function MapPage() {
   const [mapData, setMapData] = useState<MapTile[]>([])
+  const [treeData, setTreeData] = useState<TreeMapTile[]>([])
   const [loading, setLoading] = useState(true)
   const [debugMode, setDebugMode] = useState(false)
   const [showGrid, setShowGrid] = useState(false)
@@ -74,7 +87,8 @@ export default function MapPage() {
       try {
         const response = await fetch('/api/map-data')
         const data = await response.json()
-        setMapData(data)
+        setMapData(data.tiles)
+        setTreeData(data.treeTiles)
       } catch (error) {
         console.error('Failed to load map data:', error)
       } finally {
@@ -326,6 +340,31 @@ export default function MapPage() {
                     )}
                   </div>
                 )}
+                
+                {/* Tree overlay */}
+                {hasTreeAt(tile.x, tile.y, treeData) && (
+                  <div className="absolute inset-0 pointer-events-none">
+                    <Image
+                      src={TILE_VARIANTS['tree'].src}
+                      alt="Tree"
+                      width={tileSize}
+                      height={tileSize}
+                      className="block"
+                      unoptimized
+                      style={{
+                        imageRendering: 'pixelated'
+                      }}
+                    />
+                    {showTileLetters && (
+                      <div 
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                        style={{ fontSize: `${tileSize * 0.6}px` }}
+                      >
+                        <span className="text-green-800 font-bold drop-shadow-lg">T</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )
           })}
@@ -369,7 +408,7 @@ export default function MapPage() {
         <p>Map size: {maxX + 1} × {maxY + 1} tiles</p>
         <div className="mt-2">
           <p className="font-semibold mb-2">Legend:</p>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <div>
               <p className="font-medium mb-1">Grass Tiles:</p>
               <div className="flex items-center gap-2">
@@ -404,6 +443,24 @@ export default function MapPage() {
                   />
                 </div>
                 <span>l - Housing Plot</span>
+              </div>
+            </div>
+            <div>
+              <p className="font-medium mb-1">Trees:</p>
+              <div className="flex items-center gap-2">
+                <div className="relative" style={{ width: '32px', height: '32px' }}>
+                  <Image
+                    src="/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree.png"
+                    alt="Tree"
+                    width={32}
+                    height={32}
+                    className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
+                  />
+                </div>
+                <span>t - Tree</span>
               </div>
             </div>
             <div>

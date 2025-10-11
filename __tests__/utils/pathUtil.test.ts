@@ -1,5 +1,6 @@
 import { pathUtil } from '../../utils/pathUtil';
 import type { MapTile } from '@/models/MapTile';
+import type { TreeMapTile } from '@/models/TreeMapTile';
 import os from 'os';
 
 describe('pathUtil', () => {
@@ -217,6 +218,32 @@ describe('pathUtil', () => {
       // Check that other tiles are still parsed correctly
       const pathTile = result.find(tile => tile.x === 1 && tile.y === 1);
       expect(pathTile).toEqual({ type: 'p', x: 1, y: 1 });
+    });
+  });
+
+  describe('parseTreeMapData', () => {
+    it('should parse tree map data string into TreeMapTile array', () => {
+      const treeMapString = '....\n.tt.\n....';
+      const result = pathUtil.parseTreeMapData(treeMapString);
+      
+      // Should have 12 tiles including the trees
+      expect(result).toHaveLength(12);
+      
+      // Check that trees were parsed correctly
+      const tree1 = result.find(tile => tile.x === 1 && tile.y === 1);
+      expect(tree1).toEqual({ type: 't', x: 1, y: 1 });
+      
+      const tree2 = result.find(tile => tile.x === 2 && tile.y === 1);
+      expect(tree2).toEqual({ type: 't', x: 2, y: 1 });
+      
+      // Check that empty spaces are parsed as dots
+      const emptyTile = result.find(tile => tile.x === 0 && tile.y === 0);
+      expect(emptyTile).toEqual({ type: '.', x: 0, y: 0 });
+    });
+
+    it('should handle empty tree map data', () => {
+      const result = pathUtil.parseTreeMapData('');
+      expect(result).toEqual([]);
     });
   });
 });

@@ -1,4 +1,5 @@
 import type { MapTile } from "@/models/MapTile";
+import type { TreeMapTile } from "@/models/TreeMapTile";
 
 // Helper function to get tile at specific coordinates
 function getTileAt(x: number, y: number, mapData: MapTile[]): MapTile | null {
@@ -183,9 +184,29 @@ function parseMapData(mapData: string): MapTile[] {
     return tiles;
 }
 
+function parseTreeMapData(treeMapData: string): TreeMapTile[] {
+    const lines = treeMapData.trim().split('\n');
+    const tiles: TreeMapTile[] = [];
+    
+    lines.forEach((line, y) => {
+        line.split('').forEach((char, x) => {
+            if (char === '.' || char === 't') {
+                tiles.push({
+                    type: char as '.' | 't',
+                    x,
+                    y
+                });
+            }
+        });
+    });
+    
+    return tiles;
+}
+
 export const pathUtil = {
     getTileAt,
     getSubTileAt,
     getPathTile3x3Grid,
-    parseMapData
+    parseMapData,
+    parseTreeMapData
 };

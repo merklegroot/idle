@@ -212,5 +212,21 @@
     "description": "",
     "type": "Image",
     "hasSlicingParams": false
+  },
+  {
+    "id": "mgmlhl8e70yolzutepe",
+    "imagePath": "/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree.png",
+    "imageName": "Oak Tree",
+    "imageWidth": 64,
+    "imageHeight": 80,
+    "gridWidth": 32,
+    "gridHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "description": "Oak Tree",
+    "type": "Image",
+    "hasSlicingParams": false
   }
 ]
