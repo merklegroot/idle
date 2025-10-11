@@ -73,6 +73,47 @@ function hasTreeAt(x: number, y: number, treeData: TreeMapTile[]): boolean {
   return treeData.some(tree => tree.x === x && tree.y === y && tree.type === 't')
 }
 
+// Helper function to calculate vertical offset for non-square images
+function calculateVerticalOffset(imageWidth: number, imageHeight: number, tileSize: number): number {
+  // If image is taller than it is wide, center it vertically
+  if (imageHeight > imageWidth) {
+    return -(imageHeight - tileSize) / 2
+  }
+  return 0
+}
+
+// Tree image component that handles dynamic sizing
+function TreeImage({ src, alt, tileSize }: { src: string, alt: string, tileSize: number }) {
+  const [imageDimensions, setImageDimensions] = useState<{ width: number, height: number } | null>(null)
+  
+  useEffect(() => {
+    const img = document.createElement('img')
+    img.onload = () => {
+      setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })
+    }
+    img.src = src
+  }, [src])
+  
+  const verticalOffset = imageDimensions 
+    ? calculateVerticalOffset(imageDimensions.width, imageDimensions.height, tileSize)
+    : 0
+  
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={tileSize}
+      height={tileSize}
+      className="block"
+      unoptimized
+      style={{
+        imageRendering: 'pixelated',
+        transform: `translateY(${verticalOffset}px)`
+      }}
+    />
+  )
+}
+
 export default function MapPage() {
   const [mapData, setMapData] = useState<MapTile[]>([])
   const [treeData, setTreeData] = useState<TreeMapTile[]>([])
@@ -344,17 +385,10 @@ export default function MapPage() {
                 {/* Tree overlay */}
                 {hasTreeAt(tile.x, tile.y, treeData) && (
                   <div className="absolute inset-0 pointer-events-none">
-                    <Image
+                    <TreeImage
                       src={TILE_VARIANTS['tree'].src}
                       alt="Tree"
-                      width={tileSize}
-                      height={tileSize}
-                      className="block"
-                      unoptimized
-                      style={{
-                        imageRendering: 'pixelated',
-                        transform: 'translateY(-8px)'
-                      }}
+                      tileSize={tileSize}
                     />
                     {showTileLetters && (
                       <div 
