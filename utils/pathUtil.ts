@@ -170,9 +170,9 @@ function parseMapData(mapData: string): MapTile[] {
     
     lines.forEach((line, y) => {
         line.split('').forEach((char, x) => {
-            if (char === 'g' || char === 'p') {
+            if (char === 'g' || char === 'p' || char === 'l') {
                 tiles.push({
-                    type: char as 'g' | 'p',
+                    type: char as 'g' | 'p' | 'l',
                     x,
                     y
                 });

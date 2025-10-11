@@ -202,5 +202,21 @@ describe('pathUtil', () => {
       const xTile = result.find(tile => tile.x === 1 && tile.y === 0);
       expect(xTile).toBeUndefined();
     });
+
+    it('should parse housing plot characters', () => {
+      const mapString = 'gggg\ngplg\ngggg';
+      const result = pathUtil.parseMapData(mapString);
+      
+      // Should have 12 tiles including the housing plot
+      expect(result).toHaveLength(12);
+      
+      // Check that housing plot was parsed correctly (at position x=2, y=1)
+      const housingTile = result.find(tile => tile.x === 2 && tile.y === 1);
+      expect(housingTile).toEqual({ type: 'l', x: 2, y: 1 });
+      
+      // Check that other tiles are still parsed correctly
+      const pathTile = result.find(tile => tile.x === 1 && tile.y === 1);
+      expect(pathTile).toEqual({ type: 'p', x: 1, y: 1 });
+    });
   });
 });

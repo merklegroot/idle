@@ -1,5 +1,5 @@
 export interface MapTile {
-    type: 'g' | 'p'
+    type: 'g' | 'p' | 'l'
     x: number
     y: number
 }

@@ -39,12 +39,22 @@ const TILE_VARIANTS: { [key: string]: TileVariant } = {
   'path-bottom-left': { src: '/sliced-tiles/path/bl.png', offsetX: 0, offsetY: 0 },
   'path-bottom': { src: '/sliced-tiles/path/bm.png', offsetX: 0, offsetY: 0 },
   'path-bottom-right': { src: '/sliced-tiles/path/br.png', offsetX: 0, offsetY: 0 },
+  // Housing plot tile
+  'housing': {
+    src: '/assets/cute-fantasy-rpg/Tiles/FarmLand_Tile.png',
+    offsetX: 0,
+    offsetY: 0
+  },
 }
 
 // Function to determine tile variant based on neighbors
 function getTileVariant(tile: MapTile, mapData: MapTile[]): string {
   if (tile.type === 'g') {
     return 'grass'
+  }
+  
+  if (tile.type === 'l') {
+    return 'housing'
   }
 
   // For path tiles, always use the 3x3 grid approach
@@ -199,6 +209,36 @@ export default function MapPage() {
                       </div>
                     )}
                   </div>
+                ) : variant === 'housing' ? (
+                  <div className="relative">
+                    <Image
+                      src={tileVariant.src}
+                      alt="Housing Plot"
+                      width={tileSize}
+                      height={tileSize}
+                      className="block"
+                      unoptimized
+                      style={{
+                        imageRendering: 'pixelated'
+                      }}
+                    />
+                    {showTileLetters && (
+                      <div 
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                        style={{ fontSize: `${tileSize * 0.8}px` }}
+                      >
+                        <span className="text-white font-bold drop-shadow-lg">l</span>
+                      </div>
+                    )}
+                    {showTileVariants && (
+                      <div 
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                        style={{ fontSize: `${tileSize * 0.4}px` }}
+                      >
+                        <span className="text-yellow-300 font-bold drop-shadow-lg">h</span>
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <div 
                     className="relative overflow-hidden"
@@ -329,7 +369,7 @@ export default function MapPage() {
         <p>Map size: {maxX + 1} × {maxY + 1} tiles</p>
         <div className="mt-2">
           <p className="font-semibold mb-2">Legend:</p>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <p className="font-medium mb-1">Grass Tiles:</p>
               <div className="flex items-center gap-2">
@@ -346,6 +386,24 @@ export default function MapPage() {
                   />
                 </div>
                 <span>g - Grass</span>
+              </div>
+            </div>
+            <div>
+              <p className="font-medium mb-1">Housing Plots:</p>
+              <div className="flex items-center gap-2">
+                <div className="relative" style={{ width: '32px', height: '32px' }}>
+                  <Image
+                    src="/assets/cute-fantasy-rpg/Tiles/FarmLand_Tile.png"
+                    alt="Housing Plot"
+                    width={32}
+                    height={32}
+                    className="block"
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
+                  />
+                </div>
+                <span>l - Housing Plot</span>
               </div>
             </div>
             <div>
