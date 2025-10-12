@@ -2,8 +2,12 @@
 
 import Link from 'next/link';
 import assetPacksData from '../../data/asset-packs.json';
+import { calculateTotalAssets } from '../../utils/assetPackUtil';
 
-const assetPacks = assetPacksData;
+const assetPacks = assetPacksData.map(pack => ({
+  ...pack,
+  totalAssets: calculateTotalAssets(pack.id)
+}));
 
 export default function AssetPacks() {
   return (
