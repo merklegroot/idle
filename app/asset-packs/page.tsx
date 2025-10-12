@@ -59,12 +59,6 @@ export default function AssetPacks() {
             <h1 className="text-4xl font-bold text-white mb-2">Asset Packs</h1>
             <p className="text-gray-300">Choose an asset pack to browse and use in your idle game</p>
           </div>
-          <a
-            href="/sprite-editor"
-            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
-          >
-            Open Sprite Editor
-          </a>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
