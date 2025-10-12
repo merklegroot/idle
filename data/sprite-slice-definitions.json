@@ -226,8 +226,8 @@
     "spacingX": 0,
     "spacingY": 0,
     "drawingOffsetX": 0,
-    "drawingOffsetY": 8,
-    "description": "Test with drawing offset",
+    "drawingOffsetY": -8,
+    "description": "Test with negative drawing offset",
     "type": "Image",
     "hasSlicingParams": false
   }

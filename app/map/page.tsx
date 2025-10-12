@@ -99,13 +99,18 @@ function TreeImage({ src, alt, tileSize }: { src: string, alt: string, tileSize:
   useEffect(() => {
     const fetchDrawingOffset = async () => {
       try {
-        const response = await fetch('/api/sprite-definitions')
-        const definitions = await response.json()
+        const response = await fetch('/api/assets/slice-definitions')
+        const data = await response.json()
         
-        // Find the definition for this image
-        const definition = definitions.find((def: any) => def.imagePath === src)
-        if (definition && definition.drawingOffsetX !== undefined && definition.drawingOffsetY !== undefined) {
-          setDrawingOffset({ x: definition.drawingOffsetX, y: definition.drawingOffsetY })
+        if (data.success && data.definitions) {
+          // Find the definition for this image
+          const definition = data.definitions.find((def: any) => def.imagePath === src)
+          if (definition) {
+            setDrawingOffset({ 
+              x: definition.drawingOffsetX ?? 0, 
+              y: definition.drawingOffsetY ?? 0 
+            })
+          }
         }
       } catch (error) {
         console.error('Failed to fetch sprite definitions:', error)

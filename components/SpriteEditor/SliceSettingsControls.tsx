@@ -7,8 +7,8 @@ interface SliceSettings {
   offsetY: number;
   spacingX: number;
   spacingY: number;
-  drawingOffsetX: number;
-  drawingOffsetY: number;
+  drawingOffsetX: number | string;
+  drawingOffsetY: number | string;
   description: string;
   type: 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet';
 }
@@ -225,11 +225,11 @@ export default function SliceSettingsControls({
               Drawing Offset X
             </label>
             <input
-              type="number"
+              type="text"
               value={sliceSettings.drawingOffsetX ?? 0}
-              onChange={(e) => onSettingChange('drawingOffsetX', parseInt(e.target.value) || 0)}
+              onChange={(e) => onSettingChange('drawingOffsetX', e.target.value)}
               className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-              step="1"
+              placeholder="0"
             />
           </div>
           
@@ -238,11 +238,11 @@ export default function SliceSettingsControls({
               Drawing Offset Y
             </label>
             <input
-              type="number"
+              type="text"
               value={sliceSettings.drawingOffsetY ?? 0}
-              onChange={(e) => onSettingChange('drawingOffsetY', parseInt(e.target.value) || 0)}
+              onChange={(e) => onSettingChange('drawingOffsetY', e.target.value)}
               className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-              step="1"
+              placeholder="0"
             />
           </div>
         </div>

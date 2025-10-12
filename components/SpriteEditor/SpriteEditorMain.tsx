@@ -13,8 +13,8 @@ interface SliceSettings {
   offsetY: number;
   spacingX: number;
   spacingY: number;
-  drawingOffsetX: number;
-  drawingOffsetY: number;
+  drawingOffsetX: number | string;
+  drawingOffsetY: number | string;
   description: string;
   type: 'Unknown' | 'Image' | 'Tile Sheet' | 'Sprite Sheet';
 }
@@ -400,7 +400,15 @@ export default function SpriteEditorMain({ selectedImage }: SpriteEditorMainProp
           imageWidth: imageDimensions.width,
           imageHeight: imageDimensions.height,
           hasSlicingParams,
-          ...sliceSettings
+          ...sliceSettings,
+          drawingOffsetX: (() => {
+            const parsed = parseInt(String(sliceSettings.drawingOffsetX));
+            return isNaN(parsed) ? 0 : parsed;
+          })(),
+          drawingOffsetY: (() => {
+            const parsed = parseInt(String(sliceSettings.drawingOffsetY));
+            return isNaN(parsed) ? 0 : parsed;
+          })()
         })
       });
       
