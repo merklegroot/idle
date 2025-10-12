@@ -59,6 +59,14 @@ export default function AssetPacks() {
             <h1 className="text-4xl font-bold text-white mb-2">Asset Packs</h1>
             <p className="text-gray-300">Choose an asset pack to browse and use in your idle game</p>
           </div>
+          <div className="flex gap-3">
+            <Link
+              href="/new-asset-pack"
+              className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Create New Asset Pack
+            </Link>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

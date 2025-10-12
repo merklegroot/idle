@@ -28,7 +28,9 @@ export default function AssetPackDetails() {
   const [assetPack, setAssetPack] = useState<AssetPack | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [editingId, setEditingId] = useState<boolean>(false);
+  const [editingName, setEditingName] = useState<boolean>(false);
   const [newId, setNewId] = useState<string>('');
+  const [newName, setNewName] = useState<string>('');
   const [sliceDefinitions, setSliceDefinitions] = useState<any[]>([]);
   const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -50,6 +52,7 @@ export default function AssetPackDetails() {
               setAssetPack(packWithTotal);
               setSelectedCategory(pack.categories[0]);
               setNewId(pack.id);
+              setNewName(pack.name);
             }
           }
         }
@@ -127,6 +130,40 @@ export default function AssetPackDetails() {
     setEditingId(false);
   };
 
+  const handleEditName = () => {
+    setEditingName(true);
+  };
+
+  const handleSaveName = async () => {
+    if (newName.trim() && assetPack) {
+      try {
+        const response = await fetch(`/api/asset-packs?id=${assetPack.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: newName.trim() }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          setAssetPack(prev => prev ? { ...prev, name: newName.trim() } : null);
+          setEditingName(false);
+        } else {
+          console.error('Failed to update name:', result.message);
+        }
+      } catch (error) {
+        console.error('Error updating name:', error);
+      }
+    }
+  };
+
+  const handleCancelNameEdit = () => {
+    setNewName(assetPack?.name || '');
+    setEditingName(false);
+  };
+
   if (!assetPack) {
     return (
       <div className="min-h-screen bg-gray-900 p-6">
@@ -161,8 +198,53 @@ export default function AssetPackDetails() {
             >
               ← Back to Asset Packs
             </Link>
-            <h1 className="text-4xl font-bold text-white mb-2">{assetPack.name}</h1>
+            {editingName ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    className="text-4xl font-bold text-white bg-gray-700 px-3 py-2 rounded border border-gray-600 focus:border-purple-500 focus:outline-none"
+                    placeholder="Enter asset pack name"
+                    autoFocus
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSaveName}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium transition-colors"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={handleCancelNameEdit}
+                    className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm font-medium transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <h1 className="text-4xl font-bold text-white mb-2">{assetPack.name}</h1>
+                <button
+                  onClick={handleEditName}
+                  className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm font-medium transition-colors"
+                >
+                  Edit Name
+                </button>
+              </div>
+            )}
             <p className="text-gray-300">{assetPack.description}</p>
+          </div>
+          <div className="flex gap-3">
+            <Link
+              href="/new-asset-pack"
+              className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Create New Asset Pack
+            </Link>
           </div>
         </div>
 
@@ -254,27 +336,6 @@ export default function AssetPackDetails() {
 
         {/* Asset Pack Info */}
         <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-          <h3 className="text-xl font-bold text-white mb-4">Asset Pack Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h4 className="text-lg font-semibold text-gray-300 mb-2">Categories</h4>
-              <div className="flex flex-wrap gap-2">
-                {assetPack.categories.map((category) => (
-                  <span
-                    key={category}
-                    className="px-2 py-1 bg-purple-600/20 text-purple-300 text-sm rounded"
-                  >
-                    {category}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold text-gray-300 mb-2">Total Assets</h4>
-              <p className="text-white">{assetPack.totalAssets}</p>
-            </div>
-          </div>
-          
           <div className="mt-6 pt-6 border-t border-gray-600">
             <h4 className="text-lg font-semibold text-gray-300 mb-2">Asset Pack ID</h4>
             
@@ -333,6 +394,30 @@ export default function AssetPackDetails() {
             <p className="text-sm text-gray-400 mt-3">
               Use this ID to reference this asset pack in your game code
             </p>
+          </div>
+
+          {/* Asset Pack Information */}
+          <div className="mt-6 pt-6 border-t border-gray-600">
+            <h3 className="text-xl font-bold text-white mb-4">Asset Pack Information</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="text-lg font-semibold text-gray-300 mb-2">Categories</h4>
+                <div className="flex flex-wrap gap-2">
+                  {assetPack.categories.map((category) => (
+                    <span
+                      key={category}
+                      className="px-2 py-1 bg-purple-600/20 text-purple-300 text-sm rounded"
+                    >
+                      {category}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold text-gray-300 mb-2">Total Assets</h4>
+                <p className="text-white">{assetPack.totalAssets}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

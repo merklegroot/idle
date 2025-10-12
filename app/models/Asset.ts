@@ -5,4 +5,5 @@ export interface Asset {
     category: string;
     path?: string;
     icon?: string;
+    description?: string;
 }
