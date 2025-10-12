@@ -164,12 +164,6 @@ export default function AssetPackDetails() {
             <h1 className="text-4xl font-bold text-white mb-2">{assetPack.name}</h1>
             <p className="text-gray-300">{assetPack.description}</p>
           </div>
-          <a
-            href="/sprite-editor"
-            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
-          >
-            Open Sprite Editor
-          </a>
         </div>
 
         {/* Category Navigation */}
