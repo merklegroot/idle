@@ -1,25 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import assetPacksData from '../../data/asset-packs.json';
 
-const assetPacks = [
-  {
-    id: 'cute-fantasy-rpg',
-    name: 'Cute Fantasy RPG',
-    description: 'A collection of cute fantasy-themed sprites including animals, enemies, decorations, and tiles',
-    image: '/assets/cute-fantasy-rpg/Player/Player.png',
-    categories: ['Animals', 'Enemies', 'Decorations', 'Player', 'Tiles'],
-    totalAssets: 20
-  },
-  {
-    id: 'emoji-assets',
-    name: 'Emoji Assets',
-    description: 'A comprehensive collection of emoji-based assets for buildings, terrain, resources, and more',
-    image: '🏛️',
-    categories: ['Town Buildings', 'Land & Terrain', 'Paths & Roads', 'Camps & Settlements', 'Food & Agriculture', 'Resources'],
-    totalAssets: 51
-  }
-];
+const assetPacks = assetPacksData;
 
 export default function AssetPacks() {
   return (
