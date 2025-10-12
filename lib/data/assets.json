@@ -1,0 +1,520 @@
+[
+    {
+        "id":"chicken",
+        "name":"Chicken",
+        "packId":"cute-fantasy-rpg",
+        "category":"Animals",        
+        "path":"/assets/cute-fantasy-rpg/Animals/Chicken/Chicken.png"
+    },
+    {
+        "id":"cow",
+        "name":"Cow",
+        "packId":"cute-fantasy-rpg",
+        "category":"Animals",
+        "path":"/assets/cute-fantasy-rpg/Animals/Cow/Cow.png"
+    },
+    {
+        "id":"pig",
+        "name":"Pig",
+        "packId":"cute-fantasy-rpg",
+        "category":"Animals",
+        "path":"/assets/cute-fantasy-rpg/Animals/Pig/Pig.png"
+    },
+    {
+        "id":"sheep",
+        "name":"Sheep",
+        "packId":"cute-fantasy-rpg",
+        "category":"Animals",
+        "path":"/assets/cute-fantasy-rpg/Animals/Sheep/Sheep.png"
+    },
+    {
+        "id":"skeleton",
+        "name":"Skeleton",
+        "packId":"cute-fantasy-rpg",
+        "category":"Enemies",
+        "path":"/assets/cute-fantasy-rpg/Enemies/Skeleton.png"
+    },
+    {
+        "id":"slime_green",
+        "name":"Slime Green",
+        "packId":"cute-fantasy-rpg",
+        "category":"Enemies",
+        "path":"/assets/cute-fantasy-rpg/Enemies/Slime_Green.png"
+    },
+    {
+        "id":"bridge_wood",
+        "name":"Bridge Wood",
+        "packId":"cute-fantasy-rpg",
+        "category":"Decorations",
+        "path":"/assets/cute-fantasy-rpg/Outdoor decoration/Bridge_Wood.png"
+    },
+    {
+        "id":"chest",
+        "name":"Chest",
+        "packId":"cute-fantasy-rpg",
+        "category":"Decorations",
+        "path":"/assets/cute-fantasy-rpg/Outdoor decoration/Chest.png"
+    },
+    {
+        "id":"fences",
+        "name":"Fences",
+        "packId":"cute-fantasy-rpg",
+        "category":"Decorations",
+        "path":"/assets/cute-fantasy-rpg/Outdoor decoration/Fences.png"
+    },
+    {
+        "id":"house",
+        "name":"House",
+        "packId":"cute-fantasy-rpg",
+        "category":"Decorations",
+        "path":"/assets/cute-fantasy-rpg/Outdoor decoration/House.png"
+    },
+    {
+        "id":"oak_tree_small",
+        "name":"Oak Tree Small",
+        "packId":"cute-fantasy-rpg",
+        "category":"Decorations",
+        "path":"/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree_Small.png"
+    },
+    {
+        "id":"oak_tree",
+        "name":"Oak Tree",
+        "packId":"cute-fantasy-rpg",
+        "category":"Decorations",
+        "path":"/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree.png"
+    },
+    {
+        "id":"outdoor_decor_free",
+        "name":"Outdoor Decor Free",
+        "packId":"cute-fantasy-rpg",
+        "category":"Decorations",
+        "path":"/assets/cute-fantasy-rpg/Outdoor decoration/Outdoor_Decor_Free.png"
+    },
+    {
+        "id":"player_actions",
+        "name":"Player Actions",
+        "packId":"cute-fantasy-rpg",
+        "category":"Player",
+        "path":"/assets/cute-fantasy-rpg/Player/Player_Actions.png"
+    },
+    {
+        "id":"player",
+        "name":"Player",
+        "packId":"cute-fantasy-rpg",
+        "category":"Player",
+        "path":"/assets/cute-fantasy-rpg/Player/Player.png"
+    },
+    {
+        "id":"beach_tile",
+        "name":"Beach Tile",
+        "packId":"cute-fantasy-rpg",
+        "category":"Tiles",
+        "path":"/assets/cute-fantasy-rpg/Tiles/Beach_Tile.png"
+    },
+    {
+        "id":"cliff_tile",
+        "name":"Cliff Tile",
+        "packId":"cute-fantasy-rpg",
+        "category":"Tiles",
+        "path":"/assets/cute-fantasy-rpg/Tiles/Cliff_Tile.png"
+    },
+    {
+        "id":"farmland_tile",
+        "name":"FarmLand Tile",
+        "packId":"cute-fantasy-rpg",
+        "category":"Tiles",
+        "path":"/assets/cute-fantasy-rpg/Tiles/FarmLand_Tile.png"
+    },
+    {
+        "id":"grass_middle",
+        "name":"Grass Middle",
+        "packId":"cute-fantasy-rpg",
+        "category":"Tiles",
+        "path":"/assets/cute-fantasy-rpg/Tiles/Grass_Middle.png"
+    },
+    {
+        "id":"path_middle",
+        "name":"Path Middle",
+        "packId":"cute-fantasy-rpg",
+        "category":"Tiles",
+        "path":"/assets/cute-fantasy-rpg/Tiles/Path_Middle.png"
+    },
+    {
+        "id":"path_tile",
+        "name":"Path Tile",
+        "packId":"cute-fantasy-rpg",
+        "category":"Tiles",
+        "path":"/assets/cute-fantasy-rpg/Tiles/Path_Tile.png"
+    },
+    {
+        "id":"water_middle",
+        "name":"Water Middle",
+        "packId":"cute-fantasy-rpg",
+        "category":"Tiles",
+        "path":"/assets/cute-fantasy-rpg/Tiles/Water_Middle.png"
+    },
+    {
+        "id":"water_tile",
+        "name":"Water Tile",
+        "packId":"cute-fantasy-rpg",
+        "category":"Tiles",
+        "path":"/assets/cute-fantasy-rpg/Tiles/Water_Tile.png"
+    },
+    {
+        "id":"town_hall",
+        "name":"Town Hall",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"🏛️"
+    },
+    {
+        "id":"market",
+        "name":"Market",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"🏪"
+    },
+    {
+        "id":"bank",
+        "name":"Bank",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"🏦"
+    },
+    {
+        "id":"church",
+        "name":"Church",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"⛪"
+    },
+    {
+        "id":"school",
+        "name":"School",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"🏫"
+    },
+    {
+        "id":"hospital",
+        "name":"Hospital",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"🏥"
+    },
+    {
+        "id":"library",
+        "name":"Library",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"📚"
+    },
+    {
+        "id":"barracks",
+        "name":"Barracks",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"🏰"
+    },
+    {
+        "id":"tavern",
+        "name":"Tavern",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"🍺"
+    },
+    {
+        "id":"workshop",
+        "name":"Workshop",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"🔨"
+    },
+    {
+        "id":"mill",
+        "name":"Mill",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"🏭"
+    },
+    {
+        "id":"tower",
+        "name":"Tower",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"🗼"
+    },
+    {
+        "id":"castle",
+        "name":"Castle",
+        "packId":"emoji-assets",
+        "category":"Town Buildings",
+        "icon":"🏰"
+    },
+    {
+        "id":"plains",
+        "name":"Plains",
+        "packId":"emoji-assets",
+        "category":"Land & Terrain",
+        "icon":"🌾"
+    },
+    {
+        "id":"forest",
+        "name":"Forest",
+        "packId":"emoji-assets",
+        "category":"Land & Terrain",
+        "icon":"🌲"
+    },
+    {
+        "id":"mountain",
+        "name":"Mountain",
+        "packId":"emoji-assets",
+        "category":"Land & Terrain",
+        "icon":"⛰️"
+    },
+    {
+        "id":"hill",
+        "name":"Hill",
+        "packId":"emoji-assets",
+        "category":"Land & Terrain",
+        "icon":"🏔️"
+    },
+    {
+        "id":"desert",
+        "name":"Desert",
+        "packId":"emoji-assets",
+        "category":"Land & Terrain",
+        "icon":"🏜️"
+    },
+    {
+        "id":"swamp",
+        "name":"Swamp",
+        "packId":"emoji-assets",
+        "category":"Land & Terrain",
+        "icon":"🌿"
+    },
+    {
+        "id":"lake",
+        "name":"Lake",
+        "packId":"emoji-assets",
+        "category":"Land & Terrain",
+        "icon":"🏞️"
+    },
+    {
+        "id":"river",
+        "name":"River",
+        "packId":"emoji-assets",
+        "category":"Land & Terrain",
+        "icon":"🌊"
+    },
+    {
+        "id":"coast",
+        "name":"Coast",
+        "packId":"emoji-assets",
+        "category":"Land & Terrain",
+        "icon":"🏖️"
+    },
+    {
+        "id":"cave",
+        "name":"Cave",
+        "packId":"emoji-assets",
+        "category":"Land & Terrain",
+        "icon":"🕳️"
+    },
+    {
+        "id":"road",
+        "name":"Road",
+        "packId":"emoji-assets",
+        "category":"Paths & Roads",
+        "icon":"🛣️"
+    },
+    {
+        "id":"path",
+        "name":"Path",
+        "packId":"emoji-assets",
+        "category":"Paths & Roads",
+        "icon":"🛤️"
+    },
+    {
+        "id":"bridge",
+        "name":"Bridge",
+        "packId":"emoji-assets",
+        "category":"Paths & Roads",
+        "icon":"🌉"
+    },
+    {
+        "id":"gate",
+        "name":"Gate",
+        "packId":"emoji-assets",
+        "category":"Paths & Roads",
+        "icon":"🚪"
+    },
+    {
+        "id":"wall",
+        "name":"Wall",
+        "packId":"emoji-assets",
+        "category":"Paths & Roads",
+        "icon":"🧱"
+    },
+    {
+        "id":"camp",
+        "name":"Camp",
+        "packId":"emoji-assets",
+        "category":"Camps & Settlements",
+        "icon":"⛺"
+    },
+    {
+        "id":"tent",
+        "name":"Tent",
+        "packId":"emoji-assets",
+        "category":"Camps & Settlements",
+        "icon":"🏕️"
+    },
+    {
+        "id":"outpost",
+        "name":"Outpost",
+        "packId":"emoji-assets",
+        "category":"Camps & Settlements",
+        "icon":"🏘️"
+    },
+    {
+        "id":"village",
+        "name":"Village",
+        "packId":"emoji-assets",
+        "category":"Camps & Settlements",
+        "icon":"🏘️"
+    },
+    {
+        "id":"fort",
+        "name":"Fort",
+        "packId":"emoji-assets",
+        "category":"Camps & Settlements",
+        "icon":"🏯"
+    },
+    {
+        "id":"watchtower",
+        "name":"Watchtower",
+        "packId":"emoji-assets",
+        "category":"Camps & Settlements",
+        "icon":"🗼"
+    },
+    {
+        "id":"farm",
+        "name":"Farm",
+        "packId":"emoji-assets",
+        "category":"Food & Agriculture",
+        "icon":"🚜"
+    },
+    {
+        "id":"field",
+        "name":"Field",
+        "packId":"emoji-assets",
+        "category":"Food & Agriculture",
+        "icon":"🌾"
+    },
+    {
+        "id":"orchard",
+        "name":"Orchard",
+        "packId":"emoji-assets",
+        "category":"Food & Agriculture",
+        "icon":"🍎"
+    },
+    {
+        "id":"garden",
+        "name":"Garden",
+        "packId":"emoji-assets",
+        "category":"Food & Agriculture",
+        "icon":"🌻"
+    },
+    {
+        "id":"barn",
+        "name":"Barn",
+        "packId":"emoji-assets",
+        "category":"Food & Agriculture",
+        "icon":"🏚️"
+    },
+    {
+        "id":"silo",
+        "name":"Silo",
+        "packId":"emoji-assets",
+        "category":"Food & Agriculture",
+        "icon":"🏗️"
+    },
+    {
+        "id":"well",
+        "name":"Well",
+        "packId":"emoji-assets",
+        "category":"Food & Agriculture",
+        "icon":"🏺"
+    },
+    {
+        "id":"windmill",
+        "name":"Windmill",
+        "packId":"emoji-assets",
+        "category":"Food & Agriculture",
+        "icon":"🌾"
+    },
+    {
+        "id":"apiary",
+        "name":"Apiary",
+        "packId":"emoji-assets",
+        "category":"Food & Agriculture",
+        "icon":"🍯"
+    },
+    {
+        "id":"fish_pond",
+        "name":"Fish Pond",
+        "packId":"emoji-assets",
+        "category":"Food & Agriculture",
+        "icon":"🐟"
+    },
+    {
+        "id":"wood",
+        "name":"Wood",
+        "packId":"emoji-assets",
+        "category":"Resources",
+        "icon":"🪵"
+    },
+    {
+        "id":"berries",
+        "name":"Berries",
+        "packId":"emoji-assets",
+        "category":"Resources",
+        "icon":"🫐"
+    },
+    {
+        "id":"stone",
+        "name":"Stone",
+        "packId":"emoji-assets",
+        "category":"Resources",
+        "icon":"🪨"
+    },
+    {
+        "id":"hatchet",
+        "name":"Hatchet",
+        "packId":"emoji-assets",
+        "category":"Resources",
+        "icon":"🪓"
+    },
+    {
+        "id":"pickaxe",
+        "name":"Pickaxe",
+        "packId":"emoji-assets",
+        "category":"Resources",
+        "icon":"⛏️"
+    },
+    {
+        "id":"gold",
+        "name":"Gold",
+        "packId":"emoji-assets",
+        "category":"Resources",
+        "icon":"🪙"
+    },
+    {
+        "id":"house",
+        "name":"House",
+        "packId":"emoji-assets",
+        "category":"Resources",
+        "icon":"🏠"
+    }
+]

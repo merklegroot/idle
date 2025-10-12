@@ -3,7 +3,6 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import assetPacksData from '../../../data/asset-packs.json';
 import { calculateTotalAssets } from '../../../utils/assetPackUtil';
 
 interface AssetPack {
@@ -15,132 +14,74 @@ interface AssetPack {
   totalAssets: number;
 }
 
-const assetPacks: AssetPack[] = assetPacksData.map(pack => ({
-  ...pack,
-  totalAssets: calculateTotalAssets(pack.id)
-}));
-
-// Asset data for the cute-fantasy-rpg pack
-const cuteFantasyAssets = {
-  'Animals': [
-    { name: 'Chicken', path: '/assets/cute-fantasy-rpg/Animals/Chicken/Chicken.png', id: 'chicken' },
-    { name: 'Cow', path: '/assets/cute-fantasy-rpg/Animals/Cow/Cow.png', id: 'cow' },
-    { name: 'Pig', path: '/assets/cute-fantasy-rpg/Animals/Pig/Pig.png', id: 'pig' },
-    { name: 'Sheep', path: '/assets/cute-fantasy-rpg/Animals/Sheep/Sheep.png', id: 'sheep' }
-  ],
-  'Enemies': [
-    { name: 'Skeleton', path: '/assets/cute-fantasy-rpg/Enemies/Skeleton.png', id: 'skeleton' },
-    { name: 'Slime Green', path: '/assets/cute-fantasy-rpg/Enemies/Slime_Green.png', id: 'slime_green' }
-  ],
-  'Decorations': [
-    { name: 'Bridge Wood', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Bridge_Wood.png', id: 'bridge_wood' },
-    { name: 'Chest', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Chest.png', id: 'chest' },
-    { name: 'Fences', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Fences.png', id: 'fences' },
-    { name: 'House', path: '/assets/cute-fantasy-rpg/Outdoor decoration/House.png', id: 'house' },
-    { name: 'Oak Tree Small', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree_Small.png', id: 'oak_tree_small' },
-    { name: 'Oak Tree', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree.png', id: 'oak_tree' },
-    { name: 'Outdoor Decor Free', path: '/assets/cute-fantasy-rpg/Outdoor decoration/Outdoor_Decor_Free.png', id: 'outdoor_decor_free' }
-  ],
-  'Player': [
-    { name: 'Player Actions', path: '/assets/cute-fantasy-rpg/Player/Player_Actions.png', id: 'player_actions' },
-    { name: 'Player', path: '/assets/cute-fantasy-rpg/Player/Player.png', id: 'player' }
-  ],
-  'Tiles': [
-    { name: 'Beach Tile', path: '/assets/cute-fantasy-rpg/Tiles/Beach_Tile.png', id: 'beach_tile' },
-    { name: 'Cliff Tile', path: '/assets/cute-fantasy-rpg/Tiles/Cliff_Tile.png', id: 'cliff_tile' },
-    { name: 'FarmLand Tile', path: '/assets/cute-fantasy-rpg/Tiles/FarmLand_Tile.png', id: 'farmland_tile' },
-    { name: 'Grass Middle', path: '/assets/cute-fantasy-rpg/Tiles/Grass_Middle.png', id: 'grass_middle' },
-    { name: 'Path Middle', path: '/assets/cute-fantasy-rpg/Tiles/Path_Middle.png', id: 'path_middle' },
-    { name: 'Path Tile', path: '/assets/cute-fantasy-rpg/Tiles/Path_Tile.png', id: 'path_tile' },
-    { name: 'Water Middle', path: '/assets/cute-fantasy-rpg/Tiles/Water_Middle.png', id: 'water_middle' },
-    { name: 'Water Tile', path: '/assets/cute-fantasy-rpg/Tiles/Water_Tile.png', id: 'water_tile' }
-  ]
-};
-
-// Emoji assets data
-const emojiAssets = {
-  'Town Buildings': [
-    { name: 'Town Hall', icon: '🏛️', id: 'town_hall' },
-    { name: 'Market', icon: '🏪', id: 'market' },
-    { name: 'Bank', icon: '🏦', id: 'bank' },
-    { name: 'Church', icon: '⛪', id: 'church' },
-    { name: 'School', icon: '🏫', id: 'school' },
-    { name: 'Hospital', icon: '🏥', id: 'hospital' },
-    { name: 'Library', icon: '📚', id: 'library' },
-    { name: 'Barracks', icon: '🏰', id: 'barracks' },
-    { name: 'Tavern', icon: '🍺', id: 'tavern' },
-    { name: 'Workshop', icon: '🔨', id: 'workshop' },
-    { name: 'Mill', icon: '🏭', id: 'mill' },
-    { name: 'Tower', icon: '🗼', id: 'tower' },
-    { name: 'Castle', icon: '🏰', id: 'castle' }
-  ],
-  'Land & Terrain': [
-    { name: 'Plains', icon: '🌾', id: 'plains' },
-    { name: 'Forest', icon: '🌲', id: 'forest' },
-    { name: 'Mountain', icon: '⛰️', id: 'mountain' },
-    { name: 'Hill', icon: '🏔️', id: 'hill' },
-    { name: 'Desert', icon: '🏜️', id: 'desert' },
-    { name: 'Swamp', icon: '🌿', id: 'swamp' },
-    { name: 'Lake', icon: '🏞️', id: 'lake' },
-    { name: 'River', icon: '🌊', id: 'river' },
-    { name: 'Coast', icon: '🏖️', id: 'coast' },
-    { name: 'Cave', icon: '🕳️', id: 'cave' }
-  ],
-  'Paths & Roads': [
-    { name: 'Road', icon: '🛣️', id: 'road' },
-    { name: 'Path', icon: '🛤️', id: 'path' },
-    { name: 'Bridge', icon: '🌉', id: 'bridge' },
-    { name: 'Gate', icon: '🚪', id: 'gate' },
-    { name: 'Wall', icon: '🧱', id: 'wall' }
-  ],
-  'Camps & Settlements': [
-    { name: 'Camp', icon: '⛺', id: 'camp' },
-    { name: 'Tent', icon: '🏕️', id: 'tent' },
-    { name: 'Outpost', icon: '🏘️', id: 'outpost' },
-    { name: 'Village', icon: '🏘️', id: 'village' },
-    { name: 'Fort', icon: '🏯', id: 'fort' },
-    { name: 'Watchtower', icon: '🗼', id: 'watchtower' }
-  ],
-  'Food & Agriculture': [
-    { name: 'Farm', icon: '🚜', id: 'farm' },
-    { name: 'Field', icon: '🌾', id: 'field' },
-    { name: 'Orchard', icon: '🍎', id: 'orchard' },
-    { name: 'Garden', icon: '🌻', id: 'garden' },
-    { name: 'Barn', icon: '🏚️', id: 'barn' },
-    { name: 'Silo', icon: '🏗️', id: 'silo' },
-    { name: 'Well', icon: '🏺', id: 'well' },
-    { name: 'Windmill', icon: '🌾', id: 'windmill' },
-    { name: 'Apiary', icon: '🍯', id: 'apiary' },
-    { name: 'Fish Pond', icon: '🐟', id: 'fish_pond' }
-  ],
-  'Resources': [
-    { name: 'Wood', icon: '🪵', id: 'wood' },
-    { name: 'Berries', icon: '🫐', id: 'berries' },
-    { name: 'Stone', icon: '🪨', id: 'stone' },
-    { name: 'Hatchet', icon: '🪓', id: 'hatchet' },
-    { name: 'Pickaxe', icon: '⛏️', id: 'pickaxe' },
-    { name: 'Gold', icon: '🪙', id: 'gold' },
-    { name: 'House', icon: '🏠', id: 'house' }
-  ]
-};
+interface Asset {
+  id: string;
+  name: string;
+  packId: string;
+  category: string;
+  path?: string;
+  icon?: string;
+}
 
 export default function AssetPackDetails() {
   const params = useParams();
   const [assetPack, setAssetPack] = useState<AssetPack | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('Animals');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [editingId, setEditingId] = useState<boolean>(false);
   const [newId, setNewId] = useState<string>('');
   const [sliceDefinitions, setSliceDefinitions] = useState<any[]>([]);
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
+  // Load asset packs and find the current one
   useEffect(() => {
-    const pack = assetPacks.find(p => p.id === params.id);
-    setAssetPack(pack || null);
-    if (pack) {
-      // Set the first category as default
-      setSelectedCategory(pack.categories[0]);
-      setNewId(pack.id);
-    }
+    const loadAssetPack = async () => {
+      try {
+        const response = await fetch('/api/asset-packs');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            const pack = data.assetPacks.find((p: any) => p.id === params.id);
+            if (pack) {
+              const packWithTotal = {
+                ...pack,
+                totalAssets: calculateTotalAssets(pack.id)
+              };
+              setAssetPack(packWithTotal);
+              setSelectedCategory(pack.categories[0]);
+              setNewId(pack.id);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading asset pack:', error);
+      }
+    };
+    loadAssetPack();
   }, [params.id]);
+
+  // Load assets for the current pack
+  useEffect(() => {
+    const loadAssets = async () => {
+      if (!assetPack) return;
+      
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/assets?packId=${assetPack.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            setAssets(data.assets || []);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading assets:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadAssets();
+  }, [assetPack]);
 
   // Load slice definitions
   useEffect(() => {
@@ -204,11 +145,9 @@ export default function AssetPackDetails() {
     );
   }
 
-  // Determine which assets to show based on pack type
+  // Filter assets by selected category
+  const currentAssets = assets.filter(asset => asset.category === selectedCategory);
   const isEmojiPack = assetPack.id === 'emoji-assets';
-  const currentAssets = isEmojiPack 
-    ? emojiAssets[selectedCategory as keyof typeof emojiAssets] || []
-    : cuteFantasyAssets[selectedCategory as keyof typeof cuteFantasyAssets] || [];
 
   return (
     <div className="min-h-screen bg-gray-900 p-6">
@@ -255,62 +194,68 @@ export default function AssetPackDetails() {
         {/* Assets Grid */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-white mb-4">{selectedCategory}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-            {currentAssets.map((asset, index) => (
-              <div
-                key={index}
-                className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-colors group cursor-pointer"
-                onClick={() => {
-                  // Navigate directly to sprite editor with clean URL
-                  window.location.href = `/sprite-editor?packId=${assetPack.id}&assetId=${(asset as any).id}`;
-                }}
-                title="Click to open in Sprite Editor"
-              >
-                <div className="aspect-square bg-gray-700 rounded-lg mb-3 flex items-center justify-center overflow-hidden">
-                  {isEmojiPack ? (
-                    <div className="text-6xl group-hover:scale-110 transition-transform">
-                      {(asset as any).icon}
-                    </div>
-                  ) : (
-                    <img
-                      src={(asset as any).path}
-                      alt={asset.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                    />
-                  )}
-                </div>
-                <div className="text-sm text-gray-300 text-center mb-2">{asset.name}</div>
-                
-                {/* Slicing Status Indicator */}
-                {!isEmojiPack && 'path' in asset && (
-                  <div className="mb-2">
-                    {isAssetSliced(asset.path) ? (
-                      <div className="flex items-center justify-center gap-1 text-xs text-green-400 bg-green-900/20 px-2 py-1 rounded">
-                        <span>✓</span>
-                        <span>Sliced</span>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="text-gray-400">Loading assets...</div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+              {currentAssets.map((asset, index) => (
+                <div
+                  key={asset.id}
+                  className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-colors group cursor-pointer"
+                  onClick={() => {
+                    // Navigate directly to sprite editor with clean URL
+                    window.location.href = `/sprite-editor?packId=${assetPack.id}&assetId=${asset.id}`;
+                  }}
+                  title="Click to open in Sprite Editor"
+                >
+                  <div className="aspect-square bg-gray-700 rounded-lg mb-3 flex items-center justify-center overflow-hidden">
+                    {isEmojiPack ? (
+                      <div className="text-6xl group-hover:scale-110 transition-transform">
+                        {asset.icon}
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center gap-1 text-xs text-yellow-400 bg-yellow-900/20 px-2 py-1 rounded">
-                        <span>○</span>
-                        <span>Not Sliced</span>
-                      </div>
+                      <img
+                        src={asset.path}
+                        alt={asset.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      />
                     )}
                   </div>
-                )}
-                
-                <div 
-                  className="text-xs text-purple-400 text-center cursor-pointer hover:text-purple-300 transition-colors font-mono bg-gray-700 px-2 py-1 rounded"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent opening sprite editor when clicking ID
-                    navigator.clipboard.writeText((asset as any).id);
-                  }}
-                  title="Click to copy ID"
-                >
-                  {(asset as any).id}
+                  <div className="text-sm text-gray-300 text-center mb-2">{asset.name}</div>
+                  
+                  {/* Slicing Status Indicator */}
+                  {!isEmojiPack && asset.path && (
+                    <div className="mb-2">
+                      {isAssetSliced(asset.path) ? (
+                        <div className="flex items-center justify-center gap-1 text-xs text-green-400 bg-green-900/20 px-2 py-1 rounded">
+                          <span>✓</span>
+                          <span>Sliced</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center gap-1 text-xs text-yellow-400 bg-yellow-900/20 px-2 py-1 rounded">
+                          <span>○</span>
+                          <span>Not Sliced</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  <div 
+                    className="text-xs text-purple-400 text-center cursor-pointer hover:text-purple-300 transition-colors font-mono bg-gray-700 px-2 py-1 rounded"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent opening sprite editor when clicking ID
+                      navigator.clipboard.writeText(asset.id);
+                    }}
+                    title="Click to copy ID"
+                  >
+                    {asset.id}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Asset Pack Info */}

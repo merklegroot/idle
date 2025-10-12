@@ -1,15 +1,56 @@
 'use client';
 
 import Link from 'next/link';
-import assetPacksData from '../../data/asset-packs.json';
+import { useState, useEffect } from 'react';
 import { calculateTotalAssets } from '../../utils/assetPackUtil';
 
-const assetPacks = assetPacksData.map(pack => ({
-  ...pack,
-  totalAssets: calculateTotalAssets(pack.id)
-}));
+interface AssetPack {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  categories: string[];
+  totalAssets: number;
+}
 
 export default function AssetPacks() {
+  const [assetPacks, setAssetPacks] = useState<AssetPack[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadAssetPacks = async () => {
+      try {
+        const response = await fetch('/api/asset-packs');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            const packs = data.assetPacks.map((pack: any) => ({
+              ...pack,
+              totalAssets: calculateTotalAssets(pack.id)
+            }));
+            setAssetPacks(packs);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading asset packs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadAssetPacks();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center py-12">
+            <div className="text-gray-400">Loading asset packs...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-gray-900 p-6">
       <div className="max-w-7xl mx-auto">
