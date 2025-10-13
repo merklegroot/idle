@@ -5,6 +5,9 @@ interface SelectedTileComponentProps {
   tileType: string | null
   containsTree: boolean
   containsStone: boolean
+  onGatherSticks?: () => void
+  onGatherStone?: () => void
+  isGathering?: boolean
 }
 
 function getTileTypeText(tileType: string | null | undefined) {
@@ -24,7 +27,10 @@ export default function SelectedTileComponent({
   selectedTile, 
   tileType,
   containsTree,
-  containsStone
+  containsStone,
+  onGatherSticks,
+  onGatherStone,
+  isGathering = false
 }: SelectedTileComponentProps) {
   if (!selectedTile) {
     return null
@@ -52,13 +58,45 @@ export default function SelectedTileComponent({
       <div className="space-y-3">
         <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
           <p className="font-semibold text-yellow-800 mb-2">Selected Tile</p>
-          <div className="space-y-1 text-sm">
-            <p><span className="font-medium">Position:</span> ({selectedTile.x}, {selectedTile.y})</p>
-            <p><span className="font-medium">Type:</span> {getTileTypeText(tileType)}</p>
-            <p><span className="font-medium">Resources:</span>{getResourcesText()}</p>
+            <div className="space-y-1 text-sm">
+              <p><span className="font-medium">Position:</span> ({selectedTile.x}, {selectedTile.y})</p>
+              <p><span className="font-medium">Terrain:</span> {getTileTypeText(tileType)}</p>
+              <p><span className="font-medium">Resources:</span> {getResourcesText()}</p>
+            </div>
           </div>
+          
+          {containsTree && onGatherSticks && (
+            <div className="mt-3">
+              <button
+                onClick={onGatherSticks}
+                disabled={isGathering}
+                className={`w-full px-4 py-2 font-semibold rounded-lg transition-colors duration-200 ${
+                  isGathering
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                    : 'bg-green-600 hover:bg-green-700 text-white'
+                }`}
+              >
+                {isGathering ? 'Gathering...' : 'Gather Sticks'}
+              </button>
+            </div>
+          )}
+          
+          {containsStone && onGatherStone && (
+            <div className="mt-3">
+              <button
+                onClick={onGatherStone}
+                disabled={isGathering}
+                className={`w-full px-4 py-2 font-semibold rounded-lg transition-colors duration-200 ${
+                  isGathering
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                    : 'bg-green-600 hover:bg-green-700 text-white'
+                }`}
+              >
+                {isGathering ? 'Gathering...' : 'Gather Stone'}
+              </button>
+            </div>
+          )}
         </div>
-      </div>
     </div>
   )
 }
