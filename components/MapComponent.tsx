@@ -212,7 +212,13 @@ export default function MapComponent({
                   gridColumn: tile.x + 1,
                   gridRow: tile.y + 1
                 }}
-                onClick={() => onTileSelect?.(tile.x, tile.y)}
+                onClick={() => {
+                  if (isSelected) {
+                    onTileSelect?.(null, null) // Unselect if already selected
+                  } else {
+                    onTileSelect?.(tile.x, tile.y) // Select if not selected
+                  }
+                }}
                 onMouseEnter={() => setHoveredTile({ x: tile.x, y: tile.y })}
                 onMouseLeave={() => setHoveredTile(null)}
               >
