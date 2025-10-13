@@ -5,6 +5,7 @@ import Image from 'next/image'
 import type { MapTile } from '@/models/MapTile'
 import type { TreeMapTile } from '@/models/TreeMapTile'
 import MapComponent from '@/components/MapComponent'
+import SelectedTileComponent from '@/components/SelectedTileComponent'
 
 export default function MapPage() {
   const [mapData, setMapData] = useState<MapTile[]>([])
@@ -44,6 +45,15 @@ export default function MapPage() {
   // Calculate map dimensions for legend
   const maxX = Math.max(...mapData.map(tile => tile.x))
   const maxY = Math.max(...mapData.map(tile => tile.y))
+  
+  // Calculate selected tile information
+  const selectedMapTile = selectedTile 
+    ? mapData.find(tile => tile.x === selectedTile.x && tile.y === selectedTile.y)
+    : null
+
+  const selectedTreeTile = selectedTile
+    ? treeData.find(tree => tree.x === selectedTile.x && tree.y === selectedTile.y)
+    : null
 
   const handleTileSelect = (x: number | null, y: number | null) => {
     if (x === null || y === null) {
@@ -125,39 +135,22 @@ export default function MapPage() {
         </div>
         
         {/* Info Panel */}
-        <div className="flex-1 min-w-0">
-          <div className="bg-white rounded-lg border border-gray-200 p-4 h-fit">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Tile Information</h2>
-            
-            {selectedTile ? (
-              <div className="space-y-3">
-                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="font-semibold text-yellow-800 mb-2">Selected Tile</p>
-                  <div className="space-y-1 text-sm">
-                    <p><span className="font-medium">Position:</span> ({selectedTile.x}, {selectedTile.y})</p>
-                    <p><span className="font-medium">Type:</span> {mapData.find(tile => tile.x === selectedTile.x && tile.y === selectedTile.y)?.type || 'Unknown'}</p>
-                    {treeData.find(tree => tree.x === selectedTile.x && tree.y === selectedTile.y) && (
-                      <p><span className="font-medium">Contains:</span> {treeData.find(tree => tree.x === selectedTile.x && tree.y === selectedTile.y)?.type === 't' ? 'Tree' : 'Stone'}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="text-gray-500 text-sm">
-                <p>Click on a tile to view its information</p>
-              </div>
-            )}
-            
-            <div className="mt-6 pt-4 border-t border-gray-200">
-              <p className="text-sm text-gray-600">
-                <span className="font-medium">Map size:</span> {maxX + 1} × {maxY + 1} tiles
-              </p>
-            </div>
+        {selectedTile && (
+          <div className="flex-1 min-w-0">
+            <SelectedTileComponent
+              selectedTile={selectedTile}
+              tileType={selectedMapTile?.type || null}
+              containsTree={selectedTreeTile?.type === 't' || false}
+              containsStone={selectedTreeTile?.type === 's' || false}
+            />
           </div>
-        </div>
+        )}
       </div>
       
       <div className="mt-6 text-sm text-gray-600">
+        <p className="mb-4">
+          <span className="font-medium">Map size:</span> {maxX + 1} × {maxY + 1} tiles
+        </p>
         <div className="mt-2">
           <p className="font-semibold mb-2">Legend:</p>
           <div className="grid grid-cols-4 gap-4">
