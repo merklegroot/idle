@@ -6,8 +6,10 @@ import type { MapTile } from '@/models/MapTile'
 import type { TreeMapTile } from '@/models/TreeMapTile'
 import MapComponent from '@/components/MapComponent'
 import SelectedTileComponent from '@/components/SelectedTileComponent'
+import useGameStore from '@/stores/gameStore'
 
 export default function MapPage() {
+  const { addResourceAmount, initializeResource, getResource } = useGameStore()
   const [mapData, setMapData] = useState<MapTile[]>([])
   const [treeData, setTreeData] = useState<TreeMapTile[]>([])
   const [loading, setLoading] = useState(true)
@@ -20,7 +22,7 @@ export default function MapPage() {
     isActive: boolean
     progress: number
     tile: { x: number; y: number }
-    resourceType: 'sticks' | 'stone'
+    resourceType: 'stick' | 'stone'
   } | null>(null)
 
   useEffect(() => {
@@ -69,8 +71,13 @@ export default function MapPage() {
     }
   }
 
-  const startGathering = (resourceType: 'sticks' | 'stone') => {
+  const startGathering = (resourceType: 'stick' | 'stone') => {
     if (!selectedTile) return
+    
+    // Initialize resource if it doesn't exist
+    if (resourceType === 'stone' && !getResource('stone')) {
+      initializeResource('stone')
+    }
     
     // Start gathering progress
     setGatheringProgress({
@@ -88,7 +95,11 @@ export default function MapPage() {
         const newProgress = prev.progress + 10
         if (newProgress >= 100) {
           clearInterval(interval)
-          // Gathering complete - add some delay before clearing
+          // Gathering complete - add resource to inventory
+          if (prev.resourceType === 'stone') {
+            addResourceAmount('stone', 1)
+          }
+          // Add some delay before clearing
           setTimeout(() => {
             setGatheringProgress(null)
           }, 500)
@@ -103,8 +114,8 @@ export default function MapPage() {
     }, 300)
   }
 
-  const handleGatherSticks = () => {
-    startGathering('sticks')
+  const handleGatherStick = () => {
+    startGathering('stick')
   }
 
   const handleGatherStone = () => {
@@ -170,28 +181,28 @@ export default function MapPage() {
       {/* Gathering Progress Display */}
       {gatheringProgress && (
         <div className={`mb-4 p-4 rounded-lg ${
-          gatheringProgress.resourceType === 'sticks' 
+          gatheringProgress.resourceType === 'stick' 
             ? 'bg-green-50 border border-green-200' 
             : 'bg-gray-50 border border-gray-200'
         }`}>
           <div className="flex items-center justify-between mb-2">
             <h3 className={`text-lg font-semibold ${
-              gatheringProgress.resourceType === 'sticks' ? 'text-green-800' : 'text-gray-800'
+              gatheringProgress.resourceType === 'stick' ? 'text-green-800' : 'text-gray-800'
             }`}>
-              Gathering {gatheringProgress.resourceType === 'sticks' ? 'Sticks' : 'Stone'} from {gatheringProgress.resourceType === 'sticks' ? 'Tree' : 'Stone'} at ({gatheringProgress.tile.x}, {gatheringProgress.tile.y})
+              Gathering {gatheringProgress.resourceType === 'stick' ? 'Sticks' : 'Stone'} from {gatheringProgress.resourceType === 'stick' ? 'Tree' : 'Stone'} at ({gatheringProgress.tile.x}, {gatheringProgress.tile.y})
             </h3>
             <span className={`text-sm font-medium ${
-              gatheringProgress.resourceType === 'sticks' ? 'text-green-600' : 'text-gray-600'
+              gatheringProgress.resourceType === 'stick' ? 'text-green-600' : 'text-gray-600'
             }`}>
               {gatheringProgress.progress}%
             </span>
           </div>
           <div className={`w-full rounded-full h-3 ${
-            gatheringProgress.resourceType === 'sticks' ? 'bg-green-200' : 'bg-gray-200'
+            gatheringProgress.resourceType === 'stick' ? 'bg-green-200' : 'bg-gray-200'
           }`}>
             <div 
               className={`h-3 rounded-full transition-all duration-300 ease-out ${
-                gatheringProgress.resourceType === 'sticks' ? 'bg-green-600' : 'bg-gray-600'
+                gatheringProgress.resourceType === 'stick' ? 'bg-green-600' : 'bg-gray-600'
               }`}
               style={{ width: `${gatheringProgress.progress}%` }}
             ></div>
@@ -222,7 +233,7 @@ export default function MapPage() {
               tileType={selectedMapTile?.type || null}
               containsTree={selectedTreeTile?.type === 't' || false}
               containsStone={selectedTreeTile?.type === 's' || false}
-              onGatherSticks={handleGatherSticks}
+              onGatherStick={handleGatherStick}
               onGatherStone={handleGatherStone}
               isGathering={gatheringProgress?.isActive || false}
             />

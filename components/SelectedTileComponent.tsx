@@ -5,7 +5,7 @@ interface SelectedTileComponentProps {
   tileType: string | null
   containsTree: boolean
   containsStone: boolean
-  onGatherSticks?: () => void
+  onGatherStick?: () => void
   onGatherStone?: () => void
   isGathering?: boolean
 }
@@ -28,7 +28,7 @@ export default function SelectedTileComponent({
   tileType,
   containsTree,
   containsStone,
-  onGatherSticks,
+  onGatherStick: onGatherSticks,
   onGatherStone,
   isGathering = false
 }: SelectedTileComponentProps) {
@@ -76,7 +76,7 @@ export default function SelectedTileComponent({
                     : 'bg-green-600 hover:bg-green-700 text-white'
                 }`}
               >
-                {isGathering ? 'Gathering...' : 'Gather Sticks'}
+                {isGathering ? 'Gathering...' : 'Gather Stick'}
               </button>
             </div>
           )}
