@@ -14,6 +14,7 @@ export default function MapPage() {
   const [shouldShowGrid, setShouldShowGrid] = useState(false)
   const [shouldShowTileLetters, setShouldShowTileLetters] = useState(false)
   const [shouldShowTileVariants, setShouldShowTileVariants] = useState(false)
+  const [selectedTile, setSelectedTile] = useState<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
     const loadMapData = async () => {
@@ -43,6 +44,10 @@ export default function MapPage() {
   // Calculate map dimensions for legend
   const maxX = Math.max(...mapData.map(tile => tile.x))
   const maxY = Math.max(...mapData.map(tile => tile.y))
+
+  const handleTileSelect = (x: number, y: number) => {
+    setSelectedTile({ x, y })
+  }
 
   return (
     <div className="p-6">
@@ -89,6 +94,14 @@ export default function MapPage() {
         >
           {debugMode ? 'Hide Debug' : 'Show Debug'}
         </button>
+        {selectedTile && (
+          <button
+            onClick={() => setSelectedTile(null)}
+            className="px-4 py-2 rounded-lg font-semibold transition-colors text-sm bg-yellow-600 hover:bg-yellow-700 text-white"
+          >
+            Clear Selection
+          </button>
+        )}
         </div>
       </div>
       
@@ -99,10 +112,22 @@ export default function MapPage() {
         shouldShowTileLetters={shouldShowTileLetters}
         shouldShowTileVariants={shouldShowTileVariants}
         isDebugMode={debugMode}
+        selectedTile={selectedTile}
+        onTileSelect={handleTileSelect}
       />
       
       <div className="mt-4 text-sm text-gray-600">
         <p>Map size: {maxX + 1} × {maxY + 1} tiles</p>
+        {selectedTile && (
+          <div className="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p className="font-semibold text-yellow-800">Selected Tile:</p>
+            <p>Position: ({selectedTile.x}, {selectedTile.y})</p>
+            <p>Type: {mapData.find(tile => tile.x === selectedTile.x && tile.y === selectedTile.y)?.type || 'Unknown'}</p>
+            {treeData.find(tree => tree.x === selectedTile.x && tree.y === selectedTile.y) && (
+              <p>Contains: {treeData.find(tree => tree.x === selectedTile.x && tree.y === selectedTile.y)?.type === 't' ? 'Tree' : 'Stone'}</p>
+            )}
+          </div>
+        )}
         <div className="mt-2">
           <p className="font-semibold mb-2">Legend:</p>
           <div className="grid grid-cols-4 gap-4">

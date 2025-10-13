@@ -154,6 +154,8 @@ interface MapComponentProps {
   shouldShowTileLetters: boolean
   shouldShowTileVariants: boolean
   isDebugMode: boolean
+  selectedTile?: { x: number; y: number } | null
+  onTileSelect?: (x: number, y: number) => void
 }
 
 export default function MapComponent({ 
@@ -162,12 +164,17 @@ export default function MapComponent({
   shouldShowGrid, 
   shouldShowTileLetters, 
   shouldShowTileVariants, 
-  isDebugMode
+  isDebugMode,
+  selectedTile,
+  onTileSelect
 }: MapComponentProps) {
   // Calculate map dimensions
   const maxX = Math.max(...mapData.map(tile => tile.x))
   const maxY = Math.max(...mapData.map(tile => tile.y))
   const tileSize = 64 // Size of each tile in pixels (doubled from 32)
+  
+  // Track hovered tile
+  const [hoveredTile, setHoveredTile] = useState<{ x: number; y: number } | null>(null)
 
   return (
     <div className="bg-gray-100 p-4 rounded-lg inline-block">
@@ -194,15 +201,21 @@ export default function MapComponent({
             console.log(`  Neighbors: top=${neighbors.top?.type || 'null'}, bottom=${neighbors.bottom?.type || 'null'}, left=${neighbors.left?.type || 'null'}, right=${neighbors.right?.type || 'null'}`)
           }
           
-          return (
-            <div
-              key={`${tile.x}-${tile.y}`}
-              className="relative"
-              style={{
-                gridColumn: tile.x + 1,
-                gridRow: tile.y + 1
-              }}
-            >
+            const isSelected = selectedTile?.x === tile.x && selectedTile?.y === tile.y
+            const isHovered = hoveredTile?.x === tile.x && hoveredTile?.y === tile.y
+            
+            return (
+              <div
+                key={`${tile.x}-${tile.y}`}
+                className="relative cursor-pointer transition-all duration-200"
+                style={{
+                  gridColumn: tile.x + 1,
+                  gridRow: tile.y + 1
+                }}
+                onClick={() => onTileSelect?.(tile.x, tile.y)}
+                onMouseEnter={() => setHoveredTile({ x: tile.x, y: tile.y })}
+                onMouseLeave={() => setHoveredTile(null)}
+              >
               {variant === 'grass' ? (
                 <div className="relative">
                 <Image
@@ -387,6 +400,20 @@ export default function MapComponent({
                       <span className="text-gray-600 font-bold drop-shadow-lg">S</span>
                     </div>
                   )}
+                </div>
+              )}
+              
+              {/* Selection overlay */}
+              {isSelected && (
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute inset-0 border-2 border-dashed border-yellow-500"></div>
+                </div>
+              )}
+              
+              {/* Hover overlay */}
+              {isHovered && (
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute inset-1 border-2 border-dashed border-blue-400"></div>
                 </div>
               )}
             </div>
