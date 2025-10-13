@@ -7,6 +7,19 @@ interface SelectedTileComponentProps {
   containsStone: boolean
 }
 
+function getTileTypeText(tileType: string | null | undefined) {
+  if (tileType === 'g')
+    return 'Grass';
+
+  if (tileType === 'p')
+    return 'Path';
+
+  if (tileType === 'l')
+    return 'Housing Plot';
+
+  return 'Unknown';
+}
+
 export default function SelectedTileComponent({ 
   selectedTile, 
   tileType,
@@ -15,6 +28,21 @@ export default function SelectedTileComponent({
 }: SelectedTileComponentProps) {
   if (!selectedTile) {
     return null
+  }
+
+
+  function getResourcesText() { 
+    let resources: string[] = [];
+    if (containsTree)
+      resources.push('Tree');
+    
+    if (containsStone)
+      resources.push('Stone');
+
+    if(resources.length === 0)
+      return 'None';
+
+    return resources.join(', ');
   }
 
   return (
@@ -26,13 +54,8 @@ export default function SelectedTileComponent({
           <p className="font-semibold text-yellow-800 mb-2">Selected Tile</p>
           <div className="space-y-1 text-sm">
             <p><span className="font-medium">Position:</span> ({selectedTile.x}, {selectedTile.y})</p>
-            <p><span className="font-medium">Type:</span> {tileType || 'Unknown'}</p>
-            {containsTree && (
-              <p><span className="font-medium">Contains:</span> Tree</p>
-            )}
-            {containsStone && (
-              <p><span className="font-medium">Contains:</span> Stone</p>
-            )}
+            <p><span className="font-medium">Type:</span> {getTileTypeText(tileType)}</p>
+            <p><span className="font-medium">Resources:</span>{getResourcesText()}</p>
           </div>
         </div>
       </div>
