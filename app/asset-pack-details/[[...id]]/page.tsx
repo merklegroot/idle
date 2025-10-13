@@ -9,7 +9,7 @@ interface AssetPack {
   id: string;
   name: string;
   description: string;
-  image: string;
+  image: { url: string } | { emoji: string };
   categories: string[];
   totalAssets: number;
 }
@@ -25,7 +25,8 @@ interface Asset {
 
 export default function AssetPackDetails() {
   const params = useParams();
-  const isCreating = !params.id || params.id === '';
+  const packId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const isCreating = !packId || packId === '';
   const [assetPack, setAssetPack] = useState<AssetPack | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [editingId, setEditingId] = useState<boolean>(false);
@@ -45,7 +46,7 @@ export default function AssetPackDetails() {
           id: '',
           name: '',
           description: '',
-          image: '',
+          image: { emoji: '📦' },
           categories: [],
           totalAssets: 0
         };
@@ -61,7 +62,7 @@ export default function AssetPackDetails() {
         if (response.ok) {
           const data = await response.json();
           if (data.success) {
-            const pack = data.assetPacks.find((p: any) => p.id === params.id);
+            const pack = data.assetPacks.find((p: any) => p.id === packId);
             if (pack) {
               const packWithTotal = {
                 ...pack,
@@ -81,7 +82,7 @@ export default function AssetPackDetails() {
       }
     };
     loadAssetPack();
-  }, [params.id, isCreating]);
+  }, [packId, isCreating]);
 
   // Load assets for the current pack
   useEffect(() => {
@@ -147,7 +148,7 @@ export default function AssetPackDetails() {
               id: newId.trim(),
               name: newName.trim() || '',
               description: assetPack.description || '',
-              image: assetPack.image || '',
+              image: assetPack.image || { emoji: '📦' },
               categories: assetPack.categories || []
             }),
           });
@@ -215,6 +216,18 @@ export default function AssetPackDetails() {
     setNewName(assetPack?.name || '');
     setEditingName(false);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center py-12">
+            <div className="text-gray-400">Loading asset pack...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!assetPack) {
     return (
