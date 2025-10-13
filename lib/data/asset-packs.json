@@ -3,7 +3,7 @@
     "id": "cute-fantasy-rpg",
     "name": "Cute Fantasy RPG",
     "description": "A collection of cute fantasy-themed sprites including animals, enemies, decorations, and tiles",
-    "image": "/assets/cute-fantasy-rpg/Player/Player.png",
+    "image": { "url": "/assets/cute-fantasy-rpg/Player/Player.png" },
     "categories": [
       "Animals",
       "Enemies",
@@ -16,7 +16,7 @@
     "id": "emoji-assets",
     "name": "Emoji Assets",
     "description": "A comprehensive collection of emoji-based assets for buildings, terrain, resources, and more",
-    "image": "🏛️",
+    "image": { "emoji": "🏛️" },
     "categories": [
       "Town Buildings",
       "Land & Terrain",
@@ -30,7 +30,7 @@
     "id": "custom",
     "name": "Custom",
     "description": "",
-    "image": "",
+    "image": { "emoji": "📦" },
     "categories": []
   }
 ]

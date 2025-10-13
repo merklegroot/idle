@@ -8,7 +8,7 @@ interface AssetPack {
   id: string;
   name: string;
   description: string;
-  image: string;
+  image: { url: string } | { emoji: string };
   categories: string[];
   totalAssets: number;
 }
@@ -61,7 +61,7 @@ export default function AssetPacks() {
           </div>
           <div className="flex gap-3">
             <Link
-              href="/new-asset-pack"
+              href="/asset-pack-details"
               className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
             >
               Create New Asset Pack
@@ -77,11 +77,25 @@ export default function AssetPacks() {
               className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-purple-500 transition-colors group"
             >
               <div className="aspect-square bg-gray-700 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
-                <img
-                  src={pack.image}
-                  alt={pack.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                />
+                {pack.image ? (
+                  'emoji' in pack.image ? (
+                    // Emoji - display as large text
+                    <div className="text-8xl group-hover:scale-110 transition-transform">
+                      {pack.image.emoji}
+                    </div>
+                  ) : (
+                    // URL - display as image
+                    <img
+                      src={pack.image.url}
+                      alt={pack.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    />
+                  )
+                ) : (
+                  <div className="text-gray-400 text-4xl">
+                    📦
+                  </div>
+                )}
               </div>
               <h3 className="text-xl font-bold text-white mb-2">{pack.name}</h3>
               <p className="text-gray-300 text-sm mb-4">{pack.description}</p>

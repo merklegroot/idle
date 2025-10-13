@@ -2,11 +2,13 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+type assetPackPreviewImage = { url: string } | { emoji: string };
+
 interface AssetPack {
   id: string;
   name: string;
   description: string;
-  image: string;
+  image: assetPackPreviewImage;
   categories: string[];
 }
 
@@ -20,14 +22,14 @@ interface CreateAssetPackRequest {
   id: string;
   name?: string;
   description?: string;
-  image?: string;
+  image?: assetPackPreviewImage;
   categories?: string[];
 }
 
 interface UpdateAssetPackRequest {
   name?: string;
   description?: string;
-  image?: string;
+  image?: assetPackPreviewImage;
   categories?: string[];
 }
 
@@ -81,6 +83,40 @@ export async function POST(request: Request): Promise<NextResponse<{ success: bo
       }, { status: 400 });
     }
 
+    // Validate image field if provided
+    if (body.image) {
+      const hasUrl = 'url' in body.image;
+      const hasEmoji = 'emoji' in body.image;
+      
+      if (hasUrl && hasEmoji) {
+        return NextResponse.json({
+          success: false,
+          message: 'Image cannot have both url and emoji properties'
+        }, { status: 400 });
+      }
+      
+      if (!hasUrl && !hasEmoji) {
+        return NextResponse.json({
+          success: false,
+          message: 'Image must have either url or emoji property'
+        }, { status: 400 });
+      }
+      
+      if (hasUrl && (!(body.image as { url: string }).url || (body.image as { url: string }).url.trim() === '')) {
+        return NextResponse.json({
+          success: false,
+          message: 'Image url cannot be empty'
+        }, { status: 400 });
+      }
+      
+      if (hasEmoji && (!(body.image as { emoji: string }).emoji || (body.image as { emoji: string }).emoji.trim() === '')) {
+        return NextResponse.json({
+          success: false,
+          message: 'Image emoji cannot be empty'
+        }, { status: 400 });
+      }
+    }
+
     if (!fs.existsSync(ASSET_PACKS_FILE)) {
       return NextResponse.json({
         success: false,
@@ -103,7 +139,7 @@ export async function POST(request: Request): Promise<NextResponse<{ success: bo
       id: body.id,
       name: body.name || '',
       description: body.description || '',
-      image: body.image || '',
+      image: body.image || { emoji: '📦' },
       categories: body.categories || []
     };
 
