@@ -190,9 +190,9 @@ function parseTreeMapData(treeMapData: string): TreeMapTile[] {
     
     lines.forEach((line, y) => {
         line.split('').forEach((char, x) => {
-            if (char === '.' || char === 't') {
+            if (char === '.' || char === 't' || char === 's') {
                 tiles.push({
-                    type: char as '.' | 't',
+                    type: char as '.' | 't' | 's',
                     x,
                     y
                 });

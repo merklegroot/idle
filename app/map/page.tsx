@@ -73,6 +73,11 @@ function hasTreeAt(x: number, y: number, treeData: TreeMapTile[]): boolean {
   return treeData.some(tree => tree.x === x && tree.y === y && tree.type === 't')
 }
 
+// Helper function to check if there's a stone at specific coordinates
+function hasStoneAt(x: number, y: number, treeData: TreeMapTile[]): boolean {
+  return treeData.some(tree => tree.x === x && tree.y === y && tree.type === 's')
+}
+
 // Helper function to calculate vertical offset for non-square images
 function calculateVerticalOffset(imageWidth: number, imageHeight: number, tileSize: number): number {
   // If image is taller than it is wide, center it vertically
@@ -424,6 +429,26 @@ export default function MapPage() {
                         style={{ fontSize: `${tileSize * 0.6}px` }}
                       >
                         <span className="text-green-800 font-bold drop-shadow-lg">T</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {/* Stone overlay */}
+                {hasStoneAt(tile.x, tile.y, treeData) && (
+                  <div className="absolute inset-0 pointer-events-none">
+                    <div 
+                      className="flex items-center justify-center"
+                      style={{ fontSize: `${tileSize * 0.6}px` }}
+                    >
+                      <span className="text-gray-600 font-bold drop-shadow-lg">🪨</span>
+                    </div>
+                    {showTileLetters && (
+                      <div 
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                        style={{ fontSize: `${tileSize * 0.6}px` }}
+                      >
+                        <span className="text-gray-600 font-bold drop-shadow-lg">S</span>
                       </div>
                     )}
                   </div>

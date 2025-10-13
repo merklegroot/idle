@@ -1,5 +1,5 @@
 export interface TreeMapTile {
-    type: '.' | 't'
+    type: '.' | 't' | 's'
     x: number
     y: number
 }
