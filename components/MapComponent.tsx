@@ -150,19 +150,19 @@ function TreeImage({ src, alt, tileSize }: { src: string, alt: string, tileSize:
 interface MapComponentProps {
   mapData: MapTile[]
   treeData: TreeMapTile[]
-  showGrid: boolean
-  showTileLetters: boolean
-  showTileVariants: boolean
-  debugMode: boolean
+  shouldShowGrid: boolean
+  shouldShowTileLetters: boolean
+  shouldShowTileVariants: boolean
+  isDebugMode: boolean
 }
 
 export default function MapComponent({ 
   mapData, 
   treeData, 
-  showGrid, 
-  showTileLetters, 
-  showTileVariants, 
-  debugMode 
+  shouldShowGrid, 
+  shouldShowTileLetters, 
+  shouldShowTileVariants, 
+  isDebugMode
 }: MapComponentProps) {
   // Calculate map dimensions
   const maxX = Math.max(...mapData.map(tile => tile.x))
@@ -216,7 +216,7 @@ export default function MapComponent({
                     imageRendering: 'pixelated'
                   }}
                 />
-                  {showTileLetters && (
+                  {shouldShowTileLetters && (
                     <div 
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.8}px` }}
@@ -224,7 +224,7 @@ export default function MapComponent({
                       <span className="text-white font-bold drop-shadow-lg">g</span>
                     </div>
                   )}
-                  {showTileVariants && (
+                  {shouldShowTileVariants && (
                     <div 
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.4}px` }}
@@ -246,7 +246,7 @@ export default function MapComponent({
                       imageRendering: 'pixelated'
                     }}
                   />
-                  {showTileLetters && (
+                  {shouldShowTileLetters && (
                     <div 
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.8}px` }}
@@ -254,7 +254,7 @@ export default function MapComponent({
                       <span className="text-white font-bold drop-shadow-lg">l</span>
                     </div>
                   )}
-                  {showTileVariants && (
+                  {shouldShowTileVariants && (
                     <div 
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.4}px` }}
@@ -312,12 +312,12 @@ export default function MapComponent({
                       }}
                     />
                   )}
-                  {debugMode && (
+                  {isDebugMode && (
                     <div className="absolute top-0 left-0 bg-black bg-opacity-75 text-white text-[8px] p-0.5 pointer-events-none leading-none">
                       {variant}
                     </div>
                   )}
-                  {showTileLetters && (
+                  {shouldShowTileLetters && (
                     <div 
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.8}px` }}
@@ -325,7 +325,7 @@ export default function MapComponent({
                       <span className="text-white font-bold drop-shadow-lg">p</span>
                     </div>
                   )}
-                  {showTileVariants && (
+                  {shouldShowTileVariants && (
                     <div 
                       className="absolute inset-0 pointer-events-none"
                       style={{ 
@@ -359,7 +359,7 @@ export default function MapComponent({
                     alt="Tree"
                     tileSize={tileSize}
                   />
-                  {showTileLetters && (
+                  {shouldShowTileLetters && (
                     <div 
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.6}px` }}
@@ -379,7 +379,7 @@ export default function MapComponent({
                   >
                     <span className="text-gray-600 font-bold drop-shadow-lg">🪨</span>
                   </div>
-                  {showTileLetters && (
+                  {shouldShowTileLetters && (
                     <div 
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.6}px` }}
@@ -394,7 +394,7 @@ export default function MapComponent({
         })}
         
         {/* Grid overlay - placed after tiles so it renders on top */}
-        {showGrid && (
+        {shouldShowGrid && (
           <>
             {/* Main grid (tile boundaries) */}
             <div 

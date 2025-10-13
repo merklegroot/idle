@@ -11,9 +11,9 @@ export default function MapPage() {
   const [treeData, setTreeData] = useState<TreeMapTile[]>([])
   const [loading, setLoading] = useState(true)
   const [debugMode, setDebugMode] = useState(false)
-  const [showGrid, setShowGrid] = useState(false)
-  const [showTileLetters, setShowTileLetters] = useState(false)
-  const [showTileVariants, setShowTileVariants] = useState(false)
+  const [shouldShowGrid, setShouldShowGrid] = useState(false)
+  const [shouldShowTileLetters, setShouldShowTileLetters] = useState(false)
+  const [shouldShowTileVariants, setShouldShowTileVariants] = useState(false)
 
   useEffect(() => {
     const loadMapData = async () => {
@@ -50,34 +50,34 @@ export default function MapPage() {
         <h1 className="text-3xl font-bold text-gray-800">Town Map</h1>
         <div className="flex gap-3">
           <button
-            onClick={() => setShowGrid(!showGrid)}
+            onClick={() => setShouldShowGrid(!shouldShowGrid)}
             className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
-              showGrid 
+              shouldShowGrid 
                 ? 'bg-blue-600 hover:bg-blue-700 text-white' 
                 : 'bg-gray-600 hover:bg-gray-700 text-white'
             }`}
           >
-            {showGrid ? 'Hide Grid' : 'Show Grid'}
+            {shouldShowGrid ? 'Hide Grid' : 'Show Grid'}
           </button>
           <button
-            onClick={() => setShowTileLetters(!showTileLetters)}
+            onClick={() => setShouldShowTileLetters(!shouldShowTileLetters)}
             className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
-              showTileLetters 
+              shouldShowTileLetters 
                 ? 'bg-green-600 hover:bg-green-700 text-white' 
                 : 'bg-gray-600 hover:bg-gray-700 text-white'
             }`}
           >
-            {showTileLetters ? 'Hide Letters' : 'Show Letters'}
+            {shouldShowTileLetters ? 'Hide Letters' : 'Show Letters'}
           </button>
           <button
-            onClick={() => setShowTileVariants(!showTileVariants)}
+            onClick={() => setShouldShowTileVariants(!shouldShowTileVariants)}
             className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
-              showTileVariants 
+              shouldShowTileVariants 
                 ? 'bg-purple-600 hover:bg-purple-700 text-white' 
                 : 'bg-gray-600 hover:bg-gray-700 text-white'
             }`}
           >
-            {showTileVariants ? 'Hide Variants' : 'Show Variants'}
+            {shouldShowTileVariants ? 'Hide Variants' : 'Show Variants'}
           </button>
         <button
           onClick={() => setDebugMode(!debugMode)}
@@ -95,10 +95,10 @@ export default function MapPage() {
       <MapComponent
         mapData={mapData}
         treeData={treeData}
-        showGrid={showGrid}
-        showTileLetters={showTileLetters}
-        showTileVariants={showTileVariants}
-        debugMode={debugMode}
+        shouldShowGrid={shouldShowGrid}
+        shouldShowTileLetters={shouldShowTileLetters}
+        shouldShowTileVariants={shouldShowTileVariants}
+        isDebugMode={debugMode}
       />
       
       <div className="mt-4 text-sm text-gray-600">
