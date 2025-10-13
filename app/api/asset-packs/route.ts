@@ -1,16 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-
-type assetPackPreviewImage = { url: string } | { emoji: string };
-
-interface AssetPack {
-  id: string;
-  name: string;
-  description: string;
-  image: assetPackPreviewImage;
-  categories: string[];
-}
+import { AssetPack, assetPackPreviewImage } from '@/app/models/AssetPack';
 
 interface AssetPacksResponse {
   success: boolean;

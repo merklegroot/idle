@@ -4,30 +4,15 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { calculateTotalAssets } from '../../../utils/assetPackUtil';
+import { AssetPack } from '@/app/models/AssetPack';
+import { Asset } from '@/app/models/Asset';
 
-interface AssetPack {
-  id: string;
-  name: string;
-  description: string;
-  image: { url: string } | { emoji: string };
-  categories: string[];
-  totalAssets: number;
-}
-
-interface Asset {
-  id: string;
-  name: string;
-  packId: string;
-  category: string;
-  path?: string;
-  icon?: string;
-}
 
 export default function AssetPackDetails() {
   const params = useParams();
   const packId = Array.isArray(params.id) ? params.id[0] : params.id;
   const isCreating = !packId || packId === '';
-  const [assetPack, setAssetPack] = useState<AssetPack | null>(null);
+  const [assetPack, setAssetPack] = useState<AssetPackWithTotal | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [editingId, setEditingId] = useState<boolean>(false);
   const [editingName, setEditingName] = useState<boolean>(false);
@@ -37,18 +22,22 @@ export default function AssetPackDetails() {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  interface AssetPackWithTotal extends AssetPack {
+    totalAssets: number;
+  }
+
   // Load asset packs and find the current one
   useEffect(() => {
     const loadAssetPack = async () => {
       if (isCreating) {
         // Create a new empty asset pack for creation mode
-        const newPack: AssetPack = {
+        const newPack: AssetPackWithTotal = {
           id: '',
           name: '',
           description: '',
           image: { emoji: '📦' },
           categories: [],
-          totalAssets: 0
+          totalAssets: 0,
         };
         setAssetPack(newPack);
         setNewId('');
@@ -62,11 +51,11 @@ export default function AssetPackDetails() {
         if (response.ok) {
           const data = await response.json();
           if (data.success) {
-            const pack = data.assetPacks.find((p: any) => p.id === packId);
+            const pack = data.assetPacks.find((p: AssetPackWithTotal) => p.id === packId);
             if (pack) {
               const packWithTotal = {
                 ...pack,
-                totalAssets: calculateTotalAssets(pack.id)
+                totalAssets: calculateTotalAssets(pack.id),
               };
               setAssetPack(packWithTotal);
               setSelectedCategory(pack.categories[0]);
