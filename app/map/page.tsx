@@ -283,6 +283,7 @@ export default function MapPage() {
               onGatherStick={handleGatherStick}
               onGatherStone={handleGatherStone}
               onGatherThatch={handleGatherThatch}
+              onClose={() => handleTileSelect(null, null)}
               isGathering={gatheringProgress?.isActive || false}
             />
           </div>

@@ -9,6 +9,7 @@ interface SelectedTileComponentProps {
   onGatherStick?: () => void
   onGatherStone?: () => void
   onGatherThatch?: () => void
+  onClose?: () => void
   isGathering?: boolean
 }
 
@@ -34,6 +35,7 @@ export default function SelectedTileComponent({
   onGatherStick,
   onGatherStone,
   onGatherThatch,
+  onClose,
   isGathering = false
 }: SelectedTileComponentProps) {
   if (!selectedTile) {
@@ -60,7 +62,20 @@ export default function SelectedTileComponent({
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 h-fit">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">Tile Information</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-800">Tile Information</h2>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1"
+            aria-label="Close tile information"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+      </div>
       
       <div className="space-y-3">
         <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
