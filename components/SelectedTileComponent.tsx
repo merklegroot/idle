@@ -23,6 +23,9 @@ function getTileTypeText(tileType: string | null | undefined) {
   if (tileType === 'l')
     return 'Housing Plot';
 
+  if (tileType === 'w')
+    return 'Water';
+
   return 'Unknown';
 }
 
@@ -35,6 +38,9 @@ function getTileTypeIcon(tileType: string | null | undefined) {
 
   if (tileType === 'l')
     return '🏠';
+
+  if (tileType === 'w')
+    return '🌊';
 
   return '❓';
 }
