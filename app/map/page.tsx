@@ -22,7 +22,7 @@ export default function MapPage() {
     isActive: boolean
     progress: number
     tile: { x: number; y: number }
-    resourceType: 'stick' | 'stone'
+    resourceType: 'stick' | 'stone' | 'thatch'
   } | null>(null)
   const completionHandled = useRef(false)
 
@@ -64,6 +64,9 @@ export default function MapPage() {
     ? treeData.find(tree => tree.x === selectedTile.x && tree.y === selectedTile.y)
     : null
 
+  // Check if selected tile contains thatch (grass tiles)
+  const containsThatch = selectedTile && selectedMapTile?.type === 'g'
+
   const handleTileSelect = (x: number | null, y: number | null) => {
     if (x === null || y === null) {
       setSelectedTile(null)
@@ -72,7 +75,7 @@ export default function MapPage() {
     }
   }
 
-  const startGathering = (resourceType: 'stick' | 'stone') => {
+  const startGathering = (resourceType: 'stick' | 'stone' | 'thatch') => {
     if (!selectedTile) return
     
     // Initialize resource if it doesn't exist
@@ -113,6 +116,10 @@ export default function MapPage() {
                 addResourceAmount('stick', 1);
               }
 
+              if (prev.resourceType === 'thatch') {
+                addResourceAmount('thatch', 1);
+              }
+
               setGatheringProgress(null)
             }, 500)
           }
@@ -137,6 +144,10 @@ export default function MapPage() {
 
   const handleGatherStone = () => {
     startGathering('stone')
+  }
+
+  const handleGatherThatch = () => {
+    startGathering('thatch')
   }
 
   return (
@@ -200,26 +211,44 @@ export default function MapPage() {
         <div className={`mb-4 p-4 rounded-lg ${
           gatheringProgress.resourceType === 'stick' 
             ? 'bg-green-50 border border-green-200' 
+            : gatheringProgress.resourceType === 'thatch'
+            ? 'bg-yellow-50 border border-yellow-200'
             : 'bg-gray-50 border border-gray-200'
         }`}>
           <div className="flex items-center justify-between mb-2">
             <h3 className={`text-lg font-semibold ${
-              gatheringProgress.resourceType === 'stick' ? 'text-green-800' : 'text-gray-800'
+              gatheringProgress.resourceType === 'stick' 
+                ? 'text-green-800' 
+                : gatheringProgress.resourceType === 'thatch'
+                ? 'text-yellow-800'
+                : 'text-gray-800'
             }`}>
-              Gathering {gatheringProgress.resourceType === 'stick' ? 'Sticks' : 'Stone'} from {gatheringProgress.resourceType === 'stick' ? 'Tree' : 'Stone'} at ({gatheringProgress.tile.x}, {gatheringProgress.tile.y})
+              Gathering {gatheringProgress.resourceType === 'stick' ? 'Sticks' : gatheringProgress.resourceType === 'thatch' ? 'Thatch' : 'Stone'} from {gatheringProgress.resourceType === 'stick' ? 'Tree' : gatheringProgress.resourceType === 'thatch' ? 'Grass' : 'Stone'} at ({gatheringProgress.tile.x}, {gatheringProgress.tile.y})
             </h3>
             <span className={`text-sm font-medium ${
-              gatheringProgress.resourceType === 'stick' ? 'text-green-600' : 'text-gray-600'
+              gatheringProgress.resourceType === 'stick' 
+                ? 'text-green-600' 
+                : gatheringProgress.resourceType === 'thatch'
+                ? 'text-yellow-600'
+                : 'text-gray-600'
             }`}>
               {gatheringProgress.progress}%
             </span>
           </div>
           <div className={`w-full rounded-full h-3 ${
-            gatheringProgress.resourceType === 'stick' ? 'bg-green-200' : 'bg-gray-200'
+            gatheringProgress.resourceType === 'stick' 
+              ? 'bg-green-200' 
+              : gatheringProgress.resourceType === 'thatch'
+              ? 'bg-yellow-200'
+              : 'bg-gray-200'
           }`}>
             <div 
               className={`h-3 rounded-full transition-all duration-300 ease-out ${
-                gatheringProgress.resourceType === 'stick' ? 'bg-green-600' : 'bg-gray-600'
+                gatheringProgress.resourceType === 'stick' 
+                  ? 'bg-green-600' 
+                  : gatheringProgress.resourceType === 'thatch'
+                  ? 'bg-yellow-600'
+                  : 'bg-gray-600'
               }`}
               style={{ width: `${gatheringProgress.progress}%` }}
             ></div>
@@ -250,8 +279,10 @@ export default function MapPage() {
               tileType={selectedMapTile?.type || null}
               containsTree={selectedTreeTile?.type === 't' || false}
               containsStone={selectedTreeTile?.type === 's' || false}
+              containsThatch={containsThatch || false}
               onGatherStick={handleGatherStick}
               onGatherStone={handleGatherStone}
+              onGatherThatch={handleGatherThatch}
               isGathering={gatheringProgress?.isActive || false}
             />
           </div>

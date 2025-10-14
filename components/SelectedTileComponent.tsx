@@ -5,8 +5,10 @@ interface SelectedTileComponentProps {
   tileType: string | null
   containsTree: boolean
   containsStone: boolean
+  containsThatch: boolean
   onGatherStick?: () => void
   onGatherStone?: () => void
+  onGatherThatch?: () => void
   isGathering?: boolean
 }
 
@@ -28,8 +30,10 @@ export default function SelectedTileComponent({
   tileType,
   containsTree,
   containsStone,
+  containsThatch,
   onGatherStick,
   onGatherStone,
+  onGatherThatch,
   isGathering = false
 }: SelectedTileComponentProps) {
   if (!selectedTile) {
@@ -44,6 +48,9 @@ export default function SelectedTileComponent({
     
     if (containsStone)
       resources.push('Stone');
+
+    if (containsThatch)
+      resources.push('Thatch');
 
     if(resources.length === 0)
       return 'None';
@@ -93,6 +100,22 @@ export default function SelectedTileComponent({
                 }`}
               >
                 {isGathering ? 'Gathering...' : 'Gather Stone'}
+              </button>
+            </div>
+          )}
+          
+          {containsThatch && onGatherThatch && (
+            <div className="mt-3">
+              <button
+                onClick={onGatherThatch}
+                disabled={isGathering}
+                className={`w-full px-4 py-2 font-semibold rounded-lg transition-colors duration-200 ${
+                  isGathering
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                    : 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                }`}
+              >
+                {isGathering ? 'Gathering...' : 'Gather Thatch'}
               </button>
             </div>
           )}

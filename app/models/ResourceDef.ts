@@ -93,6 +93,19 @@ export const PickaxeDef: GatherableResourceDef = {
     ]
 };
 
+export const ThatchDef: GatherableResourceDef = {
+    name: 'Thatch',
+    resourceKey: 'thatch',
+    icon: '🌾',
+    perSecond: 1,
+    workerCost: 75, // Cheaper than stone but more than berries
+    workerSalary: 8, // Moderate salary cost
+    workerPerSecond: 1, // Same production rate
+    gatherPerSecond: 1.2, // Fast manual gathering (1.2% per 20ms = 1.67 seconds)
+    gatherInterval: 20,
+    sellPrice: 15 // Moderate sell price
+};
+
 export const GoldDef: ResourceDef = {
     name: 'Gold',
     resourceKey: 'gold',

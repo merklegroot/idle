@@ -1,4 +1,4 @@
-import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, toolEffectiveness, toolBonuses, toolCategories } from '../app/models/ResourceDef';
+import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, ThatchDef, toolEffectiveness, toolBonuses, toolCategories } from '../app/models/ResourceDef';
 import { GameState, GameStore, HomeCost, Home } from './gameStoreModels';
 import { gameStoreUtil } from './gameStoreUtil';
 
@@ -278,7 +278,8 @@ export function bootstrapFactory(set: (fn: (state: GameState) => Partial<GameSta
       stone: 800,
       gold: 5000,
       hatchet: 5,
-      pickaxe: 3
+      pickaxe: 3,
+      thatch: 200
     };
 
     const updatedResources = { ...state.resources };
@@ -331,7 +332,8 @@ export function hireWorkerFactory(set: (fn: (state: GameState) => Partial<GameSt
       berries: { workerSalary: BerryDef.workerSalary },
       stone: { workerSalary: StoneDef.workerSalary },
       hatchet: { workerSalary: HatchetDef.workerSalary },
-      pickaxe: { workerSalary: PickaxeDef.workerSalary }
+      pickaxe: { workerSalary: PickaxeDef.workerSalary },
+      thatch: { workerSalary: ThatchDef.workerSalary }
     };
     const resourceDef = resourceDefs[resourceKey];
     const workerSalary = resourceDef?.workerSalary || 10;
@@ -424,7 +426,8 @@ export function initializeResourceFactory(set: (fn: (state: GameState) => Partia
       berries: { workerCost: BerryDef.workerCost, workerSalary: BerryDef.workerSalary },
       stone: { workerCost: StoneDef.workerCost, workerSalary: StoneDef.workerSalary },
       hatchet: { workerCost: HatchetDef.workerCost, workerSalary: HatchetDef.workerSalary },
-      pickaxe: { workerCost: PickaxeDef.workerCost, workerSalary: PickaxeDef.workerSalary }
+      pickaxe: { workerCost: PickaxeDef.workerCost, workerSalary: PickaxeDef.workerSalary },
+      thatch: { workerCost: ThatchDef.workerCost, workerSalary: ThatchDef.workerSalary }
     };
     const resourceDef = resourceDefs[resourceKey];
     const defaultWorkerCost = resourceDef?.workerCost || 100;
