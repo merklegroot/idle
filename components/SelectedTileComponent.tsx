@@ -26,6 +26,19 @@ function getTileTypeText(tileType: string | null | undefined) {
   return 'Unknown';
 }
 
+function getTileTypeIcon(tileType: string | null | undefined) {
+  if (tileType === 'g')
+    return '🌱';
+
+  if (tileType === 'p')
+    return '🛤️';
+
+  if (tileType === 'l')
+    return '🏠';
+
+  return '❓';
+}
+
 export default function SelectedTileComponent({
   selectedTile,
   tileType,
@@ -63,7 +76,10 @@ export default function SelectedTileComponent({
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 h-fit">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">{getTileTypeText(tileType)} ({selectedTile.x}, {selectedTile.y})</h2>
+        <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+          <span className="text-2xl">{getTileTypeIcon(tileType)}</span>
+          {getTileTypeText(tileType)} ({selectedTile.x}, {selectedTile.y})
+        </h2>
         {onClose && (
           <button
             onClick={onClose}
