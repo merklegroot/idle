@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import type { MapTile } from '@/models/MapTile'
 import type { TreeMapTile } from '@/models/TreeMapTile'
@@ -24,6 +24,7 @@ export default function MapPage() {
     tile: { x: number; y: number }
     resourceType: 'stick' | 'stone'
   } | null>(null)
+  const completionHandled = useRef(false)
 
   useEffect(() => {
     const loadMapData = async () => {
@@ -79,6 +80,9 @@ export default function MapPage() {
       initializeResource('stone')
     }
     
+    // Reset completion flag
+    completionHandled.current = false
+    
     // Start gathering progress
     setGatheringProgress({
       isActive: true,
@@ -95,15 +99,23 @@ export default function MapPage() {
         const newProgress = prev.progress + 10
         if (newProgress >= 100) {
           clearInterval(interval)
-          // Add some delay before clearing and adding resource
-          setTimeout(() => {
-            // Add resource to inventory after delay
-            if (prev.resourceType === 'stone') {
-              addResourceAmount('stone', 1)
-            }
-            setGatheringProgress(null)
-          }, 500)
-          return null
+          
+          // Only handle completion once
+          if (!completionHandled.current) {
+            completionHandled.current = true
+            setTimeout(() => {
+              // Add resource to inventory after delay
+              if (prev.resourceType === 'stone') {
+                addResourceAmount('stone', 1)
+              }
+              setGatheringProgress(null)
+            }, 500)
+          }
+          
+          return {
+            ...prev,
+            progress: 100
+          }
         }
         
         return {
