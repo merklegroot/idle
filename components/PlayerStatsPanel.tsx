@@ -102,21 +102,21 @@ export default function PlayerStatsPanel({ onClose }: PlayerStatsPanelProps) {
           </div>
         </div>
 
-        {/* Thirst */}
+        {/* Hydration */}
         <div className="space-y-1">
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
               <span className="text-lg">💧</span>
-              Thirst
+              Hydration
             </span>
-            <span className={`text-sm font-semibold ${getStatColor(stats.thirst)}`}>
-              {Math.round(stats.thirst)}%
+            <span className={`text-sm font-semibold ${getStatColor(stats.hydration)}`}>
+              {Math.round(stats.hydration)}%
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
-              className={`h-2 rounded-full transition-all duration-300 ${getStatBarColor(stats.thirst)}`}
-              style={{ width: `${Math.min(100, Math.max(0, stats.thirst))}%` }}
+              className={`h-2 rounded-full transition-all duration-300 ${getStatBarColor(stats.hydration)}`}
+              style={{ width: `${Math.min(100, Math.max(0, stats.hydration))}%` }}
             ></div>
           </div>
         </div>

@@ -16,7 +16,7 @@ const useGameStore = create<GameStore>((set, get) => ({
     health: 100,
     warmth: 50,
     food: 80,
-    thirst: 70
+    hydration: 70
   },
 
   // Resource management

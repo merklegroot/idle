@@ -31,7 +31,7 @@ export interface PlayerStats {
     health: number;
     warmth: number;
     food: number;
-    thirst: number;
+    hydration: number;
 }
 
 export interface GameState {
