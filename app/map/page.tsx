@@ -76,8 +76,8 @@ export default function MapPage() {
     if (!selectedTile) return
     
     // Initialize resource if it doesn't exist
-    if (resourceType === 'stone' && !getResource('stone')) {
-      initializeResource('stone')
+    if (!getResource(resourceType)) {
+      initializeResource(resourceType)
     }
     
     // Reset completion flag
@@ -106,8 +106,13 @@ export default function MapPage() {
             setTimeout(() => {
               // Add resource to inventory after delay
               if (prev.resourceType === 'stone') {
-                addResourceAmount('stone', 1)
+                addResourceAmount('stone', 1);
               }
+
+              if (prev.resourceType === 'stick') {
+                addResourceAmount('stick', 1);
+              }
+
               setGatheringProgress(null)
             }, 500)
           }

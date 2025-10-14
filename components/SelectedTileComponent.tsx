@@ -28,7 +28,7 @@ export default function SelectedTileComponent({
   tileType,
   containsTree,
   containsStone,
-  onGatherStick: onGatherSticks,
+  onGatherStick,
   onGatherStone,
   isGathering = false
 }: SelectedTileComponentProps) {
@@ -65,10 +65,10 @@ export default function SelectedTileComponent({
             </div>
           </div>
           
-          {containsTree && onGatherSticks && (
+          {containsTree && onGatherStick && (
             <div className="mt-3">
               <button
-                onClick={onGatherSticks}
+                onClick={onGatherStick}
                 disabled={isGathering}
                 className={`w-full px-4 py-2 font-semibold rounded-lg transition-colors duration-200 ${
                   isGathering

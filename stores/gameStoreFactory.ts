@@ -18,9 +18,40 @@ export function setResourceAmountFactory(set: (fn: (state: GameState) => Partial
 
 export function addResourceAmountFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
   return function (resourceKey: string, amount: number): void {
-    set((state) => ({
-      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], amount: state.resources[resourceKey].amount + amount } }
-    }));
+    set((state) => {
+      const existingResource = state.resources[resourceKey];
+      if (!existingResource) {
+        // Initialize resource if it doesn't exist
+        return {
+          resources: {
+            ...state.resources,
+            [resourceKey]: {
+              amount: amount,
+              perSecond: 0,
+              workers: 0,
+              paidWorkers: 0,
+              workerCost: 100,
+              workerSalary: 10,
+              isGathering: false,
+              gatherProgress: 0,
+              workerProgress: 0,
+              autoSellThreshold: 0,
+              autoSellEnabled: false
+            }
+          }
+        };
+      }
+      
+      return {
+        resources: { 
+          ...state.resources, 
+          [resourceKey]: { 
+            ...existingResource, 
+            amount: existingResource.amount + amount 
+          } 
+        }
+      };
+    });
   }
 }
 
