@@ -8,6 +8,7 @@ import MapComponent from '@/components/MapComponent'
 import SelectedTileComponent from '@/components/SelectedTileComponent'
 import PlayerStatsPanel from '@/components/PlayerStatsPanel'
 import DayNightCycle from '@/components/DayNightCycle'
+import CompactDayNightCycle from '@/components/CompactDayNightCycle'
 import useGameStore from '@/stores/gameStore'
 
 export default function MapPage() {
@@ -157,7 +158,10 @@ export default function MapPage() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Town Map</h1>
+        <div className="flex items-center gap-6">
+          <h1 className="text-3xl font-bold text-gray-800">Town Map</h1>
+          <CompactDayNightCycle />
+        </div>
         <div className="flex gap-3">
           <button
             onClick={() => setShouldShowGrid(!shouldShowGrid)}
