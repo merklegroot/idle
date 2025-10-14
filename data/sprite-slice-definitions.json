@@ -230,5 +230,23 @@
     "description": "Test with negative drawing offset",
     "type": "Image",
     "hasSlicingParams": false
+  },
+  {
+    "id": "mgqxgh42fkiqo5zmsxj",
+    "imagePath": "/assets/cute-fantasy-rpg/Tiles/Water_Middle.png",
+    "imageName": "Water Middle",
+    "imageWidth": 16,
+    "imageHeight": 16,
+    "gridWidth": 32,
+    "gridHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0,
+    "drawingOffsetX": 0,
+    "drawingOffsetY": 0,
+    "description": "Water",
+    "type": "Image",
+    "hasSlicingParams": false
   }
 ]

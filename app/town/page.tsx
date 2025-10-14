@@ -1,8 +1,12 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import useGameStore from '@/stores/gameStore';
 import { formattingUtil } from '@/utils/formattingUtil';
 import { HouseDef, TownHallDef } from '@/app/models/ResourceDef';
+import MapComponent from '@/components/MapComponent';
+import type { MapTile } from '@/models/MapTile';
+import type { TreeMapTile } from '@/models/TreeMapTile';
 
 export default function Town() {
   const { 
@@ -123,39 +127,47 @@ export default function Town() {
 }
 
 function TownMap() {
-  const tileSize = 32; // Size of each tile in pixels
-  const mapWidth = 16;
-  const mapHeight = 8;
-  
+  const [mapData, setMapData] = useState<MapTile[]>([]);
+  const [treeData, setTreeData] = useState<TreeMapTile[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadMapData = async () => {
+      try {
+        const response = await fetch('/api/map-data');
+        const data = await response.json();
+        setMapData(data.tiles);
+        setTreeData(data.treeTiles);
+      } catch (error) {
+        console.error('Failed to load map data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMapData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-white">Loading map...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex justify-center">
-      <div 
-        className="grid gap-0 border-2 border-gray-600 bg-gray-900"
-        style={{
-          gridTemplateColumns: `repeat(${mapWidth}, ${tileSize}px)`,
-          gridTemplateRows: `repeat(${mapHeight}, ${tileSize}px)`,
-        }}
-      >
-        {Array.from({ length: mapHeight * mapWidth }, (_, index) => {
-          const row = Math.floor(index / mapWidth);
-          const col = index % mapWidth;
-          
-          return (
-            <div
-              key={`${row}-${col}`}
-              className="flex items-center justify-center bg-gray-800"
-              style={{ width: tileSize, height: tileSize }}
-            >
-              <img
-                src="/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree.png"
-                alt="Oak Tree"
-                className="w-full h-full object-contain"
-                style={{ maxWidth: tileSize - 2, maxHeight: tileSize - 2 }}
-              />
-            </div>
-          );
-        })}
-      </div>
+      <MapComponent
+        mapData={mapData}
+        treeData={treeData}
+        shouldShowGrid={false}
+        shouldShowTileLetters={false}
+        shouldShowTileVariants={false}
+        isDebugMode={false}
+        selectedTile={null}
+        onTileSelect={() => {}}
+      />
     </div>
   );
 }

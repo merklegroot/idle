@@ -52,6 +52,12 @@ const TILE_VARIANTS: { [key: string]: TileVariant } = {
     offsetX: 0,
     offsetY: 0
   },
+  // Water tile
+  'water': {
+    src: '/assets/cute-fantasy-rpg/Tiles/Water_Middle.png',
+    offsetX: 0,
+    offsetY: 0
+  },
 }
 
 // Function to determine tile variant based on neighbors
@@ -62,6 +68,10 @@ function getTileVariant(tile: MapTile, mapData: MapTile[]): string {
   
   if (tile.type === 'l') {
     return 'housing'
+  }
+
+  if (tile.type === 'w') {
+    return 'water'
   }
 
   // For path tiles, always use the 3x3 grid approach
