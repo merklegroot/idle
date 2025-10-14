@@ -95,12 +95,12 @@ export default function MapPage() {
         const newProgress = prev.progress + 10
         if (newProgress >= 100) {
           clearInterval(interval)
-          // Gathering complete - add resource to inventory
-          if (prev.resourceType === 'stone') {
-            addResourceAmount('stone', 1)
-          }
-          // Add some delay before clearing
+          // Add some delay before clearing and adding resource
           setTimeout(() => {
+            // Add resource to inventory after delay
+            if (prev.resourceType === 'stone') {
+              addResourceAmount('stone', 1)
+            }
             setGatheringProgress(null)
           }, 500)
           return null
