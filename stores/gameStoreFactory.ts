@@ -1,5 +1,5 @@
 import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, ThatchDef, toolEffectiveness, toolBonuses, toolCategories } from '../app/models/ResourceDef';
-import { GameState, GameStore, HomeCost, Home } from './gameStoreModels';
+import { GameState, GameStore, HomeCost, Home, PlayerStats } from './gameStoreModels';
 import { gameStoreUtil } from './gameStoreUtil';
 
 export function getResourceFactory(get: () => GameState) {
@@ -763,5 +763,47 @@ export function stopGameLoopFactory(set: (fn: (state: GameState) => Partial<Game
       clearInterval(state.gameLoopInterval);
       set((state) => ({ ...state, gameLoopInterval: undefined }));
     }
+  }
+}
+
+export function getPlayerStatsFactory(get: () => GameState) {
+  return function (): PlayerStats {
+    return get().playerStats;
+  }
+}
+
+export function setPlayerStatsFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (stats: Partial<PlayerStats>): void {
+    set((state) => ({
+      playerStats: { ...state.playerStats, ...stats }
+    }));
+  }
+}
+
+export function updatePlayerWarmthFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (timeOfDay: number): void {
+    const state = get();
+    const currentWarmth = state.playerStats.warmth;
+    
+    // Calculate warmth change based on time of day
+    // Warmer during day (6-18), cooler at night
+    let warmthChange = 0;
+    
+    if (timeOfDay >= 6 && timeOfDay < 18) {
+      // Day time: gradually warm up
+      warmthChange = 0.5;
+    } else {
+      // Night time: gradually cool down
+      warmthChange = -0.3;
+    }
+    
+    const newWarmth = Math.max(0, Math.min(100, currentWarmth + warmthChange));
+    
+    set((state) => ({
+      playerStats: {
+        ...state.playerStats,
+        warmth: newWarmth
+      }
+    }));
   }
 }

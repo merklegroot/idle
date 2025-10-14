@@ -27,12 +27,20 @@ export interface HomeCost {
     gold: number;
 }
 
+export interface PlayerStats {
+    health: number;
+    warmth: number;
+    food: number;
+    thirst: number;
+}
+
 export interface GameState {
     resources: Record<string, ResourceState>;
     gameLoopInterval?: NodeJS.Timeout;
     tickCount: number;
     characterEquipment: CharacterEquipment;
     homes: Home[];
+    playerStats: PlayerStats;
 }
 
 export interface GameActions {
@@ -96,6 +104,11 @@ export interface GameActions {
     startGameLoop: () => void;
     stopGameLoop: () => void;
     gameTick: () => void;
+
+    // Player stats management
+    getPlayerStats: () => PlayerStats;
+    setPlayerStats: (stats: Partial<PlayerStats>) => void;
+    updatePlayerWarmth: (timeOfDay: number) => void;
 }
 
 export type GameStore = GameState & GameActions;

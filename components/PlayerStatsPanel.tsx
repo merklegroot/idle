@@ -1,17 +1,14 @@
 'use client'
 
+import useGameStore from '@/stores/gameStore'
+
 interface PlayerStatsPanelProps {
   onClose?: () => void
 }
 
 export default function PlayerStatsPanel({ onClose }: PlayerStatsPanelProps) {
-  // Mock data for now - these will be connected to the game store later
-  const stats = {
-    health: 85,
-    warmth: 70,
-    food: 60,
-    thirst: 45
-  }
+  const { getPlayerStats } = useGameStore()
+  const stats = getPlayerStats()
 
   const getStatColor = (value: number) => {
     if (value >= 80) return 'text-green-600'
@@ -56,13 +53,13 @@ export default function PlayerStatsPanel({ onClose }: PlayerStatsPanelProps) {
               Health
             </span>
             <span className={`text-sm font-semibold ${getStatColor(stats.health)}`}>
-              {stats.health}%
+              {Math.round(stats.health)}%
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
               className={`h-2 rounded-full transition-all duration-300 ${getStatBarColor(stats.health)}`}
-              style={{ width: `${stats.health}%` }}
+              style={{ width: `${Math.min(100, Math.max(0, stats.health))}%` }}
             ></div>
           </div>
         </div>
@@ -75,13 +72,13 @@ export default function PlayerStatsPanel({ onClose }: PlayerStatsPanelProps) {
               Warmth
             </span>
             <span className={`text-sm font-semibold ${getStatColor(stats.warmth)}`}>
-              {stats.warmth}%
+              {Math.round(stats.warmth)}%
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
               className={`h-2 rounded-full transition-all duration-300 ${getStatBarColor(stats.warmth)}`}
-              style={{ width: `${stats.warmth}%` }}
+              style={{ width: `${Math.min(100, Math.max(0, stats.warmth))}%` }}
             ></div>
           </div>
         </div>
@@ -94,13 +91,13 @@ export default function PlayerStatsPanel({ onClose }: PlayerStatsPanelProps) {
               Food
             </span>
             <span className={`text-sm font-semibold ${getStatColor(stats.food)}`}>
-              {stats.food}%
+              {Math.round(stats.food)}%
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
               className={`h-2 rounded-full transition-all duration-300 ${getStatBarColor(stats.food)}`}
-              style={{ width: `${stats.food}%` }}
+              style={{ width: `${Math.min(100, Math.max(0, stats.food))}%` }}
             ></div>
           </div>
         </div>
@@ -113,13 +110,13 @@ export default function PlayerStatsPanel({ onClose }: PlayerStatsPanelProps) {
               Thirst
             </span>
             <span className={`text-sm font-semibold ${getStatColor(stats.thirst)}`}>
-              {stats.thirst}%
+              {Math.round(stats.thirst)}%
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
               className={`h-2 rounded-full transition-all duration-300 ${getStatBarColor(stats.thirst)}`}
-              style={{ width: `${stats.thirst}%` }}
+              style={{ width: `${Math.min(100, Math.max(0, stats.thirst))}%` }}
             ></div>
           </div>
         </div>

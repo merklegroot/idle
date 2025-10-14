@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { GameStore } from './gameStoreModels';
 import { getResourceFactory, setResourceAmountFactory, addResourceAmountFactory, setResourcePerSecondFactory, setResourceWorkersFactory, setResourcePaidWorkersFactory, setResourceWorkerCostFactory, setResourceWorkerSalaryFactory, setResourceIsGatheringFactory, setResourceGatherProgressFactory, setResourceWorkerProgressFactory } from './gameStoreFactory';
 import { getHomeCostFactory, getHomeUpgradeCostFactory, canBuildHomeFactory, canUpgradeHomeFactory, buildHomeFactory, upgradeHomeFactory } from './gameStoreFactory';
-import { bootstrapFactory, hireWorkerFactory, startGatheringFactory, resetGatherProgressFactory, resetWorkerProgressFactory, initializeResourceFactory, sellResourceFactory, sellResourcePercentageFactory, sellAllResourceFactory, setAutoSellThresholdFactory, setAutoSellEnabledFactory, checkAutoSellFactory, payWorkerSalariesFactory, equipToolFactory, unequipToolFactory, getEquippedToolFactory, getToolBonusFactory, getWorkerToolBonusFactory, getWorkersWithToolsFactory, startGameLoopFactory, stopGameLoopFactory } from './gameStoreFactory';
+import { bootstrapFactory, hireWorkerFactory, startGatheringFactory, resetGatherProgressFactory, resetWorkerProgressFactory, initializeResourceFactory, sellResourceFactory, sellResourcePercentageFactory, sellAllResourceFactory, setAutoSellThresholdFactory, setAutoSellEnabledFactory, checkAutoSellFactory, payWorkerSalariesFactory, equipToolFactory, unequipToolFactory, getEquippedToolFactory, getToolBonusFactory, getWorkerToolBonusFactory, getWorkersWithToolsFactory, startGameLoopFactory, stopGameLoopFactory, getPlayerStatsFactory, setPlayerStatsFactory, updatePlayerWarmthFactory } from './gameStoreFactory';
 import { gameTickFactory } from './gameTickFactory';
 
 const useGameStore = create<GameStore>((set, get) => ({
@@ -12,6 +12,12 @@ const useGameStore = create<GameStore>((set, get) => ({
   tickCount: 0,
   characterEquipment: {},
   homes: [],
+  playerStats: {
+    health: 100,
+    warmth: 50,
+    food: 80,
+    thirst: 70
+  },
 
   // Resource management
   getResource: getResourceFactory(get),
@@ -71,7 +77,12 @@ const useGameStore = create<GameStore>((set, get) => ({
   // Game loop
   startGameLoop: startGameLoopFactory(set, get),
   stopGameLoop: stopGameLoopFactory(set, get),
-  gameTick: gameTickFactory(set, get)
+  gameTick: gameTickFactory(set, get),
+
+  // Player stats management
+  getPlayerStats: getPlayerStatsFactory(get),
+  setPlayerStats: setPlayerStatsFactory(set),
+  updatePlayerWarmth: updatePlayerWarmthFactory(set, get)
 }));
 
 export default useGameStore;
