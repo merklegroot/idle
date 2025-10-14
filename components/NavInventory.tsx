@@ -14,11 +14,13 @@ export default function NavInventory() {
   const wood = getResource('wood');
   const stone = getResource('stone');
   const stick = getResource('stick');
+  const thatch = getResource('thatch');
   
   const goldAmount = gold?.amount || 0;
   const woodAmount = wood?.amount || 0;
   const stoneAmount = stone?.amount || 0;
   const stickAmount = stick?.amount || 0;
+  const thatchAmount = thatch?.amount || 0;
   
   // Calculate total population from all homes
   const totalPopulation = homes.reduce((sum, home) => sum + home.population, 0);
@@ -45,6 +47,10 @@ export default function NavInventory() {
         <div className="flex items-center gap-1">
           <span className="text-green-400">╱</span>
           <span className="font-semibold text-green-400">{formattingUtil.formatNumber(stickAmount)}</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <span className="text-yellow-400">🌾</span>
+          <span className="font-semibold text-yellow-400">{formattingUtil.formatNumber(thatchAmount)}</span>
         </div>
       </div>
       <button
