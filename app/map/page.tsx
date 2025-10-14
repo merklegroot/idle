@@ -7,7 +7,6 @@ import type { TreeMapTile } from '@/models/TreeMapTile'
 import MapComponent from '@/components/MapComponent'
 import SelectedTileComponent from '@/components/SelectedTileComponent'
 import PlayerStatsPanel from '@/components/PlayerStatsPanel'
-import DayNightCycle from '@/components/DayNightCycle'
 import CompactDayNightCycle from '@/components/CompactDayNightCycle'
 import useGameStore from '@/stores/gameStore'
 
@@ -22,7 +21,6 @@ export default function MapPage() {
   const [shouldShowTileVariants, setShouldShowTileVariants] = useState(false)
   const [selectedTile, setSelectedTile] = useState<{ x: number; y: number } | null>(null)
   const [showPlayerStats, setShowPlayerStats] = useState(false)
-  const [showDayNightCycle, setShowDayNightCycle] = useState(true)
   const [gatheringProgress, setGatheringProgress] = useState<{
     isActive: boolean
     progress: number
@@ -213,16 +211,6 @@ export default function MapPage() {
         >
           {showPlayerStats ? 'Hide Stats' : 'Show Stats'}
         </button>
-        <button
-          onClick={() => setShowDayNightCycle(!showDayNightCycle)}
-          className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
-            showDayNightCycle 
-              ? 'bg-purple-600 hover:bg-purple-700 text-white' 
-              : 'bg-gray-600 hover:bg-gray-700 text-white'
-          }`}
-        >
-          {showDayNightCycle ? 'Hide Time' : 'Show Time'}
-        </button>
         {selectedTile && (
           <button
             onClick={() => setSelectedTile(null)}
@@ -301,12 +289,6 @@ export default function MapPage() {
         
         {/* Info Panels */}
         <div className="flex-1 min-w-0 space-y-4">
-          {showDayNightCycle && (
-            <DayNightCycle
-              onClose={() => setShowDayNightCycle(false)}
-            />
-          )}
-          
           {showPlayerStats && (
             <PlayerStatsPanel
               onClose={() => setShowPlayerStats(false)}
