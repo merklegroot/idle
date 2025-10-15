@@ -109,6 +109,7 @@ export interface GameActions {
     getPlayerStats: () => PlayerStats;
     setPlayerStats: (stats: Partial<PlayerStats>) => void;
     updatePlayerWarmth: (timeOfDay: number) => void;
+    drinkWater: () => void;
 }
 
 export type GameStore = GameState & GameActions;

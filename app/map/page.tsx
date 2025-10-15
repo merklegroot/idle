@@ -9,9 +9,10 @@ import SelectedTileComponent from '@/components/SelectedTileComponent'
 import PlayerStatsPanel from '@/components/PlayerStatsPanel'
 import CompactDayNightCycle from '@/components/CompactDayNightCycle'
 import useGameStore from '@/stores/gameStore'
+import GatherProgressComponent from '@/components/GatherProgressComponent'
 
 export default function MapPage() {
-  const { addResourceAmount, initializeResource, getResource } = useGameStore()
+  const { addResourceAmount, initializeResource, getResource, drinkWater } = useGameStore()
   const [mapData, setMapData] = useState<MapTile[]>([])
   const [treeData, setTreeData] = useState<TreeMapTile[]>([])
   const [loading, setLoading] = useState(true)
@@ -25,7 +26,7 @@ export default function MapPage() {
     isActive: boolean
     progress: number
     tile: { x: number; y: number }
-    resourceType: 'stick' | 'stone' | 'thatch'
+    resourceType: 'stick' | 'stone' | 'thatch' | 'water'
   } | null>(null)
   const completionHandled = useRef(false)
 
@@ -57,9 +58,9 @@ export default function MapPage() {
   // Calculate map dimensions for legend
   const maxX = Math.max(...mapData.map(tile => tile.x))
   const maxY = Math.max(...mapData.map(tile => tile.y))
-  
+
   // Calculate selected tile information
-  const selectedMapTile = selectedTile 
+  const selectedMapTile = selectedTile
     ? mapData.find(tile => tile.x === selectedTile.x && tile.y === selectedTile.y)
     : null
 
@@ -78,17 +79,17 @@ export default function MapPage() {
     }
   }
 
-  const startGathering = (resourceType: 'stick' | 'stone' | 'thatch') => {
+  const startGathering = (resourceType: 'stick' | 'stone' | 'thatch' | 'water') => {
     if (!selectedTile) return
-    
+
     // Initialize resource if it doesn't exist
     if (!getResource(resourceType)) {
       initializeResource(resourceType)
     }
-    
+
     // Reset completion flag
     completionHandled.current = false
-    
+
     // Start gathering progress
     setGatheringProgress({
       isActive: true,
@@ -96,16 +97,16 @@ export default function MapPage() {
       tile: selectedTile,
       resourceType
     })
-    
+
     // Simulate gathering progress over 3 seconds
     const interval = setInterval(() => {
       setGatheringProgress(prev => {
         if (!prev) return null
-        
+
         const newProgress = prev.progress + 10
         if (newProgress >= 100) {
           clearInterval(interval)
-          
+
           // Only handle completion once
           if (!completionHandled.current) {
             completionHandled.current = true
@@ -123,16 +124,20 @@ export default function MapPage() {
                 addResourceAmount('thatch', 1);
               }
 
+              if (prev.resourceType === 'water') {
+                drinkWater();
+              }
+
               setGatheringProgress(null)
             }, 500)
           }
-          
+
           return {
             ...prev,
             progress: 100
           }
         }
-        
+
         return {
           ...prev,
           progress: newProgress
@@ -153,6 +158,10 @@ export default function MapPage() {
     startGathering('thatch')
   }
 
+  const handleDrinkWater = () => {
+    startGathering('water')
+  }
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -163,115 +172,98 @@ export default function MapPage() {
         <div className="flex gap-3">
           <button
             onClick={() => setShouldShowGrid(!shouldShowGrid)}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
-              shouldShowGrid 
-                ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${shouldShowGrid
+                ? 'bg-blue-600 hover:bg-blue-700 text-white'
                 : 'bg-gray-600 hover:bg-gray-700 text-white'
-            }`}
+              }`}
           >
             {shouldShowGrid ? 'Hide Grid' : 'Show Grid'}
           </button>
           <button
             onClick={() => setShouldShowTileLetters(!shouldShowTileLetters)}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
-              shouldShowTileLetters 
-                ? 'bg-green-600 hover:bg-green-700 text-white' 
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${shouldShowTileLetters
+                ? 'bg-green-600 hover:bg-green-700 text-white'
                 : 'bg-gray-600 hover:bg-gray-700 text-white'
-            }`}
+              }`}
           >
             {shouldShowTileLetters ? 'Hide Letters' : 'Show Letters'}
           </button>
           <button
             onClick={() => setShouldShowTileVariants(!shouldShowTileVariants)}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
-              shouldShowTileVariants 
-                ? 'bg-purple-600 hover:bg-purple-700 text-white' 
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${shouldShowTileVariants
+                ? 'bg-purple-600 hover:bg-purple-700 text-white'
                 : 'bg-gray-600 hover:bg-gray-700 text-white'
-            }`}
+              }`}
           >
             {shouldShowTileVariants ? 'Hide Variants' : 'Show Variants'}
           </button>
-        <button
-          onClick={() => setDebugMode(!debugMode)}
-          className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
-            debugMode 
-              ? 'bg-red-600 hover:bg-red-700 text-white' 
-              : 'bg-gray-600 hover:bg-gray-700 text-white'
-          }`}
-        >
-          {debugMode ? 'Hide Debug' : 'Show Debug'}
-        </button>
-        <button
-          onClick={() => setShowPlayerStats(!showPlayerStats)}
-          className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
-            showPlayerStats 
-              ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-              : 'bg-gray-600 hover:bg-gray-700 text-white'
-          }`}
-        >
-          {showPlayerStats ? 'Hide Stats' : 'Show Stats'}
-        </button>
-        {selectedTile && (
           <button
-            onClick={() => setSelectedTile(null)}
-            className="px-4 py-2 rounded-lg font-semibold transition-colors text-sm bg-yellow-600 hover:bg-yellow-700 text-white"
+            onClick={() => setDebugMode(!debugMode)}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${debugMode
+                ? 'bg-red-600 hover:bg-red-700 text-white'
+                : 'bg-gray-600 hover:bg-gray-700 text-white'
+              }`}
           >
-            Clear Selection
+            {debugMode ? 'Hide Debug' : 'Show Debug'}
           </button>
-        )}
+          <button
+            onClick={() => setShowPlayerStats(!showPlayerStats)}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${showPlayerStats
+                ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                : 'bg-gray-600 hover:bg-gray-700 text-white'
+              }`}
+          >
+            {showPlayerStats ? 'Hide Stats' : 'Show Stats'}
+          </button>
+          {selectedTile && (
+            <button
+              onClick={() => setSelectedTile(null)}
+              className="px-4 py-2 rounded-lg font-semibold transition-colors text-sm bg-yellow-600 hover:bg-yellow-700 text-white"
+            >
+              Clear Selection
+            </button>
+          )}
         </div>
       </div>
-      
+
       {/* Gathering Progress Display */}
       {gatheringProgress && (
-        <div className={`mb-4 p-4 rounded-lg ${
-          gatheringProgress.resourceType === 'stick' 
-            ? 'bg-green-50 border border-green-200' 
+        <div className={`mb-4 p-4 rounded-lg ${gatheringProgress.resourceType === 'stick'
+            ? 'bg-green-50 border border-green-200'
             : gatheringProgress.resourceType === 'thatch'
-            ? 'bg-yellow-50 border border-yellow-200'
-            : 'bg-gray-50 border border-gray-200'
-        }`}>
+              ? 'bg-yellow-50 border border-yellow-200'
+              : 'bg-gray-50 border border-gray-200'
+          }`}>
           <div className="flex items-center justify-between mb-2">
-            <h3 className={`text-lg font-semibold ${
-              gatheringProgress.resourceType === 'stick' 
-                ? 'text-green-800' 
+            <GatherProgressComponent gatheringProgress={gatheringProgress} />
+            <span className={`text-sm font-medium ${gatheringProgress.resourceType === 'stick'
+                ? 'text-green-600'
                 : gatheringProgress.resourceType === 'thatch'
-                ? 'text-yellow-800'
-                : 'text-gray-800'
-            }`}>
-              Gathering {gatheringProgress.resourceType === 'stick' ? 'Sticks' : gatheringProgress.resourceType === 'thatch' ? 'Thatch' : 'Stone'} from {gatheringProgress.resourceType === 'stick' ? 'Tree' : gatheringProgress.resourceType === 'thatch' ? 'Grass' : 'Stone'} at ({gatheringProgress.tile.x}, {gatheringProgress.tile.y})
-            </h3>
-            <span className={`text-sm font-medium ${
-              gatheringProgress.resourceType === 'stick' 
-                ? 'text-green-600' 
-                : gatheringProgress.resourceType === 'thatch'
-                ? 'text-yellow-600'
-                : 'text-gray-600'
-            }`}>
+                  ? 'text-yellow-600'
+                  : 'text-gray-600'
+              }`}>
               {gatheringProgress.progress}%
             </span>
           </div>
-          <div className={`w-full rounded-full h-3 ${
-            gatheringProgress.resourceType === 'stick' 
-              ? 'bg-green-200' 
+          <div className={`w-full rounded-full h-3 ${gatheringProgress.resourceType === 'stick'
+              ? 'bg-green-200'
               : gatheringProgress.resourceType === 'thatch'
-              ? 'bg-yellow-200'
-              : 'bg-gray-200'
-          }`}>
-            <div 
-              className={`h-3 rounded-full transition-all duration-300 ease-out ${
-                gatheringProgress.resourceType === 'stick' 
-                  ? 'bg-green-600' 
+                ? 'bg-yellow-200'
+                : 'bg-gray-200'
+            }`}>
+            <div
+              className={`h-3 rounded-full transition-all duration-300 ease-out ${gatheringProgress.resourceType === 'stick'
+                  ? 'bg-green-600'
                   : gatheringProgress.resourceType === 'thatch'
-                  ? 'bg-yellow-600'
-                  : 'bg-gray-600'
-              }`}
+                    ? 'bg-yellow-600'
+                    : 'bg-gray-600'
+                }`}
               style={{ width: `${gatheringProgress.progress}%` }}
             ></div>
           </div>
         </div>
       )}
-      
+
       <div className="flex gap-6">
         {/* Map Component */}
         <div className="flex-shrink-0">
@@ -286,7 +278,7 @@ export default function MapPage() {
             onTileSelect={handleTileSelect}
           />
         </div>
-        
+
         {/* Info Panels */}
         <div className="flex-1 min-w-0 space-y-4">
           {showPlayerStats && (
@@ -294,7 +286,7 @@ export default function MapPage() {
               onClose={() => setShowPlayerStats(false)}
             />
           )}
-          
+
           {selectedTile && (
             <SelectedTileComponent
               selectedTile={selectedTile}
@@ -302,16 +294,18 @@ export default function MapPage() {
               containsTree={selectedTreeTile?.type === 't' || false}
               containsStone={selectedTreeTile?.type === 's' || false}
               containsThatch={containsThatch || false}
+              containsWater={selectedMapTile?.type === 'w' || false}
               onGatherStick={handleGatherStick}
               onGatherStone={handleGatherStone}
               onGatherThatch={handleGatherThatch}
+              onDrinkWater={handleDrinkWater}
               onClose={() => handleTileSelect(null, null)}
               isGathering={gatheringProgress?.isActive || false}
             />
           )}
         </div>
       </div>
-      
+
       <div className="mt-6 text-sm text-gray-600">
         <p className="mb-4">
           <span className="font-medium">Map size:</span> {maxX + 1} × {maxY + 1} tiles

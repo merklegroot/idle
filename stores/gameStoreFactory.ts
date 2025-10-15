@@ -807,3 +807,21 @@ export function updatePlayerWarmthFactory(set: (fn: (state: GameState) => Partia
     }));
   }
 }
+
+export function drinkWaterFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (): void {
+    const state = get();
+    const currentStats = state.playerStats;
+    
+    // Increase hydration by 20, capped at 100
+    const newHydration = Math.min(100, currentStats.hydration + 20);
+    
+    set((state) => ({
+      ...state,
+      playerStats: {
+        ...state.playerStats,
+        hydration: newHydration
+      }
+    }));
+  }
+}

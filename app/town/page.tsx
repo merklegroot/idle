@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import useGameStore from '@/stores/gameStore';
 import { formattingUtil } from '@/utils/formattingUtil';
 import { HouseDef, TownHallDef } from '@/app/models/ResourceDef';
 import MapComponent from '@/components/MapComponent';
+import SelectedTileComponent from '@/components/SelectedTileComponent';
 import type { MapTile } from '@/models/MapTile';
 import type { TreeMapTile } from '@/models/TreeMapTile';
 
@@ -17,7 +18,8 @@ export default function Town() {
     getHomeUpgradeCost,
     canBuildHome,
     canUpgradeHome,
-    getResource 
+    getResource,
+    drinkWater
   } = useGameStore();
   
   const wood = getResource('wood');
@@ -127,9 +129,17 @@ export default function Town() {
 }
 
 function TownMap() {
+  const { drinkWater } = useGameStore();
   const [mapData, setMapData] = useState<MapTile[]>([]);
   const [treeData, setTreeData] = useState<TreeMapTile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedTile, setSelectedTile] = useState<{ x: number; y: number } | null>(null);
+  const [drinkingProgress, setDrinkingProgress] = useState<{
+    isActive: boolean
+    progress: number
+    tile: { x: number; y: number }
+  } | null>(null);
+  const completionHandled = useRef(false);
 
   useEffect(() => {
     const loadMapData = async () => {
@@ -148,6 +158,79 @@ function TownMap() {
     loadMapData();
   }, []);
 
+  useEffect(() => {
+    const handleDrinkWater = () => {
+      console.log('Custom drinkWater event received');
+      startDrinking();
+    };
+
+    window.addEventListener('drinkWater', handleDrinkWater);
+    return () => window.removeEventListener('drinkWater', handleDrinkWater);
+  }, []);
+
+  const startDrinking = () => {
+    console.log('startDrinking called');
+    if (!selectedTile) return;
+    
+    // Reset completion flag
+    completionHandled.current = false;
+    
+    // Start drinking progress
+    setDrinkingProgress({
+      isActive: true,
+      progress: 0,
+      tile: selectedTile
+    });
+    
+    // Simulate drinking progress over 2 seconds
+    const interval = setInterval(() => {
+      setDrinkingProgress(prev => {
+        if (!prev) return null;
+        
+        const newProgress = prev.progress + 10;
+        if (newProgress >= 100) {
+          clearInterval(interval);
+          
+          // Only handle completion once
+          if (!completionHandled.current) {
+            completionHandled.current = true;
+            setTimeout(() => {
+              // Increase hydration after delay
+              drinkWater();
+              setDrinkingProgress(null);
+            }, 500);
+          }
+          
+          return {
+            ...prev,
+            progress: 100
+          };
+        }
+        
+        return {
+          ...prev,
+          progress: newProgress
+        };
+      });
+    }, 200);
+  };
+
+  const handleDrinkWater = useCallback(() => {
+    console.log('handleDrinkWater called');
+    startDrinking();
+  }, [selectedTile]);
+
+  const handleTileSelect = (x: number | null, y: number | null) => {
+    if (x !== null && y !== null) {
+      setSelectedTile({ x, y });
+    } else {
+      setSelectedTile(null);
+    }
+  };
+
+  const selectedMapTile = selectedTile ? mapData.find(tile => tile.x === selectedTile.x && tile.y === selectedTile.y) : null;
+  const selectedTreeTile = selectedTile ? treeData.find(tile => tile.x === selectedTile.x && tile.y === selectedTile.y) : null;
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -157,17 +240,53 @@ function TownMap() {
   }
 
   return (
-    <div className="flex justify-center">
-      <MapComponent
-        mapData={mapData}
-        treeData={treeData}
-        shouldShowGrid={false}
-        shouldShowTileLetters={false}
-        shouldShowTileVariants={false}
-        isDebugMode={false}
-        selectedTile={null}
-        onTileSelect={() => {}}
-      />
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-center">
+        <MapComponent
+          mapData={mapData}
+          treeData={treeData}
+          shouldShowGrid={false}
+          shouldShowTileLetters={false}
+          shouldShowTileVariants={false}
+          isDebugMode={false}
+          selectedTile={selectedTile}
+          onTileSelect={handleTileSelect}
+        />
+      </div>
+      
+      {/* Drinking Progress Display */}
+      {drinkingProgress && (
+        <div className="mb-4 p-4 rounded-lg bg-blue-50 border border-blue-200">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-semibold text-blue-800">
+              Drinking Water at ({drinkingProgress.tile.x}, {drinkingProgress.tile.y})
+            </h3>
+            <span className="text-sm font-medium text-blue-600">
+              {drinkingProgress.progress}%
+            </span>
+          </div>
+          <div className="w-full rounded-full h-3 bg-blue-200">
+            <div 
+              className="h-3 rounded-full transition-all duration-300 ease-out bg-blue-600"
+              style={{ width: `${drinkingProgress.progress}%` }}
+            ></div>
+          </div>
+        </div>
+      )}
+      
+      {selectedTile && (
+        <>
+          <SelectedTileComponent
+            selectedTile={selectedTile}
+            tileType={selectedMapTile?.type || null}
+            containsTree={selectedTreeTile?.type === 't' || false}
+            containsStone={selectedTreeTile?.type === 's' || false}
+            containsThatch={false}
+            onClose={() => handleTileSelect(null, null)}
+            isGathering={drinkingProgress?.isActive || false}
+          />
+        </>
+      )}
     </div>
   );
 }

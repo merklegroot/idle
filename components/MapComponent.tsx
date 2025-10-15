@@ -65,7 +65,7 @@ function getTileVariant(tile: MapTile, mapData: MapTile[]): string {
   if (tile.type === 'g') {
     return 'grass'
   }
-  
+
   if (tile.type === 'l') {
     return 'housing'
   }
@@ -101,7 +101,7 @@ function calculateVerticalOffset(imageWidth: number, imageHeight: number, tileSi
 function TreeImage({ src, alt, tileSize }: { src: string, alt: string, tileSize: number }) {
   const [imageDimensions, setImageDimensions] = useState<{ width: number, height: number } | null>(null)
   const [drawingOffset, setDrawingOffset] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
-  
+
   useEffect(() => {
     const img = document.createElement('img')
     img.onload = () => {
@@ -109,21 +109,21 @@ function TreeImage({ src, alt, tileSize }: { src: string, alt: string, tileSize:
     }
     img.src = src
   }, [src])
-  
+
   // Fetch drawing offset from sprite definitions
   useEffect(() => {
     const fetchDrawingOffset = async () => {
       try {
         const response = await fetch('/api/assets/slice-definitions')
         const data = await response.json()
-        
+
         if (data.success && data.definitions) {
           // Find the definition for this image
           const definition = data.definitions.find((def: any) => def.imagePath === src)
           if (definition) {
-            setDrawingOffset({ 
-              x: definition.drawingOffsetX ?? 0, 
-              y: definition.drawingOffsetY ?? 0 
+            setDrawingOffset({
+              x: definition.drawingOffsetX ?? 0,
+              y: definition.drawingOffsetY ?? 0
             })
           }
         }
@@ -131,16 +131,16 @@ function TreeImage({ src, alt, tileSize }: { src: string, alt: string, tileSize:
         console.error('Failed to fetch sprite definitions:', error)
       }
     }
-    
+
     fetchDrawingOffset()
   }, [src])
-  
-  const calculatedOffset = imageDimensions 
+
+  const calculatedOffset = imageDimensions
     ? calculateVerticalOffset(imageDimensions.width, imageDimensions.height, tileSize)
     : 0
-  
+
   const totalOffset = calculatedOffset + drawingOffset.y
-  
+
   return (
     <Image
       src={src}
@@ -168,12 +168,12 @@ interface MapComponentProps {
   onTileSelect?: (x: number, y: number) => void
 }
 
-export default function MapComponent({ 
-  mapData, 
-  treeData, 
-  shouldShowGrid, 
-  shouldShowTileLetters, 
-  shouldShowTileVariants, 
+export default function MapComponent({
+  mapData,
+  treeData,
+  shouldShowGrid,
+  shouldShowTileLetters,
+  shouldShowTileVariants,
   isDebugMode,
   selectedTile,
   onTileSelect
@@ -182,13 +182,13 @@ export default function MapComponent({
   const maxX = Math.max(...mapData.map(tile => tile.x))
   const maxY = Math.max(...mapData.map(tile => tile.y))
   const tileSize = 64 // Size of each tile in pixels (doubled from 32)
-  
+
   // Track hovered tile
   const [hoveredTile, setHoveredTile] = useState<{ x: number; y: number } | null>(null)
 
   return (
     <div className="bg-gray-100 p-4 rounded-lg inline-block">
-      <div 
+      <div
         className="grid gap-0 relative"
         style={{
           gridTemplateColumns: `repeat(${maxX + 1}, ${tileSize}px)`,
@@ -198,7 +198,7 @@ export default function MapComponent({
         {mapData.map((tile, index) => {
           const variant = getTileVariant(tile, mapData)
           const tileVariant = TILE_VARIANTS[variant]
-          
+
           // Debug logging for bottom row
           if (tile.y === 3 && tile.type === 'p') {
             const neighbors = {
@@ -207,46 +207,44 @@ export default function MapComponent({
               left: pathUtil.getTileAt(tile.x - 1, tile.y, mapData),
               right: pathUtil.getTileAt(tile.x + 1, tile.y, mapData),
             }
-            console.log(`Tile at (${tile.x}, ${tile.y}): variant=${variant}`)
-            console.log(`  Neighbors: top=${neighbors.top?.type || 'null'}, bottom=${neighbors.bottom?.type || 'null'}, left=${neighbors.left?.type || 'null'}, right=${neighbors.right?.type || 'null'}`)
           }
-          
-            const isSelected = selectedTile?.x === tile.x && selectedTile?.y === tile.y
-            const isHovered = hoveredTile?.x === tile.x && hoveredTile?.y === tile.y
-            
-            return (
-              <div
-                key={`${tile.x}-${tile.y}`}
-                className="relative cursor-pointer transition-all duration-200"
-                style={{
-                  gridColumn: tile.x + 1,
-                  gridRow: tile.y + 1
-                }}
-                onClick={() => {
-                  if (isSelected) {
-                    onTileSelect?.(null, null) // Unselect if already selected
-                  } else {
-                    onTileSelect?.(tile.x, tile.y) // Select if not selected
-                  }
-                }}
-                onMouseEnter={() => setHoveredTile({ x: tile.x, y: tile.y })}
-                onMouseLeave={() => setHoveredTile(null)}
-              >
+
+          const isSelected = selectedTile?.x === tile.x && selectedTile?.y === tile.y
+          const isHovered = hoveredTile?.x === tile.x && hoveredTile?.y === tile.y
+
+          return (
+            <div
+              key={`${tile.x}-${tile.y}`}
+              className="relative cursor-pointer transition-all duration-200"
+              style={{
+                gridColumn: tile.x + 1,
+                gridRow: tile.y + 1
+              }}
+              onClick={() => {
+                if (isSelected) {
+                  onTileSelect?.(null, null) // Unselect if already selected
+                } else {
+                  onTileSelect?.(tile.x, tile.y) // Select if not selected
+                }
+              }}
+              onMouseEnter={() => setHoveredTile({ x: tile.x, y: tile.y })}
+              onMouseLeave={() => setHoveredTile(null)}
+            >
               {variant === 'grass' ? (
                 <div className="relative">
-                <Image
-                  src={tileVariant.src}
-                  alt="Grass"
-                  width={tileSize}
-                  height={tileSize}
-                  className="block"
-                  unoptimized
-                  style={{
-                    imageRendering: 'pixelated'
-                  }}
-                />
+                  <Image
+                    src={tileVariant.src}
+                    alt="Grass"
+                    width={tileSize}
+                    height={tileSize}
+                    className="block"
+                    unoptimized
+                    style={{
+                      imageRendering: 'pixelated'
+                    }}
+                  />
                   {shouldShowTileLetters && (
-                    <div 
+                    <div
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.8}px` }}
                     >
@@ -254,7 +252,7 @@ export default function MapComponent({
                     </div>
                   )}
                   {shouldShowTileVariants && (
-                    <div 
+                    <div
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.4}px` }}
                     >
@@ -276,7 +274,7 @@ export default function MapComponent({
                     }}
                   />
                   {shouldShowTileLetters && (
-                    <div 
+                    <div
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.8}px` }}
                     >
@@ -284,7 +282,7 @@ export default function MapComponent({
                     </div>
                   )}
                   {shouldShowTileVariants && (
-                    <div 
+                    <div
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.4}px` }}
                     >
@@ -293,13 +291,13 @@ export default function MapComponent({
                   )}
                 </div>
               ) : (
-                <div 
+                <div
                   className="relative overflow-hidden"
                   style={{ width: tileSize, height: tileSize }}
                 >
                   {variant === 'path-3x3-grid' ? (
                     // Render composite 3x3 grid for all path tiles
-                    <div 
+                    <div
                       className="absolute inset-0"
                       style={{
                         display: 'grid',
@@ -347,7 +345,7 @@ export default function MapComponent({
                     </div>
                   )}
                   {shouldShowTileLetters && (
-                    <div 
+                    <div
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.8}px` }}
                     >
@@ -355,9 +353,9 @@ export default function MapComponent({
                     </div>
                   )}
                   {shouldShowTileVariants && (
-                    <div 
+                    <div
                       className="absolute inset-0 pointer-events-none"
-                      style={{ 
+                      style={{
                         display: 'grid',
                         gridTemplateColumns: '1fr 1fr 1fr',
                         gridTemplateRows: '1fr 1fr 1fr',
@@ -379,7 +377,7 @@ export default function MapComponent({
                   )}
                 </div>
               )}
-              
+
               {/* Tree overlay */}
               {hasTreeAt(tile.x, tile.y, treeData) && (
                 <div className="absolute inset-0 pointer-events-none">
@@ -389,7 +387,7 @@ export default function MapComponent({
                     tileSize={tileSize}
                   />
                   {shouldShowTileLetters && (
-                    <div 
+                    <div
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.6}px` }}
                     >
@@ -398,18 +396,18 @@ export default function MapComponent({
                   )}
                 </div>
               )}
-              
+
               {/* Stone overlay */}
               {hasStoneAt(tile.x, tile.y, treeData) && (
                 <div className="absolute inset-0 pointer-events-none">
-                  <div 
+                  <div
                     className="flex items-center justify-center"
                     style={{ fontSize: `${tileSize * 0.6}px` }}
                   >
                     <span className="text-gray-600 font-bold drop-shadow-lg">🪨</span>
                   </div>
                   {shouldShowTileLetters && (
-                    <div 
+                    <div
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                       style={{ fontSize: `${tileSize * 0.6}px` }}
                     >
@@ -418,14 +416,14 @@ export default function MapComponent({
                   )}
                 </div>
               )}
-              
+
               {/* Selection overlay */}
               {isSelected && (
                 <div className="absolute inset-0 pointer-events-none">
                   <div className="absolute inset-0 border-2 border-dashed border-yellow-500"></div>
                 </div>
               )}
-              
+
               {/* Hover overlay */}
               {isHovered && (
                 <div className="absolute inset-0 pointer-events-none">
@@ -435,12 +433,12 @@ export default function MapComponent({
             </div>
           )
         })}
-        
+
         {/* Grid overlay - placed after tiles so it renders on top */}
         {shouldShowGrid && (
           <>
             {/* Main grid (tile boundaries) */}
-            <div 
+            <div
               className="absolute inset-0 pointer-events-none"
               style={{
                 backgroundImage: `
@@ -452,9 +450,9 @@ export default function MapComponent({
                 height: `${(maxY + 1) * tileSize}px`
               }}
             />
-            
+
             {/* Sub-grid for split tiles (3x3 subdivisions within each tile) */}
-            <div 
+            <div
               className="absolute inset-0 pointer-events-none"
               style={{
                 backgroundImage: `

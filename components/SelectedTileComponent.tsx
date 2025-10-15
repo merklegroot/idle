@@ -1,16 +1,18 @@
 'use client'
 
 interface SelectedTileComponentProps {
-  selectedTile: { x: number; y: number } | null
-  tileType: string | null
-  containsTree: boolean
-  containsStone: boolean
-  containsThatch: boolean
-  onGatherStick?: () => void
-  onGatherStone?: () => void
-  onGatherThatch?: () => void
-  onClose?: () => void
-  isGathering?: boolean
+  selectedTile: { x: number; y: number } | null;
+  tileType: string | null;
+  containsTree: boolean;
+  containsStone: boolean;
+  containsThatch: boolean;
+  containsWater: boolean;
+  onGatherStick?: () => void;
+  onGatherStone?: () => void;
+  onGatherThatch?: () => void;
+  onDrinkWater?: () => void;
+  onClose?: () => void;
+  isGathering?: boolean;
 }
 
 function getTileTypeText(tileType: string | null | undefined) {
@@ -51,16 +53,16 @@ export default function SelectedTileComponent({
   containsTree,
   containsStone,
   containsThatch,
+  containsWater,
   onGatherStick,
   onGatherStone,
   onGatherThatch,
+  onDrinkWater,
   onClose,
   isGathering = false
 }: SelectedTileComponentProps) {
-  if (!selectedTile) {
+  if (!selectedTile)
     return null
-  }
-
 
   function getResourcesText() {
     let resources: string[] = [];
@@ -72,6 +74,9 @@ export default function SelectedTileComponent({
 
     if (containsThatch)
       resources.push('Thatch');
+
+    if (containsWater)
+      resources.push('Water');
 
     if (resources.length === 0)
       return 'None';
@@ -146,6 +151,21 @@ export default function SelectedTileComponent({
                 }`}
             >
               {isGathering ? 'Gathering...' : 'Gather Thatch'}
+            </button>
+          </div>
+        )}
+
+        {tileType === 'w' && (
+          <div className="mt-3">
+            <button
+              onClick={onDrinkWater}
+              disabled={isGathering}
+              className={`w-full px-4 py-2 font-semibold rounded-lg transition-colors duration-200 ${isGathering
+                ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
+                }`}
+            >
+              {isGathering ? 'Drinking...' : 'Drink Water'}
             </button>
           </div>
         )}
