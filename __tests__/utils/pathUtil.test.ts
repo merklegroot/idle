@@ -1,6 +1,6 @@
 import { pathUtil } from '../../utils/pathUtil';
 import type { MapTile } from '@/models/MapTile';
-import type { TreeMapTile } from '@/models/TreeMapTile';
+import type { SceneryTileMap } from '@/models/SceneryTileMap';
 import os from 'os';
 
 describe('pathUtil', () => {

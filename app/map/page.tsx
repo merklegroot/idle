@@ -3,18 +3,20 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import type { MapTile } from '@/models/MapTile'
-import type { TreeMapTile } from '@/models/TreeMapTile'
+import type { SceneryTileMap } from '@/models/SceneryTileMap'
 import MapComponent from '@/components/MapComponent'
 import SelectedTileComponent from '@/components/SelectedTileComponent'
 import PlayerStatsPanel from '@/components/PlayerStatsPanel'
 import CompactDayNightCycle from '@/components/CompactDayNightCycle'
 import useGameStore from '@/stores/gameStore'
 import GatherProgressComponent from '@/components/GatherProgressComponent'
+import { TerrainEnum } from '@/models/TerrainEnum'
+import { SceneryEnum } from '@/models/SceneryEnum'
 
 export default function MapPage() {
   const { addResourceAmount, initializeResource, getResource, drinkWater } = useGameStore()
   const [mapData, setMapData] = useState<MapTile[]>([])
-  const [treeData, setTreeData] = useState<TreeMapTile[]>([])
+  const [treeData, setTreeData] = useState<SceneryTileMap[]>([])
   const [loading, setLoading] = useState(true)
   const [debugMode, setDebugMode] = useState(false)
   const [shouldShowGrid, setShouldShowGrid] = useState(false)
@@ -69,7 +71,7 @@ export default function MapPage() {
     : null
 
   // Check if selected tile contains thatch (grass tiles)
-  const containsThatch = selectedTile && selectedMapTile?.type === 'g'
+  const containsThatch = selectedTile && selectedMapTile?.terrainType === TerrainEnum.Grass;
 
   const handleTileSelect = (x: number | null, y: number | null) => {
     if (x === null || y === null) {
@@ -290,11 +292,11 @@ export default function MapPage() {
           {selectedTile && (
             <SelectedTileComponent
               selectedTile={selectedTile}
-              tileType={selectedMapTile?.type || null}
-              containsTree={selectedTreeTile?.type === 't' || false}
-              containsStone={selectedTreeTile?.type === 's' || false}
+              terrainType={selectedMapTile?.terrainType || null}
+              containsTree={selectedTreeTile?.sceneryType === SceneryEnum.Tree || false}
+              containsStone={selectedTreeTile?.sceneryType === SceneryEnum.Rock || false}
               containsThatch={containsThatch || false}
-              containsWater={selectedMapTile?.type === 'w' || false}
+              containsWater={selectedMapTile?.terrainType === TerrainEnum.Water || false}
               onGatherStick={handleGatherStick}
               onGatherStone={handleGatherStone}
               onGatherThatch={handleGatherThatch}

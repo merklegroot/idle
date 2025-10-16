@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import type { MapTile } from '@/models/MapTile'
-import type { TreeMapTile } from '@/models/TreeMapTile'
+import type { SceneryTileMap } from '@/models/SceneryTileMap'
 import { pathUtil } from '@/utils/pathUtil'
+import { TerrainEnum } from '@/models/TerrainEnum'
+import { SceneryEnum } from '@/models/SceneryEnum'
 
 interface TileVariant {
   src: string
@@ -62,15 +64,15 @@ const TILE_VARIANTS: { [key: string]: TileVariant } = {
 
 // Function to determine tile variant based on neighbors
 function getTileVariant(tile: MapTile, mapData: MapTile[]): string {
-  if (tile.type === 'g') {
+  if (tile.terrainType === TerrainEnum.Grass) {
     return 'grass'
   }
 
-  if (tile.type === 'l') {
+  if (tile.terrainType === TerrainEnum.HousingPlot) {
     return 'housing'
   }
 
-  if (tile.type === 'w') {
+  if (tile.terrainType === TerrainEnum.Water) {
     return 'water'
   }
 
@@ -79,13 +81,13 @@ function getTileVariant(tile: MapTile, mapData: MapTile[]): string {
 }
 
 // Helper function to check if there's a tree at specific coordinates
-function hasTreeAt(x: number, y: number, treeData: TreeMapTile[]): boolean {
-  return treeData.some(tree => tree.x === x && tree.y === y && tree.type === 't')
+function hasTreeAt(x: number, y: number, treeData: SceneryTileMap[]): boolean {
+  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === SceneryEnum.Tree)
 }
 
 // Helper function to check if there's a stone at specific coordinates
-function hasStoneAt(x: number, y: number, treeData: TreeMapTile[]): boolean {
-  return treeData.some(tree => tree.x === x && tree.y === y && tree.type === 's')
+function hasStoneAt(x: number, y: number, treeData: SceneryTileMap[]): boolean {
+  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === SceneryEnum.Rock)
 }
 
 // Helper function to calculate vertical offset for non-square images
@@ -159,13 +161,13 @@ function TreeImage({ src, alt, tileSize }: { src: string, alt: string, tileSize:
 
 interface MapComponentProps {
   mapData: MapTile[]
-  treeData: TreeMapTile[]
+  treeData: SceneryTileMap[]
   shouldShowGrid: boolean
   shouldShowTileLetters: boolean
   shouldShowTileVariants: boolean
   isDebugMode: boolean
   selectedTile?: { x: number; y: number } | null
-  onTileSelect?: (x: number, y: number) => void
+  onTileSelect?: (x: number | null, y: number | null) => void
 }
 
 export default function MapComponent({
@@ -200,7 +202,7 @@ export default function MapComponent({
           const tileVariant = TILE_VARIANTS[variant]
 
           // Debug logging for bottom row
-          if (tile.y === 3 && tile.type === 'p') {
+          if (tile.y === 3 && tile.terrainType === TerrainEnum.Path) {
             const neighbors = {
               top: pathUtil.getTileAt(tile.x, tile.y - 1, mapData),
               bottom: pathUtil.getTileAt(tile.x, tile.y + 1, mapData),

@@ -1,10 +1,11 @@
 'use client'
 
+import { TerrainEnum } from "@/models/TerrainEnum";
 import { GatherButton } from "./GatherButton";
 
 interface SelectedTileComponentProps {
   selectedTile: { x: number; y: number } | null;
-  tileType: string | null;
+  terrainType: TerrainEnum | undefined | null;
   containsTree: boolean;
   containsStone: boolean;
   containsThatch: boolean;
@@ -17,33 +18,33 @@ interface SelectedTileComponentProps {
   isGathering?: boolean;
 }
 
-function getTileTypeText(tileType: string | null | undefined) {
-  if (tileType === 'g')
+function getTileTypeText(terrainType: TerrainEnum | undefined | null) {
+  if (terrainType === TerrainEnum.Grass)
     return 'Grass';
 
-  if (tileType === 'p')
+  if (terrainType === TerrainEnum.Path)
     return 'Path';
 
-  if (tileType === 'l')
+  if (terrainType === TerrainEnum.HousingPlot)
     return 'Housing Plot';
 
-  if (tileType === 'w')
+  if (terrainType === TerrainEnum.Water)
     return 'Water';
 
   return 'Unknown';
 }
 
-function getTileTypeIcon(tileType: string | null | undefined) {
-  if (tileType === 'g')
+function getTileTypeIcon(terrainType: TerrainEnum | undefined | null) {
+  if (terrainType === TerrainEnum.Grass)
     return '🌱';
 
-  if (tileType === 'p')
+  if (terrainType === TerrainEnum.Path)
     return '🛤️';
 
-  if (tileType === 'l')
+  if (terrainType === TerrainEnum.HousingPlot)
     return '🏠';
 
-  if (tileType === 'w')
+  if (terrainType === TerrainEnum.Water)
     return '🌊';
 
   return '❓';
@@ -51,7 +52,7 @@ function getTileTypeIcon(tileType: string | null | undefined) {
 
 export default function SelectedTileComponent({
   selectedTile,
-  tileType,
+  terrainType,
   containsTree,
   containsStone,
   containsThatch,
@@ -90,8 +91,8 @@ export default function SelectedTileComponent({
     <div className="bg-white rounded-lg border border-gray-200 p-4 h-fit">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-          <span className="text-2xl">{getTileTypeIcon(tileType)}</span>
-          {getTileTypeText(tileType)} ({selectedTile.x}, {selectedTile.y})
+          <span className="text-2xl">{getTileTypeIcon(terrainType)}</span>
+          {getTileTypeText(terrainType)} ({selectedTile.x}, {selectedTile.y})
         </h2>
         {onClose && (
           <button

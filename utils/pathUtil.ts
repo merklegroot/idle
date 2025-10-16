@@ -1,5 +1,7 @@
-import type { MapTile } from "@/models/MapTile";
-import type { TreeMapTile } from "@/models/TreeMapTile";
+import { parseTerrainType, type MapTile } from "@/models/MapTile";
+import { TerrainEnum } from "@/models/TerrainEnum";
+import type { SceneryTileMap } from "@/models/SceneryTileMap";
+import { SceneryEnum } from "@/models/SceneryEnum";
 
 // Helper function to get tile at specific coordinates
 function getTileAt(x: number, y: number, mapData: MapTile[]): MapTile | null {
@@ -26,14 +28,14 @@ function getSubTileAt(
     }
 
     // Determine if each direction has a path tile (not grass or null)
-    const hasPathTop = neighbors.top?.type === 'p';
-    const hasPathBottom = neighbors.bottom?.type === 'p';
-    const hasPathLeft = neighbors.left?.type === 'p';
-    const hasPathRight = neighbors.right?.type === 'p';
-    const hasPathTopLeft = neighbors.topLeft?.type === 'p';
-    const hasPathTopRight = neighbors.topRight?.type === 'p';
-    const hasPathBottomLeft = neighbors.bottomLeft?.type === 'p';
-    const hasPathBottomRight = neighbors.bottomRight?.type === 'p';
+    const hasPathTop = neighbors.top?.terrainType === TerrainEnum.Path;
+    const hasPathBottom = neighbors.bottom?.terrainType === TerrainEnum.Path;
+    const hasPathLeft = neighbors.left?.terrainType === TerrainEnum.Path;
+    const hasPathRight = neighbors.right?.terrainType === TerrainEnum.Path;
+    const hasPathTopLeft = neighbors.topLeft?.terrainType === TerrainEnum.Path;
+    const hasPathTopRight = neighbors.topRight?.terrainType === TerrainEnum.Path;
+    const hasPathBottomLeft = neighbors.bottomLeft?.terrainType === TerrainEnum.Path;
+    const hasPathBottomRight = neighbors.bottomRight?.terrainType === TerrainEnum.Path;
 
     // Determine the sub-tile variant based on position and neighbors
     if (subTileCoord.x === 0 && subTileCoord.y === 0) {
@@ -171,9 +173,26 @@ function parseMapData(mapData: string): MapTile[] {
     
     lines.forEach((line, y) => {
         line.split('').forEach((char, x) => {
-            if (char === 'g' || char === 'p' || char === 'l' || char === 'w') {
+            tiles.push({
+                terrainType: parseTerrainType(char),
+                x,
+                y
+            });
+        });
+    });
+    
+    return tiles;
+}
+
+function parseTreeMapData(treeMapData: string): SceneryTileMap[] {
+    const lines = treeMapData.trim().split('\n');
+    const tiles: SceneryTileMap[] = [];
+    
+    lines.forEach((line, y) => {
+        line.split('').forEach((char, x) => {
+            if (char === '.' || char === 't' || char === 's') {
                 tiles.push({
-                    type: char as 'g' | 'p' | 'l' | 'w',
+                    sceneryType: parseSceneryType(char),
                     x,
                     y
                 });
@@ -184,23 +203,15 @@ function parseMapData(mapData: string): MapTile[] {
     return tiles;
 }
 
-function parseTreeMapData(treeMapData: string): TreeMapTile[] {
-    const lines = treeMapData.trim().split('\n');
-    const tiles: TreeMapTile[] = [];
-    
-    lines.forEach((line, y) => {
-        line.split('').forEach((char, x) => {
-            if (char === '.' || char === 't' || char === 's') {
-                tiles.push({
-                    type: char as '.' | 't' | 's',
-                    x,
-                    y
-                });
-            }
-        });
-    });
-    
-    return tiles;
+function parseSceneryType(sceneryType: string): SceneryEnum {
+    if (sceneryType === '.')
+        return SceneryEnum.Empty;
+    if (sceneryType === 't')
+        return SceneryEnum.Tree;
+    if (sceneryType === 's')
+        return SceneryEnum.Rock;
+
+    return SceneryEnum.Invalid;
 }
 
 export const pathUtil = {
