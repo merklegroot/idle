@@ -1,16 +1,9 @@
-export default function GatherProgressComponent({ gatheringProgress }: { gatheringProgress: { isActive: boolean, progress: number, tile: { x: number, y: number }, resourceType: 'stick' | 'stone' | 'thatch' | 'water' } }) {
-  const resourceColorClass = 
-    gatheringProgress.resourceType === 'stick' ? 'text-green-800' :
-    gatheringProgress.resourceType === 'thatch' ? 'text-yellow-800' :
-    gatheringProgress.resourceType === 'stone' ? 'text-gray-800' :
-    gatheringProgress.resourceType === 'water' ? 'text-blue-800' :
-    'text-gray-800';
+import { getResourceColorClass, getResourceDisplayName } from "@/models/ResourceType";
 
-  const resourceDisplayName = gatheringProgress.resourceType === 'stick' ? 'Sticks' 
-    : gatheringProgress.resourceType === 'thatch' ? 'Thatch'
-    : gatheringProgress.resourceType === 'stone' ? 'Stone'
-    : gatheringProgress.resourceType === 'water' ? 'Water'
-    : gatheringProgress.resourceType;
+export default function GatherProgressComponent({ gatheringProgress }: { gatheringProgress: { isActive: boolean, progress: number, tile: { x: number, y: number }, resourceType: 'stick' | 'stone' | 'thatch' | 'water' } }) {
+  const resourceColorClass = getResourceColorClass(gatheringProgress.resourceType);
+
+  const resourceDisplayName = getResourceDisplayName(gatheringProgress.resourceType);
 
   const verb = gatheringProgress.resourceType === 'water' ? 'Drinking' : 'Gathering';
 

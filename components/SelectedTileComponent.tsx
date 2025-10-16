@@ -1,5 +1,7 @@
 'use client'
 
+import { GatherButton } from "./GatherButton";
+
 interface SelectedTileComponentProps {
   selectedTile: { x: number; y: number } | null;
   tileType: string | null;
@@ -112,61 +114,25 @@ export default function SelectedTileComponent({
 
         {containsTree && onGatherStick && (
           <div className="mt-3">
-            <button
-              onClick={onGatherStick}
-              disabled={isGathering}
-              className={`w-full px-4 py-2 font-semibold rounded-lg transition-colors duration-200 ${isGathering
-                ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                : 'bg-green-600 hover:bg-green-700 text-white'
-                }`}
-            >
-              {isGathering ? 'Gathering...' : 'Gather Stick'}
-            </button>
+            <GatherButton resourceType="stick" isActing={isGathering} onPress={onGatherStick} />
           </div>
         )}
 
         {containsStone && onGatherStone && (
           <div className="mt-3">
-            <button
-              onClick={onGatherStone}
-              disabled={isGathering}
-              className={`w-full px-4 py-2 font-semibold rounded-lg transition-colors duration-200 ${isGathering
-                ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                : 'bg-green-600 hover:bg-green-700 text-white'
-                }`}
-            >
-              {isGathering ? 'Gathering...' : 'Gather Stone'}
-            </button>
+            <GatherButton resourceType="stone" isActing={isGathering} onPress={onGatherStone} />
           </div>
         )}
 
         {containsThatch && onGatherThatch && (
           <div className="mt-3">
-            <button
-              onClick={onGatherThatch}
-              disabled={isGathering}
-              className={`w-full px-4 py-2 font-semibold rounded-lg transition-colors duration-200 ${isGathering
-                ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                : 'bg-yellow-600 hover:bg-yellow-700 text-white'
-                }`}
-            >
-              {isGathering ? 'Gathering...' : 'Gather Thatch'}
-            </button>
+            <GatherButton resourceType="thatch" isActing={isGathering} onPress={onGatherThatch} />
           </div>
         )}
 
-        {tileType === 'w' && (
+        {tileType === 'w' && onDrinkWater && (
           <div className="mt-3">
-            <button
-              onClick={onDrinkWater}
-              disabled={isGathering}
-              className={`w-full px-4 py-2 font-semibold rounded-lg transition-colors duration-200 ${isGathering
-                ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
-                }`}
-            >
-              {isGathering ? 'Drinking...' : 'Drink Water'}
-            </button>
+            <GatherButton resourceType="water" isActing={isGathering} onPress={onDrinkWater} />
           </div>
         )}
       </div>
