@@ -130,7 +130,7 @@ export default function SelectedTileComponent({
           </div>
         )}
 
-        {tileType === 'w' && onDrinkWater && (
+        {containsWater && onDrinkWater && (
           <div className="mt-3">
             <GatherButton resourceType="water" isActing={isGathering} onPress={onDrinkWater} />
           </div>
