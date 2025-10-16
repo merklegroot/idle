@@ -25,11 +25,11 @@ export default function PlayerStatsPanel({ onClose }: PlayerStatsPanelProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 h-fit">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-          <span className="text-2xl">👤</span>
-          Player Stats
+    <div className="bg-white rounded-lg border border-gray-200 p-2 h-fit">
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-sm font-semibold text-gray-800 flex items-center gap-1">
+          <span className="text-lg">👤</span>
+          Stats
         </h2>
         {onClose && (
           <button
@@ -37,28 +37,28 @@ export default function PlayerStatsPanel({ onClose }: PlayerStatsPanelProps) {
             className="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1"
             aria-label="Close player stats"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         )}
       </div>
 
-      <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-2">
         {/* Health */}
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <span className="text-lg">❤️</span>
+            <span className="text-xs font-medium text-gray-700 flex items-center gap-1">
+              <span className="text-sm">❤️</span>
               Health
             </span>
-            <span className={`text-sm font-semibold ${getStatColor(stats.health)}`}>
+            <span className={`text-xs font-semibold ${getStatColor(stats.health)}`}>
               {Math.round(stats.health)}%
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div 
-              className={`h-2 rounded-full transition-all duration-300 ${getStatBarColor(stats.health)}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${getStatBarColor(stats.health)}`}
               style={{ width: `${Math.min(100, Math.max(0, stats.health))}%` }}
             ></div>
           </div>
@@ -67,17 +67,17 @@ export default function PlayerStatsPanel({ onClose }: PlayerStatsPanelProps) {
         {/* Warmth */}
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <span className="text-lg">🔥</span>
+            <span className="text-xs font-medium text-gray-700 flex items-center gap-1">
+              <span className="text-sm">🔥</span>
               Warmth
             </span>
-            <span className={`text-sm font-semibold ${getStatColor(stats.warmth)}`}>
+            <span className={`text-xs font-semibold ${getStatColor(stats.warmth)}`}>
               {Math.round(stats.warmth)}%
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div 
-              className={`h-2 rounded-full transition-all duration-300 ${getStatBarColor(stats.warmth)}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${getStatBarColor(stats.warmth)}`}
               style={{ width: `${Math.min(100, Math.max(0, stats.warmth))}%` }}
             ></div>
           </div>
@@ -86,17 +86,17 @@ export default function PlayerStatsPanel({ onClose }: PlayerStatsPanelProps) {
         {/* Food */}
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <span className="text-lg">🍎</span>
+            <span className="text-xs font-medium text-gray-700 flex items-center gap-1">
+              <span className="text-sm">🍎</span>
               Food
             </span>
-            <span className={`text-sm font-semibold ${getStatColor(stats.food)}`}>
+            <span className={`text-xs font-semibold ${getStatColor(stats.food)}`}>
               {Math.round(stats.food)}%
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div 
-              className={`h-2 rounded-full transition-all duration-300 ${getStatBarColor(stats.food)}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${getStatBarColor(stats.food)}`}
               style={{ width: `${Math.min(100, Math.max(0, stats.food))}%` }}
             ></div>
           </div>
@@ -105,17 +105,17 @@ export default function PlayerStatsPanel({ onClose }: PlayerStatsPanelProps) {
         {/* Hydration */}
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <span className="text-lg">💧</span>
+            <span className="text-xs font-medium text-gray-700 flex items-center gap-1">
+              <span className="text-sm">💧</span>
               Hydration
             </span>
-            <span className={`text-sm font-semibold ${getStatColor(stats.hydration)}`}>
+            <span className={`text-xs font-semibold ${getStatColor(stats.hydration)}`}>
               {Math.round(stats.hydration)}%
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div 
-              className={`h-2 rounded-full transition-all duration-300 ${getStatBarColor(stats.hydration)}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${getStatBarColor(stats.hydration)}`}
               style={{ width: `${Math.min(100, Math.max(0, stats.hydration))}%` }}
             ></div>
           </div>
