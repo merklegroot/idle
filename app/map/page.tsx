@@ -218,6 +218,11 @@ export default function MapPage() {
         </div>
       </div>
 
+      {/* Compact Stats Bar */}
+      <div className="mb-4">
+        <CompactStatsBar />
+      </div>
+
       {/* Gathering Progress Display */}
       {gatheringProgress && (
         <div className={`mb-4 p-4 rounded-lg ${gatheringProgress.resourceType === 'stick'
@@ -273,8 +278,6 @@ export default function MapPage() {
 
         {/* Info Panels */}
         <div className="flex-1 min-w-0 space-y-4">
-          <CompactStatsBar />
-
           {selectedTile && (
             <SelectedTileComponent
               selectedTile={selectedTile}
