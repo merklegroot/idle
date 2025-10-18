@@ -10,6 +10,7 @@ import CompactStatsBar from '@/components/CompactStatsBar'
 import CompactDayNightCycle from '@/components/CompactDayNightCycle'
 import useGameStore from '@/stores/gameStore'
 import GatherProgressComponent from '@/components/GatherProgressComponent'
+import GatheringProgressDisplay from '@/components/GatheringProgressDisplay'
 import MapLegend from '@/components/MapLegend'
 import { TerrainEnum } from '@/models/TerrainEnum'
 import { SceneryEnum } from '@/models/SceneryEnum'
@@ -225,42 +226,7 @@ export default function MapPage() {
       </div>
 
       {/* Gathering Progress Display */}
-      {gatheringProgress && (
-        <div className={`mb-4 p-4 rounded-lg ${gatheringProgress.resourceType === 'stick'
-            ? 'bg-green-50 border border-green-200'
-            : gatheringProgress.resourceType === 'thatch'
-              ? 'bg-yellow-50 border border-yellow-200'
-              : 'bg-gray-50 border border-gray-200'
-          }`}>
-          <div className="flex items-center justify-between mb-2">
-            <GatherProgressComponent gatheringProgress={gatheringProgress} />
-            <span className={`text-sm font-medium ${gatheringProgress.resourceType === 'stick'
-                ? 'text-green-600'
-                : gatheringProgress.resourceType === 'thatch'
-                  ? 'text-yellow-600'
-                  : 'text-gray-600'
-              }`}>
-              {gatheringProgress.progress}%
-            </span>
-          </div>
-          <div className={`w-full rounded-full h-3 ${gatheringProgress.resourceType === 'stick'
-              ? 'bg-green-200'
-              : gatheringProgress.resourceType === 'thatch'
-                ? 'bg-yellow-200'
-                : 'bg-gray-200'
-            }`}>
-            <div
-              className={`h-3 rounded-full transition-all duration-300 ease-out ${gatheringProgress.resourceType === 'stick'
-                  ? 'bg-green-600'
-                  : gatheringProgress.resourceType === 'thatch'
-                    ? 'bg-yellow-600'
-                    : 'bg-gray-600'
-                }`}
-              style={{ width: `${gatheringProgress.progress}%` }}
-            ></div>
-          </div>
-        </div>
-      )}
+      <GatheringProgressDisplay gatheringProgress={gatheringProgress} />
 
       <div className="flex gap-6">
         {/* Map Component */}
