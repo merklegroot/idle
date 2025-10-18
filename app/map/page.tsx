@@ -6,7 +6,7 @@ import type { MapTile } from '@/models/MapTile'
 import type { SceneryTileMap } from '@/models/SceneryTileMap'
 import MapComponent from '@/components/MapComponent'
 import SelectedTileComponent from '@/components/SelectedTileComponent'
-import PlayerStatsPanel from '@/components/PlayerStatsPanel'
+import CompactStatsBar from '@/components/CompactStatsBar'
 import CompactDayNightCycle from '@/components/CompactDayNightCycle'
 import useGameStore from '@/stores/gameStore'
 import GatherProgressComponent from '@/components/GatherProgressComponent'
@@ -23,7 +23,6 @@ export default function MapPage() {
   const [shouldShowTileLetters, setShouldShowTileLetters] = useState(false)
   const [shouldShowTileVariants, setShouldShowTileVariants] = useState(false)
   const [selectedTile, setSelectedTile] = useState<{ x: number; y: number } | null>(null)
-  const [showPlayerStats, setShowPlayerStats] = useState(false)
   const [gatheringProgress, setGatheringProgress] = useState<{
     isActive: boolean
     progress: number
@@ -208,15 +207,6 @@ export default function MapPage() {
           >
             {debugMode ? 'Hide Debug' : 'Show Debug'}
           </button>
-          <button
-            onClick={() => setShowPlayerStats(!showPlayerStats)}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${showPlayerStats
-                ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                : 'bg-gray-600 hover:bg-gray-700 text-white'
-              }`}
-          >
-            {showPlayerStats ? 'Hide Stats' : 'Show Stats'}
-          </button>
           {selectedTile && (
             <button
               onClick={() => setSelectedTile(null)}
@@ -283,11 +273,7 @@ export default function MapPage() {
 
         {/* Info Panels */}
         <div className="flex-1 min-w-0 space-y-4">
-          {showPlayerStats && (
-            <PlayerStatsPanel
-              onClose={() => setShowPlayerStats(false)}
-            />
-          )}
+          <CompactStatsBar />
 
           {selectedTile && (
             <SelectedTileComponent
