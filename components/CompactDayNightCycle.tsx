@@ -1,27 +1,20 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import useGameStore from '@/stores/gameStore'
 
 export default function CompactDayNightCycle() {
-  const { updatePlayerWarmth } = useGameStore()
-  const [timeOfDay, setTimeOfDay] = useState(0) // 0-24 hours
-  const [day, setDay] = useState(1)
+  const { updatePlayerWarmth, getTimeOfDay, getDay, advanceTime } = useGameStore()
+  const timeOfDay = getTimeOfDay()
+  const day = getDay()
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeOfDay(prev => {
-        const newTime = prev + 0.1 // Advance time by 0.1 hours every interval
-        if (newTime >= 24) {
-          setDay(prevDay => prevDay + 1)
-          return 0 // Reset to midnight
-        }
-        return newTime
-      })
+      advanceTime()
     }, 100) // Update every 100ms for smooth progression
 
     return () => clearInterval(interval)
-  }, [])
+  }, [advanceTime])
 
   // Update player warmth based on time of day
   useEffect(() => {

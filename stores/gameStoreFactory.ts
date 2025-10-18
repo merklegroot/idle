@@ -825,3 +825,54 @@ export function drinkWaterFactory(set: (fn: (state: GameState) => Partial<GameSt
     }));
   }
 }
+
+// Time management factories
+export function getTimeOfDayFactory(get: () => GameState) {
+  return function (): number {
+    return get().timeOfDay;
+  }
+}
+
+export function getDayFactory(get: () => GameState) {
+  return function (): number {
+    return get().day;
+  }
+}
+
+export function setTimeOfDayFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (timeOfDay: number): void {
+    set((state) => ({
+      ...state,
+      timeOfDay: timeOfDay
+    }));
+  }
+}
+
+export function setDayFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (day: number): void {
+    set((state) => ({
+      ...state,
+      day: day
+    }));
+  }
+}
+
+export function advanceTimeFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (): void {
+    const state = get();
+    const newTime = state.timeOfDay + 0.1; // Advance time by 0.1 hours
+    
+    if (newTime >= 24) {
+      set((state) => ({
+        ...state,
+        timeOfDay: 0,
+        day: state.day + 1
+      }));
+    } else {
+      set((state) => ({
+        ...state,
+        timeOfDay: newTime
+      }));
+    }
+  }
+}

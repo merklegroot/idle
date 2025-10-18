@@ -41,6 +41,8 @@ export interface GameState {
     characterEquipment: CharacterEquipment;
     homes: Home[];
     playerStats: PlayerStats;
+    timeOfDay: number; // 0-24 hours
+    day: number;
 }
 
 export interface GameActions {
@@ -110,6 +112,13 @@ export interface GameActions {
     setPlayerStats: (stats: Partial<PlayerStats>) => void;
     updatePlayerWarmth: (timeOfDay: number) => void;
     drinkWater: () => void;
+
+    // Time management
+    getTimeOfDay: () => number;
+    getDay: () => number;
+    setTimeOfDay: (timeOfDay: number) => void;
+    setDay: (day: number) => void;
+    advanceTime: () => void;
 }
 
 export type GameStore = GameState & GameActions;

@@ -7,6 +7,7 @@ import type { SceneryTileMap } from '@/models/SceneryTileMap'
 import { pathUtil } from '@/utils/pathUtil'
 import { TerrainEnum } from '@/models/TerrainEnum'
 import { SceneryEnum } from '@/models/SceneryEnum'
+import useGameStore from '@/stores/gameStore'
 
 interface TileVariant {
   src: string
@@ -180,6 +181,9 @@ export default function MapComponent({
   selectedTile,
   onTileSelect
 }: MapComponentProps) {
+  const { getTimeOfDay } = useGameStore()
+  const timeOfDay = getTimeOfDay()
+
   // Calculate map dimensions
   const maxX = Math.max(...mapData.map(tile => tile.x))
   const maxY = Math.max(...mapData.map(tile => tile.y))
@@ -188,8 +192,24 @@ export default function MapComponent({
   // Track hovered tile
   const [hoveredTile, setHoveredTile] = useState<{ x: number; y: number } | null>(null)
 
+  // Calculate brightness based on time of day (sine wave)
+  const getBrightness = (hours: number) => {
+    const radians = (hours / 24) * 2 * Math.PI - Math.PI / 2
+    const sineValue = Math.sin(radians)
+    // Convert sine value (-1 to 1) to brightness (0.3 to 1.0)
+    // 0.3 = dim but visible, 1.0 = full brightness
+    return (sineValue + 1) / 2 * 0.7 + 0.3
+  }
+
+  const brightness = getBrightness(timeOfDay)
+
   return (
-    <div className="bg-gray-100 p-4 rounded-lg inline-block">
+    <div 
+      className="bg-gray-100 p-4 rounded-lg inline-block"
+      style={{
+        filter: `brightness(${brightness})`
+      }}
+    >
       <div
         className="grid gap-0 relative"
         style={{
