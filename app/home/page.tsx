@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
 import type { MapTile } from '@/models/MapTile'
 import type { SceneryTileMap } from '@/models/SceneryTileMap'
 import MapComponent from '@/components/MapComponent'
@@ -9,7 +8,6 @@ import SelectedTileComponent from '@/components/SelectedTileComponent'
 import CompactStatsBar from '@/components/CompactStatsBar'
 import CompactDayNightCycle from '@/components/CompactDayNightCycle'
 import useGameStore from '@/stores/gameStore'
-import GatherProgressComponent from '@/components/GatherProgressComponent'
 import GatheringProgressDisplay from '@/components/GatheringProgressDisplay'
 import MapLegend from '@/components/MapLegend'
 import InventoryWidget from '@/components/InventoryWidget'
@@ -27,7 +25,6 @@ export default function MapPage() {
   const [shouldShowTileLetters, setShouldShowTileLetters] = useState(false)
   const [shouldShowTileVariants, setShouldShowTileVariants] = useState(false)
   const [selectedTile, setSelectedTile] = useState<{ x: number; y: number } | null>(null)
-  const [showCraftingPanel, setShowCraftingPanel] = useState(false)
   const [gatheringProgress, setGatheringProgress] = useState<{
     isActive: boolean
     progress: number
@@ -249,16 +246,6 @@ export default function MapPage() {
           >
             {debugMode ? 'Hide Debug' : 'Show Debug'}
           </button>
-          <button
-            onClick={() => setShowCraftingPanel(!showCraftingPanel)}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
-              showCraftingPanel
-                ? 'bg-purple-600 hover:bg-purple-700 text-white'
-                : 'bg-gray-600 hover:bg-gray-700 text-white'
-            }`}
-          >
-            {showCraftingPanel ? 'Hide Crafting' : 'Crafting'}
-          </button>
           {selectedTile && (
             <button
               onClick={() => setSelectedTile(null)}
@@ -277,13 +264,6 @@ export default function MapPage() {
 
       {/* Gathering Progress Display */}
       <GatheringProgressDisplay gatheringProgress={gatheringProgress} />
-
-      {/* Crafting Panel */}
-      {showCraftingPanel && (
-        <div className="mb-6">
-          <CraftingPanel onClose={() => setShowCraftingPanel(false)} />
-        </div>
-      )}
 
       <div className="flex gap-6">
         {/* Map Component */}
@@ -311,6 +291,9 @@ export default function MapPage() {
               window.location.href = `/inventory?selected=${resourceKey}`
             }}
           />
+          
+          {/* Crafting Panel */}
+          <CraftingPanel />
           
           {selectedTile && (
             <SelectedTileComponent
