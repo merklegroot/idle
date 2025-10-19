@@ -8,9 +8,11 @@ import { formattingUtil } from '@/utils/formattingUtil';
 interface ItemDetailsProps {
   resourceKey: string;
   onClose: () => void;
+  onSell?: (amount: number) => void;
+  onSellAll?: () => void;
 }
 
-export default function ItemDetails({ resourceKey, onClose }: ItemDetailsProps) {
+export default function ItemDetails({ resourceKey, onClose, onSell, onSellAll }: ItemDetailsProps) {
   const { getResource, sellResource, sellResourcePercentage, sellAllResource, setAutoSellThreshold, setAutoSellEnabled } = useGameStore();
   const [customAmount, setCustomAmount] = useState('');
   const [autoSellThreshold, setAutoSellThresholdInput] = useState('');
@@ -80,7 +82,11 @@ export default function ItemDetails({ resourceKey, onClose }: ItemDetailsProps) 
   const handleCustomSell = () => {
     const amount = parseInt(customAmount);
     if (amount > 0 && amount <= resource.amount) {
-      sellResource(resourceKey, amount);
+      if (onSell) {
+        onSell(amount);
+      } else {
+        sellResource(resourceKey, amount);
+      }
       setCustomAmount('');
     }
   };
@@ -111,7 +117,7 @@ export default function ItemDetails({ resourceKey, onClose }: ItemDetailsProps) 
             </div>
 
             <button
-              onClick={() => sellResource(resourceKey, 1)}
+              onClick={() => onSell ? onSell(1) : sellResource(resourceKey, 1)}
               disabled={resource.amount < 1}
               className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white rounded-lg font-semibold transition-colors"
             >
@@ -127,7 +133,7 @@ export default function ItemDetails({ resourceKey, onClose }: ItemDetailsProps) 
             </button>
 
             <button
-              onClick={() => sellAllResource(resourceKey)}
+              onClick={() => onSellAll ? onSellAll() : sellAllResource(resourceKey)}
               disabled={resource.amount < 1}
               className="w-full py-2 px-4 bg-red-600 hover:bg-red-700 disabled:bg-gray-300 text-white rounded-lg font-semibold transition-colors"
             >
