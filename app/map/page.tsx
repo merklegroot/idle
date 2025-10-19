@@ -29,7 +29,7 @@ export default function MapPage() {
     isActive: boolean
     progress: number
     tile: { x: number; y: number }
-    resourceType: 'stick' | 'stone' | 'thatch' | 'water'
+    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to'
   } | null>(null)
   const completionHandled = useRef(false)
 
@@ -82,12 +82,21 @@ export default function MapPage() {
     }
   }
 
-  const startGathering = (resourceType: 'stick' | 'stone' | 'thatch' | 'water') => {
+  const startGathering = (resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to') => {
     if (!selectedTile) return
 
-    // Initialize resource if it doesn't exist
-    if (!getResource(resourceType)) {
-      initializeResource(resourceType)
+    // For construction, check if player has enough resources first
+    if (resourceType === 'construct-lean-to') {
+      const stickResource = getResource('stick')
+      if (!stickResource || stickResource.amount < 1) {
+        alert('You need at least 1 stick to construct a lean-to!')
+        return
+      }
+    } else {
+      // Initialize resource if it doesn't exist
+      if (!getResource(resourceType)) {
+        initializeResource(resourceType)
+      }
     }
 
     // Reset completion flag
@@ -131,6 +140,22 @@ export default function MapPage() {
                 drinkWater();
               }
 
+              if (prev.resourceType === 'construct-lean-to') {
+                // Deduct the cost and show success message
+                addResourceAmount('stick', -1);
+                
+                // Mark the tile as having a lean-to
+                setMapData(prevMapData => 
+                  prevMapData.map(tile => 
+                    tile.x === prev.tile.x && tile.y === prev.tile.y
+                      ? { ...tile, hasLeanTo: true }
+                      : tile
+                  )
+                );
+                
+                alert('Lean-to constructed successfully!');
+              }
+
               setGatheringProgress(null)
             }, 500)
           }
@@ -163,6 +188,16 @@ export default function MapPage() {
 
   const handleDrinkWater = () => {
     startGathering('water')
+  }
+
+  const handleConstructLeanTo = () => {
+    startGathering('construct-lean-to')
+  }
+
+  // Check if player can construct a lean-to (has at least 1 stick)
+  const canConstructLeanTo = () => {
+    const stickResource = getResource('stick')
+    return stickResource && stickResource.amount >= 1
   }
 
   return (
@@ -253,12 +288,15 @@ export default function MapPage() {
               containsStone={selectedTreeTile?.sceneryType === SceneryEnum.Rock || false}
               containsThatch={containsThatch || false}
               containsWater={selectedMapTile?.terrainType === TerrainEnum.Water || false}
+              hasLeanTo={selectedMapTile?.hasLeanTo || false}
               onGatherStick={handleGatherStick}
               onGatherStone={handleGatherStone}
               onGatherThatch={handleGatherThatch}
               onDrinkWater={handleDrinkWater}
+              onConstructLeanTo={handleConstructLeanTo}
               onClose={() => handleTileSelect(null, null)}
               isGathering={gatheringProgress?.isActive || false}
+              canConstructLeanTo={canConstructLeanTo()}
             />
           )}
         </div>

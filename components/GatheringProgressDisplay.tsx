@@ -4,7 +4,7 @@ interface GatheringProgress {
   isActive: boolean
   progress: number
   tile: { x: number; y: number }
-  resourceType: 'stick' | 'stone' | 'thatch' | 'water'
+  resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to'
 }
 
 interface GatheringProgressDisplayProps {
@@ -12,9 +12,8 @@ interface GatheringProgressDisplayProps {
 }
 
 export default function GatheringProgressDisplay({ gatheringProgress }: GatheringProgressDisplayProps) {
-  if (!gatheringProgress) {
-    return null
-  }
+  // Always render the container to maintain consistent layout
+  const isActive = gatheringProgress !== null
 
   const getResourceTypeStyles = (resourceType: string) => {
     switch (resourceType) {
@@ -32,6 +31,13 @@ export default function GatheringProgressDisplay({ gatheringProgress }: Gatherin
           progressBg: 'bg-yellow-200',
           progressBar: 'bg-yellow-600'
         }
+      case 'construct-lean-to':
+        return {
+          container: 'bg-blue-50 border border-blue-200',
+          text: 'text-blue-600',
+          progressBg: 'bg-blue-200',
+          progressBar: 'bg-blue-600'
+        }
       default:
         return {
           container: 'bg-gray-50 border border-gray-200',
@@ -42,20 +48,34 @@ export default function GatheringProgressDisplay({ gatheringProgress }: Gatherin
     }
   }
 
-  const styles = getResourceTypeStyles(gatheringProgress.resourceType)
+  const styles = isActive ? getResourceTypeStyles(gatheringProgress.resourceType) : {
+    container: 'bg-gray-50 border border-gray-200',
+    text: 'text-gray-600',
+    progressBg: 'bg-gray-200',
+    progressBar: 'bg-gray-600'
+  }
 
   return (
     <div className={`mb-4 p-4 rounded-lg ${styles.container}`}>
       <div className="flex items-center justify-between mb-2">
-        <GatherProgressComponent gatheringProgress={gatheringProgress} />
-        <span className={`text-sm font-medium ${styles.text}`}>
-          {gatheringProgress.progress}%
-        </span>
+        {isActive ? (
+          <>
+            <GatherProgressComponent gatheringProgress={gatheringProgress} />
+            <span className={`text-sm font-medium ${styles.text}`}>
+              {gatheringProgress.progress}%
+            </span>
+          </>
+        ) : (
+          <>
+            <div className="text-sm text-gray-500">No gathering in progress</div>
+            <span className="text-sm font-medium text-gray-500">0%</span>
+          </>
+        )}
       </div>
       <div className={`w-full rounded-full h-3 ${styles.progressBg}`}>
         <div
           className={`h-3 rounded-full transition-all duration-300 ease-out ${styles.progressBar}`}
-          style={{ width: `${gatheringProgress.progress}%` }}
+          style={{ width: isActive ? `${gatheringProgress.progress}%` : '0%' }}
         ></div>
       </div>
     </div>

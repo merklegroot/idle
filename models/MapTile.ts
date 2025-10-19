@@ -18,4 +18,5 @@ export interface MapTile {
     terrainType: TerrainEnum
     x: number
     y: number
+    hasLeanTo?: boolean
 }

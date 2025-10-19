@@ -439,6 +439,26 @@ export default function MapComponent({
                 </div>
               )}
 
+              {/* Lean-to overlay */}
+              {tile.hasLeanTo && (
+                <div className="absolute inset-0 pointer-events-none">
+                  <div
+                    className="flex items-center justify-center"
+                    style={{ fontSize: `${tileSize * 0.6}px` }}
+                  >
+                    <span className="text-amber-600 font-bold drop-shadow-lg">🏕️</span>
+                  </div>
+                  {shouldShowTileLetters && (
+                    <div
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                      style={{ fontSize: `${tileSize * 0.6}px` }}
+                    >
+                      <span className="text-amber-600 font-bold drop-shadow-lg">L</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Selection overlay */}
               {isSelected && (
                 <div className="absolute inset-0 pointer-events-none">

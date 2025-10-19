@@ -10,12 +10,15 @@ interface SelectedTileComponentProps {
   containsStone: boolean;
   containsThatch: boolean;
   containsWater: boolean;
+  hasLeanTo?: boolean;
   onGatherStick?: () => void;
   onGatherStone?: () => void;
   onGatherThatch?: () => void;
   onDrinkWater?: () => void;
+  onConstructLeanTo?: () => void;
   onClose?: () => void;
   isGathering?: boolean;
+  canConstructLeanTo?: boolean;
 }
 
 function getTileTypeText(terrainType: TerrainEnum | undefined | null) {
@@ -57,12 +60,15 @@ export default function SelectedTileComponent({
   containsStone,
   containsThatch,
   containsWater,
+  hasLeanTo = false,
   onGatherStick,
   onGatherStone,
   onGatherThatch,
   onDrinkWater,
+  onConstructLeanTo,
   onClose,
-  isGathering = false
+  isGathering = false,
+  canConstructLeanTo = false
 }: SelectedTileComponentProps) {
   if (!selectedTile)
     return null
@@ -134,6 +140,39 @@ export default function SelectedTileComponent({
         {containsWater && onDrinkWater && (
           <div className="mt-3">
             <GatherButton resourceType="water" isActing={isGathering} onPress={onDrinkWater} />
+          </div>
+        )}
+
+        {/* Construction section for housing plots */}
+        {terrainType === TerrainEnum.HousingPlot && (
+          <div className="mt-4 pt-3 border-t border-gray-200">
+            <h3 className="text-sm font-medium text-gray-700 mb-2">Construction</h3>
+            {hasLeanTo ? (
+              <div className="text-sm text-green-600 bg-green-50 p-3 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🏕️</span>
+                  <span>Lean-to constructed</span>
+                </div>
+                <div className="text-xs text-green-500 mt-1">This plot has a lean-to</div>
+              </div>
+            ) : canConstructLeanTo && onConstructLeanTo ? (
+              <button
+                onClick={onConstructLeanTo}
+                disabled={isGathering}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+              >
+                <span className="text-lg">🏠</span>
+                <span>Construct Lean-to (1 stick)</span>
+              </button>
+            ) : (
+              <div className="text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🏠</span>
+                  <span>Construct Lean-to (1 stick)</span>
+                </div>
+                <div className="text-xs text-red-500 mt-1">Insufficient resources</div>
+              </div>
+            )}
           </div>
         )}
       </div>
