@@ -120,7 +120,7 @@ function findAssetByPackAndId(packId: string, assetId: string) {
   if (!pack) return null;
 
   for (const [category, assets] of Object.entries(pack.assets)) {
-    const asset = assets.find(a => a.id === assetId);
+    const asset = assets.find((a: any) => a.id === assetId);
     if (asset) {
       return {
         ...asset,
@@ -154,8 +154,7 @@ export default function SpriteEditor() {
             src: asset.path,
             name: asset.name,
             assetPack: asset.packName,
-            category: asset.category,
-            assetId: asset.id
+            category: asset.category
           });
         } else if ('icon' in asset) {
           // Emoji asset - we can't directly edit emojis in the sprite editor

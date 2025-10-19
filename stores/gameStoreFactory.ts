@@ -309,9 +309,27 @@ export function bootstrapFactory(set: (fn: (state: GameState) => Partial<GameSta
       }
     });
 
+    // Initialize crafting recipes
+    const initialRecipes = [
+      {
+        id: 'twine',
+        name: 'Twine',
+        description: 'A simple cord made from thatch',
+        ingredients: [
+          { resourceKey: 'thatch', amount: 1 }
+        ],
+        result: {
+          resourceKey: 'twine',
+          amount: 1
+        },
+        unlocked: true
+      }
+    ];
+
     set((state) => ({
       ...state,
-      resources: updatedResources
+      resources: updatedResources,
+      craftingRecipes: initialRecipes
     }));
   }
 }
@@ -874,5 +892,112 @@ export function advanceTimeFactory(set: (fn: (state: GameState) => Partial<GameS
         timeOfDay: newTime
       }));
     }
+  }
+}
+
+// Crafting management factories
+export function getCraftingRecipesFactory(get: () => GameState) {
+  return function (): any[] {
+    return get().craftingRecipes;
+  }
+}
+
+export function canCraftRecipeFactory(get: () => GameState) {
+  return function (recipeId: string): boolean {
+    const state = get();
+    const recipe = state.craftingRecipes.find(r => r.id === recipeId);
+    
+    if (!recipe || !recipe.unlocked) {
+      return false;
+    }
+    
+    // Check if player has all required ingredients
+    return recipe.ingredients.every(ingredient => {
+      const resource = state.resources[ingredient.resourceKey];
+      return resource && resource.amount >= ingredient.amount;
+    });
+  }
+}
+
+export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
+  return function (recipeId: string): boolean {
+    const state = get();
+    const recipe = state.craftingRecipes.find(r => r.id === recipeId);
+    
+    if (!recipe || !recipe.unlocked) {
+      return false;
+    }
+    
+    // Check if player can craft this recipe
+    const canCraft = recipe.ingredients.every(ingredient => {
+      const resource = state.resources[ingredient.resourceKey];
+      return resource && resource.amount >= ingredient.amount;
+    });
+    
+    if (!canCraft) {
+      return false;
+    }
+    
+    // Deduct ingredients
+    recipe.ingredients.forEach(ingredient => {
+      const resource = state.resources[ingredient.resourceKey];
+      if (resource) {
+        set((state) => ({
+          resources: {
+            ...state.resources,
+            [ingredient.resourceKey]: {
+              ...resource,
+              amount: resource.amount - ingredient.amount
+            }
+          }
+        }));
+      }
+    });
+    
+    // Add result
+    const resultResource = state.resources[recipe.result.resourceKey];
+    if (resultResource) {
+      set((state) => ({
+        resources: {
+          ...state.resources,
+          [recipe.result.resourceKey]: {
+            ...resultResource,
+            amount: resultResource.amount + recipe.result.amount
+          }
+        }
+      }));
+    } else {
+      // Initialize resource if it doesn't exist
+      set((state) => ({
+        resources: {
+          ...state.resources,
+          [recipe.result.resourceKey]: {
+            amount: recipe.result.amount,
+            perSecond: 0,
+            workers: 0,
+            paidWorkers: 0,
+            workerCost: 100,
+            workerSalary: 10,
+            isGathering: false,
+            gatherProgress: 0,
+            workerProgress: 0,
+            autoSellThreshold: 0,
+            autoSellEnabled: false
+          }
+        }
+      }));
+    }
+    
+    return true;
+  }
+}
+
+export function unlockRecipeFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (recipeId: string): void {
+    set((state) => ({
+      craftingRecipes: state.craftingRecipes.map(recipe =>
+        recipe.id === recipeId ? { ...recipe, unlocked: true } : recipe
+      )
+    }));
   }
 }

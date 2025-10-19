@@ -13,11 +13,12 @@ import GatherProgressComponent from '@/components/GatherProgressComponent'
 import GatheringProgressDisplay from '@/components/GatheringProgressDisplay'
 import MapLegend from '@/components/MapLegend'
 import InventoryWidget from '@/components/InventoryWidget'
+import CraftingPanel from '@/components/CraftingPanel'
 import { TerrainEnum } from '@/models/TerrainEnum'
 import { SceneryEnum } from '@/models/SceneryEnum'
 
 export default function MapPage() {
-  const { addResourceAmount, initializeResource, getResource, drinkWater } = useGameStore()
+  const { addResourceAmount, initializeResource, getResource, drinkWater, bootstrap } = useGameStore()
   const [mapData, setMapData] = useState<MapTile[]>([])
   const [treeData, setTreeData] = useState<SceneryTileMap[]>([])
   const [loading, setLoading] = useState(true)
@@ -26,6 +27,7 @@ export default function MapPage() {
   const [shouldShowTileLetters, setShouldShowTileLetters] = useState(false)
   const [shouldShowTileVariants, setShouldShowTileVariants] = useState(false)
   const [selectedTile, setSelectedTile] = useState<{ x: number; y: number } | null>(null)
+  const [showCraftingPanel, setShowCraftingPanel] = useState(false)
   const [gatheringProgress, setGatheringProgress] = useState<{
     isActive: boolean
     progress: number
@@ -48,8 +50,10 @@ export default function MapPage() {
       }
     }
 
+    // Initialize game with bootstrap (includes crafting recipes)
+    bootstrap()
     loadMapData()
-  }, [])
+  }, [bootstrap])
 
   if (loading) {
     return (
@@ -245,6 +249,16 @@ export default function MapPage() {
           >
             {debugMode ? 'Hide Debug' : 'Show Debug'}
           </button>
+          <button
+            onClick={() => setShowCraftingPanel(!showCraftingPanel)}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${
+              showCraftingPanel
+                ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                : 'bg-gray-600 hover:bg-gray-700 text-white'
+            }`}
+          >
+            {showCraftingPanel ? 'Hide Crafting' : 'Crafting'}
+          </button>
           {selectedTile && (
             <button
               onClick={() => setSelectedTile(null)}
@@ -263,6 +277,13 @@ export default function MapPage() {
 
       {/* Gathering Progress Display */}
       <GatheringProgressDisplay gatheringProgress={gatheringProgress} />
+
+      {/* Crafting Panel */}
+      {showCraftingPanel && (
+        <div className="mb-6">
+          <CraftingPanel onClose={() => setShowCraftingPanel(false)} />
+        </div>
+      )}
 
       <div className="flex gap-6">
         {/* Map Component */}
@@ -283,7 +304,6 @@ export default function MapPage() {
         <div className="flex-1 min-w-0 space-y-4">
           {/* Inventory Widget */}
           <InventoryWidget 
-            maxItems={4} 
             showValue={true} 
             compact={true}
             onItemClick={(resourceKey) => {

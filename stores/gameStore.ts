@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { GameStore } from './gameStoreModels';
 import { getResourceFactory, setResourceAmountFactory, addResourceAmountFactory, setResourcePerSecondFactory, setResourceWorkersFactory, setResourcePaidWorkersFactory, setResourceWorkerCostFactory, setResourceWorkerSalaryFactory, setResourceIsGatheringFactory, setResourceGatherProgressFactory, setResourceWorkerProgressFactory } from './gameStoreFactory';
 import { getHomeCostFactory, getHomeUpgradeCostFactory, canBuildHomeFactory, canUpgradeHomeFactory, buildHomeFactory, upgradeHomeFactory } from './gameStoreFactory';
-import { bootstrapFactory, hireWorkerFactory, startGatheringFactory, resetGatherProgressFactory, resetWorkerProgressFactory, initializeResourceFactory, sellResourceFactory, sellResourcePercentageFactory, sellAllResourceFactory, setAutoSellThresholdFactory, setAutoSellEnabledFactory, checkAutoSellFactory, payWorkerSalariesFactory, equipToolFactory, unequipToolFactory, getEquippedToolFactory, getToolBonusFactory, getWorkerToolBonusFactory, getWorkersWithToolsFactory, startGameLoopFactory, stopGameLoopFactory, getPlayerStatsFactory, setPlayerStatsFactory, updatePlayerWarmthFactory, drinkWaterFactory, getTimeOfDayFactory, getDayFactory, setTimeOfDayFactory, setDayFactory, advanceTimeFactory } from './gameStoreFactory';
+import { bootstrapFactory, hireWorkerFactory, startGatheringFactory, resetGatherProgressFactory, resetWorkerProgressFactory, initializeResourceFactory, sellResourceFactory, sellResourcePercentageFactory, sellAllResourceFactory, setAutoSellThresholdFactory, setAutoSellEnabledFactory, checkAutoSellFactory, payWorkerSalariesFactory, equipToolFactory, unequipToolFactory, getEquippedToolFactory, getToolBonusFactory, getWorkerToolBonusFactory, getWorkersWithToolsFactory, startGameLoopFactory, stopGameLoopFactory, getPlayerStatsFactory, setPlayerStatsFactory, updatePlayerWarmthFactory, drinkWaterFactory, getTimeOfDayFactory, getDayFactory, setTimeOfDayFactory, setDayFactory, advanceTimeFactory, getCraftingRecipesFactory, canCraftRecipeFactory, craftRecipeFactory, unlockRecipeFactory } from './gameStoreFactory';
 import { gameTickFactory } from './gameTickFactory';
 
 const useGameStore = create<GameStore>((set, get) => ({
@@ -20,6 +20,7 @@ const useGameStore = create<GameStore>((set, get) => ({
   },
   timeOfDay: 12, // Start at noon
   day: 1,
+  craftingRecipes: [],
 
   // Resource management
   getResource: getResourceFactory(get),
@@ -92,7 +93,13 @@ const useGameStore = create<GameStore>((set, get) => ({
   getDay: getDayFactory(get),
   setTimeOfDay: setTimeOfDayFactory(set),
   setDay: setDayFactory(set),
-  advanceTime: advanceTimeFactory(set, get)
+  advanceTime: advanceTimeFactory(set, get),
+
+  // Crafting management
+  getCraftingRecipes: getCraftingRecipesFactory(get),
+  canCraftRecipe: canCraftRecipeFactory(get),
+  craftRecipe: craftRecipeFactory(set, get),
+  unlockRecipe: unlockRecipeFactory(set)
 }));
 
 export default useGameStore;

@@ -45,7 +45,11 @@ export default function InventoryWidget({
       'thatch': 0.03,
       'berry': 0.5,
       'hatchet': 10,
-      'pickaxe': 15
+      'pickaxe': 15,
+      'twine': 0.1,
+      'rope': 0.5,
+      'cloth': 2,
+      'leather': 5
     }
     return values[key] || 0
   }
@@ -62,7 +66,11 @@ export default function InventoryWidget({
   // Add additional resources that might exist in the game
   const additionalResources = [
     { key: 'stick', name: 'Stick', icon: '╱', value: 0.05 },
-    { key: 'thatch', name: 'Thatch', icon: '🌾', value: 0.03 }
+    { key: 'thatch', name: 'Thatch', icon: '🌾', value: 0.03 },
+    { key: 'twine', name: 'Twine', icon: '🧵', value: 0.1 },
+    { key: 'rope', name: 'Rope', icon: '🪢', value: 0.5 },
+    { key: 'cloth', name: 'Cloth', icon: '🧶', value: 2 },
+    { key: 'leather', name: 'Leather', icon: '🦬', value: 5 }
   ]
 
   const allItems = [...allResources, ...additionalResources]
@@ -76,7 +84,6 @@ export default function InventoryWidget({
     }
   }).filter(item => item.amount > 0)
     .sort((a, b) => b.amount - a.amount)
-    .slice(0, maxItems)
 
   if (inventoryItems.length === 0) {
     return (
@@ -100,7 +107,7 @@ export default function InventoryWidget({
         </div>
       </div>
       
-      <div className={`grid gap-2 ${compact ? 'grid-cols-2' : 'grid-cols-1'}`}>
+      <div className={`grid gap-2 ${compact ? 'grid-cols-2' : 'grid-cols-1'} max-h-96 overflow-y-auto`}>
         {inventoryItems.map(item => (
           <div
             key={item.key}
@@ -126,14 +133,6 @@ export default function InventoryWidget({
           </div>
         ))}
       </div>
-
-      {inventoryItems.length >= maxItems && (
-        <div className="mt-2 text-center">
-          <div className="text-xs text-gray-400">
-            Showing top {maxItems} items
-          </div>
-        </div>
-      )}
     </div>
   )
 }
