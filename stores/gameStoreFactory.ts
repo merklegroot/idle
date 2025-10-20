@@ -323,6 +323,19 @@ export function bootstrapFactory(set: (fn: (state: GameState) => Partial<GameSta
           amount: 1
         },
         unlocked: true
+      },
+      {
+        id: 'knapped-axe-head',
+        name: 'Knapped Axe Head',
+        description: 'A chipped stone axe head suitable for hafting',
+        ingredients: [
+          { resourceKey: 'stone', amount: 1 }
+        ],
+        result: {
+          resourceKey: 'knapped-axe-head',
+          amount: 1
+        },
+        unlocked: true
       }
     ];
 

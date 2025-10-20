@@ -29,7 +29,7 @@ export default function MapPage() {
     isActive: boolean
     progress: number
     tile: { x: number; y: number }
-    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine'
+    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head'
   } | null>(null)
   const completionHandled = useRef(false)
 
@@ -84,8 +84,10 @@ export default function MapPage() {
     }
   }
 
-  const startGathering = (resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine') => {
-    if (!selectedTile) return
+  const startGathering = (resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head') => {
+    // For crafting actions, allow starting without a selected tile
+    const isCraftAction = resourceType === 'craft-twine' || resourceType === 'craft-knapped-axe-head'
+    if (!selectedTile && !isCraftAction) return
 
     // For construction, check if player has enough resources first
     if (resourceType === 'construct-lean-to') {
@@ -96,6 +98,10 @@ export default function MapPage() {
       }
     } else if (resourceType === 'craft-twine') {
       if (!canCraftRecipe('twine')) {
+        return
+      }
+    } else if (resourceType === 'craft-knapped-axe-head') {
+      if (!canCraftRecipe('knapped-axe-head')) {
         return
       }
     } else {
@@ -112,7 +118,7 @@ export default function MapPage() {
     setGatheringProgress({
       isActive: true,
       progress: 0,
-      tile: selectedTile,
+      tile: selectedTile || { x: 0, y: 0 },
       resourceType
     })
 
@@ -165,6 +171,11 @@ export default function MapPage() {
               if (prev.resourceType === 'craft-twine') {
                 // Craft twine using the crafting system
                 craftRecipe('twine');
+              }
+
+              if (prev.resourceType === 'craft-knapped-axe-head') {
+                // Craft knapped axe head using the crafting system
+                craftRecipe('knapped-axe-head');
               }
 
               setGatheringProgress(null)
@@ -306,18 +317,20 @@ export default function MapPage() {
         <div className="flex-1 min-w-0 space-y-4">
           {/* Inventory Widget */}
           <InventoryWidget 
-            showValue={true} 
             compact={true}
-            onItemClick={(resourceKey) => {
-              // Navigate to inventory page with item selected
-              window.location.href = `/inventory?selected=${resourceKey}`
-            }}
           />
           
           {/* Crafting Panel */}
           <CraftingPanel onStartCrafting={(recipeId) => {
             if (recipeId === 'twine') {
               handleCraftTwine()
+              return
+            }
+            if (recipeId === 'knapped-axe-head') {
+              // Route through gathering progress like twine
+              if (!canCraftRecipe('knapped-axe-head')) return
+              startGathering('craft-knapped-axe-head')
+              return
             }
           }} />
           

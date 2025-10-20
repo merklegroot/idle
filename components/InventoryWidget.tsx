@@ -67,6 +67,7 @@ export default function InventoryWidget({
     { key: 'stick', name: 'Stick', icon: '╱', value: 0.05 },
     { key: 'thatch', name: 'Thatch', icon: '🌾', value: 0.03 },
     { key: 'twine', name: 'Twine', icon: '🧵', value: 0.1 },
+    { key: 'knapped-axe-head', name: 'Knapped Axe Head', icon: '🪨', value: 0.2 },
     { key: 'rope', name: 'Rope', icon: '🪢', value: 0.5 },
     { key: 'cloth', name: 'Cloth', icon: '🧶', value: 2 },
     { key: 'leather', name: 'Leather', icon: '🦬', value: 5 }

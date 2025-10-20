@@ -15,18 +15,20 @@ export interface CraftingRecipe {
   unlocked: boolean;
 }
 
-export type CraftableResource = 'twine' | 'rope' | 'cloth' | 'leather';
+export type CraftableResource = 'twine' | 'rope' | 'cloth' | 'leather' | 'knapped-axe-head';
 
 export const CRAFTABLE_RESOURCES: Record<CraftableResource, string> = {
   twine: 'Twine',
   rope: 'Rope',
   cloth: 'Cloth',
-  leather: 'Leather'
+  leather: 'Leather',
+  'knapped-axe-head': 'Knapped Axe Head'
 };
 
 export const CRAFTABLE_RESOURCE_COLORS: Record<CraftableResource, string> = {
   twine: 'text-amber-800',
   rope: 'text-orange-800',
   cloth: 'text-purple-800',
-  leather: 'text-brown-800'
+  leather: 'text-brown-800',
+  'knapped-axe-head': 'text-gray-700'
 };

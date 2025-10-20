@@ -4,7 +4,7 @@ interface GatheringProgress {
   isActive: boolean
   progress: number
   tile: { x: number; y: number }
-  resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine'
+  resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head'
 }
 
 interface GatheringProgressDisplayProps {
@@ -44,6 +44,13 @@ export default function GatheringProgressDisplay({ gatheringProgress }: Gatherin
           text: 'text-amber-600',
           progressBg: 'bg-amber-200',
           progressBar: 'bg-amber-600'
+        }
+      case 'craft-knapped-axe-head':
+        return {
+          container: 'bg-gray-50 border border-gray-200',
+          text: 'text-gray-700',
+          progressBg: 'bg-gray-200',
+          progressBar: 'bg-gray-700'
         }
       default:
         return {
