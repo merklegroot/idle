@@ -1,13 +1,11 @@
 'use client'
 
-import { useState } from 'react'
 import useGameStore from '@/stores/gameStore'
 import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, GoldDef, ResourceDef } from '@/app/models/ResourceDef'
 import { formattingUtil } from '@/utils/formattingUtil'
 
 interface InventoryWidgetProps {
   maxItems?: number
-  showValue?: boolean
   compact?: boolean
   onItemClick?: (resourceKey: string) => void
   onCraftTwine?: () => void
@@ -15,10 +13,7 @@ interface InventoryWidgetProps {
 }
 
 export default function InventoryWidget({ 
-  maxItems = 6, 
-  showValue = false, 
   compact = false,
-  onItemClick,
   onCraftTwine,
   canCraftTwine
 }: InventoryWidgetProps) {
@@ -130,8 +125,7 @@ export default function InventoryWidget({
         {inventoryItems.map(item => (
           <div
             key={item.key}
-            onClick={() => onItemClick?.(item.key)}
-            className={`${onItemClick ? 'cursor-pointer hover:bg-gray-50' : ''} p-2 rounded border border-gray-100 transition-colors`}
+            className={`p-2 rounded border border-gray-100`}
           >
             <div className="flex items-center gap-2">
               <div className="text-lg">{item.icon}</div>
@@ -143,11 +137,6 @@ export default function InventoryWidget({
                   {formattingUtil.formatNumber(item.amount)}
                 </div>
               </div>
-              {showValue && item.value && item.value > 0 && (
-                <div className="text-xs text-yellow-600 font-medium">
-                  {formattingUtil.formatNumber(item.totalValue)}💰
-                </div>
-              )}
             </div>
           </div>
         ))}
