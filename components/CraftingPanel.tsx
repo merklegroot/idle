@@ -5,22 +5,22 @@ import { getResourceDisplayName, getResourceColorClass } from '@/models/Resource
 
 interface CraftingPanelProps {
   onClose?: () => void
+  onStartCrafting?: (recipeId: string) => void
 }
 
-export default function CraftingPanel({ onClose }: CraftingPanelProps) {
-  const { getCraftingRecipes, canCraftRecipe, craftRecipe, getResource } = useGameStore()
+export default function CraftingPanel({ onClose, onStartCrafting }: CraftingPanelProps) {
+  const { getCraftingRecipes, canCraftRecipe, getResource } = useGameStore()
   
   const recipes = getCraftingRecipes()
   const unlockedRecipes = recipes.filter(recipe => recipe.unlocked)
 
   const handleCraft = (recipeId: string) => {
-    const success = craftRecipe(recipeId)
-    if (success) {
-      // Show success feedback
-      console.log(`Successfully crafted ${recipeId}`)
-    } else {
-      // Show error feedback
-      console.log(`Failed to craft ${recipeId}`)
+    if (!canCraftRecipe(recipeId)) {
+      return
+    }
+    
+    if (onStartCrafting) {
+      onStartCrafting(recipeId)
     }
   }
 

@@ -16,7 +16,7 @@ import { TerrainEnum } from '@/models/TerrainEnum'
 import { SceneryEnum } from '@/models/SceneryEnum'
 
 export default function MapPage() {
-  const { addResourceAmount, initializeResource, getResource, drinkWater, bootstrap } = useGameStore()
+  const { addResourceAmount, initializeResource, getResource, drinkWater, bootstrap, canCraftRecipe, craftRecipe } = useGameStore()
   const [mapData, setMapData] = useState<MapTile[]>([])
   const [treeData, setTreeData] = useState<SceneryTileMap[]>([])
   const [loading, setLoading] = useState(true)
@@ -29,7 +29,7 @@ export default function MapPage() {
     isActive: boolean
     progress: number
     tile: { x: number; y: number }
-    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to'
+    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine'
   } | null>(null)
   const completionHandled = useRef(false)
 
@@ -84,7 +84,7 @@ export default function MapPage() {
     }
   }
 
-  const startGathering = (resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to') => {
+  const startGathering = (resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine') => {
     if (!selectedTile) return
 
     // For construction, check if player has enough resources first
@@ -92,6 +92,10 @@ export default function MapPage() {
       const stickResource = getResource('stick')
       if (!stickResource || stickResource.amount < 1) {
         alert('You need at least 1 stick to construct a lean-to!')
+        return
+      }
+    } else if (resourceType === 'craft-twine') {
+      if (!canCraftRecipe('twine')) {
         return
       }
     } else {
@@ -158,6 +162,11 @@ export default function MapPage() {
                 alert('Lean-to constructed successfully!');
               }
 
+              if (prev.resourceType === 'craft-twine') {
+                // Craft twine using the crafting system
+                craftRecipe('twine');
+              }
+
               setGatheringProgress(null)
             }, 500)
           }
@@ -196,10 +205,23 @@ export default function MapPage() {
     startGathering('construct-lean-to')
   }
 
+  const handleCraftTwine = () => {
+    if (!canCraftRecipe('twine')) {
+      alert('You need at least 1 thatch to craft twine!')
+      return
+    }
+    startGathering('craft-twine')
+  }
+
   // Check if player can construct a lean-to (has at least 1 stick)
   const canConstructLeanTo = () => {
     const stickResource = getResource('stick')
     return stickResource && stickResource.amount >= 1
+  }
+
+  // Check if player can craft twine (has at least 1 thatch)
+  const canCraftTwine = () => {
+    return canCraftRecipe('twine')
   }
 
   return (
@@ -292,7 +314,12 @@ export default function MapPage() {
             }}
           />
           
-          <CraftingPanel />
+          {/* Crafting Panel */}
+          <CraftingPanel onStartCrafting={(recipeId) => {
+            if (recipeId === 'twine') {
+              handleCraftTwine()
+            }
+          }} />
           
           {selectedTile && (
             <SelectedTileComponent

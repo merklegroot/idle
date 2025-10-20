@@ -10,13 +10,17 @@ interface InventoryWidgetProps {
   showValue?: boolean
   compact?: boolean
   onItemClick?: (resourceKey: string) => void
+  onCraftTwine?: () => void
+  canCraftTwine?: boolean
 }
 
 export default function InventoryWidget({ 
   maxItems = 6, 
   showValue = false, 
   compact = false,
-  onItemClick 
+  onItemClick,
+  onCraftTwine,
+  canCraftTwine
 }: InventoryWidgetProps) {
   const { getResource } = useGameStore()
 
@@ -102,8 +106,23 @@ export default function InventoryWidget({
         <h3 className={`${compact ? 'text-sm' : 'text-base'} font-semibold text-gray-800`}>
           Inventory
         </h3>
-        <div className="text-xs text-gray-500">
-          {inventoryItems.length} item{inventoryItems.length !== 1 ? 's' : ''}
+        <div className="flex items-center gap-2">
+          <div className="text-xs text-gray-500">
+            {inventoryItems.length} item{inventoryItems.length !== 1 ? 's' : ''}
+          </div>
+          {onCraftTwine && (
+            <button
+              onClick={onCraftTwine}
+              disabled={!canCraftTwine}
+              className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
+                canCraftTwine
+                  ? 'bg-amber-600 hover:bg-amber-700 text-white'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              Craft Twine
+            </button>
+          )}
         </div>
       </div>
       
