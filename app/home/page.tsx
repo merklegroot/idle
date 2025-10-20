@@ -292,7 +292,6 @@ export default function MapPage() {
             }}
           />
           
-          {/* Crafting Panel */}
           <CraftingPanel />
           
           {selectedTile && (

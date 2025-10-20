@@ -1,9 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import useGameStore from '@/stores/gameStore'
 import { getResourceDisplayName, getResourceColorClass } from '@/models/ResourceType'
-import type { CraftingRecipe } from '@/models/CraftingRecipe'
 
 interface CraftingPanelProps {
   onClose?: () => void
@@ -11,7 +9,6 @@ interface CraftingPanelProps {
 
 export default function CraftingPanel({ onClose }: CraftingPanelProps) {
   const { getCraftingRecipes, canCraftRecipe, craftRecipe, getResource } = useGameStore()
-  const [selectedRecipe, setSelectedRecipe] = useState<string | null>(null)
   
   const recipes = getCraftingRecipes()
   const unlockedRecipes = recipes.filter(recipe => recipe.unlocked)
@@ -44,14 +41,6 @@ export default function CraftingPanel({ onClose }: CraftingPanelProps) {
     <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Crafting</h2>
-        {onClose && (
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-xl font-bold"
-          >
-            ×
-          </button>
-        )}
       </div>
 
       {unlockedRecipes.length === 0 ? (
@@ -63,16 +52,11 @@ export default function CraftingPanel({ onClose }: CraftingPanelProps) {
         <div className="space-y-4">
           {unlockedRecipes.map((recipe) => {
             const canCraft = canCraftRecipe(recipe.id)
-            const isSelected = selectedRecipe === recipe.id
             
             return (
               <div
                 key={recipe.id}
-                className={`border rounded-lg p-4 transition-all ${
-                  isSelected 
-                    ? 'border-blue-500 bg-blue-50' 
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
+                className="border rounded-lg p-4 border-gray-200 hover:border-gray-300 transition-all"
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
@@ -105,18 +89,7 @@ export default function CraftingPanel({ onClose }: CraftingPanelProps) {
                     </div>
                   </div>
                   
-                  <div className="ml-4 flex flex-col gap-2">
-                    <button
-                      onClick={() => setSelectedRecipe(isSelected ? null : recipe.id)}
-                      className={`px-3 py-1 text-sm rounded ${
-                        isSelected
-                          ? 'bg-blue-100 text-blue-700 border border-blue-300'
-                          : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200'
-                      }`}
-                    >
-                      {isSelected ? 'Selected' : 'Select'}
-                    </button>
-                    
+                  <div className="ml-4">
                     <button
                       onClick={() => handleCraft(recipe.id)}
                       disabled={!canCraft}
