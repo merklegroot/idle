@@ -32,7 +32,6 @@ export default function Navigation() {
           </Link>
           <ul className="flex flex-wrap gap-4 lg:gap-6">
             <NavLink href="/home" label="Home" />
-            <NavLink href="/inventory" label="Inventory" />
             <NavLink href="/equipment" label="Equipment" />
             <NavLink href="/numbers" label="Numbers" />
             <NavLink href="/asset-packs" label="Assets" />
