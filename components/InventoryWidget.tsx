@@ -4,19 +4,7 @@ import useGameStore from '@/stores/gameStore'
 import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, GoldDef, ResourceDef } from '@/app/models/ResourceDef'
 import { formattingUtil } from '@/utils/formattingUtil'
 
-interface InventoryWidgetProps {
-  maxItems?: number
-  compact?: boolean
-  onItemClick?: (resourceKey: string) => void
-  onCraftTwine?: () => void
-  canCraftTwine?: boolean
-}
-
-export default function InventoryWidget({ 
-  compact = false,
-  onCraftTwine,
-  canCraftTwine
-}: InventoryWidgetProps) {
+export default function InventoryWidget() {
   const { getResource } = useGameStore()
 
   interface ResourceInventoryItemDef {
@@ -30,29 +18,10 @@ export default function InventoryWidget({
     return {
       key: resourceDef.resourceKey,
       name: resourceDef.name,
-      icon: resourceDef.icon,
-      value: getValueFromKey(resourceDef.resourceKey)
+      icon: resourceDef.icon
     }
   }
 
-  function getValueFromKey(key: string): number {
-    const values: { [key: string]: number } = {
-      'gold': 1,
-      'wood': 0.1,
-      'stone': 0.2,
-      'stick': 0.05,
-      'thatch': 0.03,
-      'berry': 0.5,
-      'hatchet': 10,
-      'pickaxe': 15,
-      'twine': 0.1,
-      'rope': 0.5,
-      'cloth': 2,
-      'leather': 5
-    }
-    return values[key] || 0
-  }
-  
   const allResources = [
     toResourceInventoryItemDef(WoodDef),
     toResourceInventoryItemDef(BerryDef),
@@ -79,22 +48,12 @@ export default function InventoryWidget({
     const resourceData = getResource(resource.key)
     return {
       ...resource,
-      amount: resourceData?.amount || 0,
-      totalValue: (resourceData?.amount || 0) * (resource.value || 0)
+      amount: resourceData?.amount || 0
     }
   }).filter(item => item.amount > 0)
     .sort((a, b) => b.amount - a.amount)
 
-  if (inventoryItems.length === 0) {
-    return (
-      <div className={`${compact ? 'p-3' : 'p-4'} bg-gray-50 rounded-lg border border-gray-200`}>
-        <div className="text-center text-gray-500">
-          <div className="text-2xl mb-2">📦</div>
-          <div className="text-sm">No items in inventory</div>
-        </div>
-      </div>
-    )
-  }
+  const compact = true;
 
   return (
     <div className={`${compact ? 'p-3' : 'p-4'} bg-white rounded-lg border border-gray-200 shadow-sm`}>
@@ -106,22 +65,9 @@ export default function InventoryWidget({
           <div className="text-xs text-gray-500">
             {inventoryItems.length} item{inventoryItems.length !== 1 ? 's' : ''}
           </div>
-          {onCraftTwine && (
-            <button
-              onClick={onCraftTwine}
-              disabled={!canCraftTwine}
-              className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
-                canCraftTwine
-                  ? 'bg-amber-600 hover:bg-amber-700 text-white'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              Craft Twine
-            </button>
-          )}
         </div>
       </div>
-      
+
       <div className={`grid gap-2 ${compact ? 'grid-cols-2' : 'grid-cols-1'} max-h-96 overflow-y-auto`}>
         {inventoryItems.map(item => (
           <div

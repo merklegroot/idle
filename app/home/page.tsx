@@ -314,13 +314,8 @@ export default function MapPage() {
         </div>
 
         {/* Info Panels */}
-        <div className="flex-1 min-w-0 space-y-4">
-          {/* Inventory Widget */}
-          <InventoryWidget 
-            compact={true}
-          />
-          
-          {/* Crafting Panel */}
+        <div className="flex-1 min-w-0 space-y-4">          
+          <InventoryWidget />
           <CraftingPanel onStartCrafting={(recipeId) => {
             if (recipeId === 'twine') {
               handleCraftTwine()
