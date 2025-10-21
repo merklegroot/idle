@@ -7,7 +7,6 @@ export interface ResourceState {
     workers: number;
     paidWorkers: number;
     workerCost: number;
-    workerSalary: number;
     isGathering: boolean;
     gatherProgress: number;
     workerProgress: number;
