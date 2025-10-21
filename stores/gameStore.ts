@@ -38,16 +38,6 @@ const useGameStore = create<GameStore>((set, get) => ({
   // Initialize resource
   initializeResource: initializeResourceFactory(set, get),
 
-  // Selling functions
-  sellResource: sellResourceFactory(set, get),
-  sellResourcePercentage: sellResourcePercentageFactory(get),
-  sellAllResource: sellAllResourceFactory(get),
-
-  // Auto-sell functions
-  setAutoSellThreshold: setAutoSellThresholdFactory(set),
-  setAutoSellEnabled: setAutoSellEnabledFactory(set),
-  checkAutoSell: checkAutoSellFactory(get),
-
   // Equipment management
   equipTool: equipToolFactory(set, get),
   unequipTool: unequipToolFactory(set, get),
