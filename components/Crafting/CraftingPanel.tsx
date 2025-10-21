@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import useGameStore from '@/stores/gameStore'
 import RecipeDetails from './RecipeDetails'
+import RecipeItem from './RecipeItem'
 
 interface CraftingPanelProps {
   onClose?: () => void
@@ -10,7 +11,7 @@ interface CraftingPanelProps {
 }
 
 export default function CraftingPanel({ onClose, onStartCrafting }: CraftingPanelProps) {
-  const { getCraftingRecipes, canCraftRecipe } = useGameStore()
+  const { getCraftingRecipes } = useGameStore()
   
   const recipes = getCraftingRecipes()
   const unlockedRecipes = recipes.filter(recipe => recipe.unlocked)
@@ -36,10 +37,6 @@ export default function CraftingPanel({ onClose, onStartCrafting }: CraftingPane
   }, [unlockedRecipes, selectedRecipeId])
 
   const handleCraft = (recipeId: string) => {
-    if (!canCraftRecipe(recipeId)) {
-      return
-    }
-    
     if (onStartCrafting) {
       onStartCrafting(recipeId)
     }
@@ -62,33 +59,14 @@ export default function CraftingPanel({ onClose, onStartCrafting }: CraftingPane
           {/* Left: recipe list */}
           <div className="w-1/3 border rounded-lg border-gray-200 overflow-hidden">
             <div className="max-h-80 overflow-y-auto">
-              {unlockedRecipes.map(recipe => {
-                const isSelected = recipe.id === selectedRecipeId
-                const canCraft = canCraftRecipe(recipe.id)
-                return (
-                  <button
-                    key={recipe.id}
-                    onClick={() => setSelectedRecipeId(recipe.id)}
-                    className={`w-full text-left px-3 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
-                      isSelected ? 'bg-gray-100' : ''
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <div>
-                        <div className="text-sm font-medium text-gray-800">{recipe.name}</div>
-                        {recipe.description && (
-                          <div className="text-xs text-gray-500 line-clamp-2">{recipe.description}</div>
-                        )}
-                      </div>
-                      <span className={`shrink-0 text-xs px-2 py-0.5 rounded ${
-                        canCraft ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-600'
-                      }`}>
-                        {canCraft ? 'Ready' : 'Need mats'}
-                      </span>
-                    </div>
-                  </button>
-                )
-              })}
+              {unlockedRecipes.map(recipe => (
+                <RecipeItem
+                  key={recipe.id}
+                  recipe={recipe}
+                  isSelected={recipe.id === selectedRecipeId}
+                  onSelect={setSelectedRecipeId}
+                />
+              ))}
             </div>
           </div>
 
