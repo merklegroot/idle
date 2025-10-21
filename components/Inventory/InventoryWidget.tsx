@@ -1,7 +1,7 @@
 'use client'
 
 import useGameStore from '@/stores/gameStore'
-import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, GoldDef, ResourceDef } from '@/app/models/ResourceDef'
+import { WoodDef, BerryDef, StoneDef, GoldDef, ResourceDef } from '@/app/models/ResourceDef'
 import InventoryItem from './InventoryItem'
 
 export default function InventoryWidget() {
@@ -26,8 +26,6 @@ export default function InventoryWidget() {
     toResourceInventoryItemDef(WoodDef),
     toResourceInventoryItemDef(BerryDef),
     toResourceInventoryItemDef(StoneDef),
-    toResourceInventoryItemDef(HatchetDef),
-    toResourceInventoryItemDef(PickaxeDef),
     toResourceInventoryItemDef(GoldDef)
   ]
 
