@@ -73,7 +73,6 @@ export interface GameActions {
     bootstrap: () => void;
 
     // Actions
-    hireWorker: (resourceKey: string) => void;
     startGathering: (resourceKey: string) => void;
     resetGatherProgress: (resourceKey: string) => void;
     resetWorkerProgress: (resourceKey: string) => void;

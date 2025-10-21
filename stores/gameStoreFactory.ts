@@ -347,48 +347,6 @@ export function bootstrapFactory(set: (fn: (state: GameState) => Partial<GameSta
   }
 }
 
-export function hireWorkerFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
-  return function (resourceKey: string): void {
-    const state = get();
-    const resource = state.resources[resourceKey];
-    if (!resource) return;
-
-    // Get gold resource
-    const gold = state.resources.gold;
-    if (!gold || gold.amount < resource.workerCost) return;
-
-    // Get salary from resource definition
-    const resourceDefs: Record<string, { workerSalary: number }> = {
-      wood: { workerSalary: WoodDef.workerSalary },
-      berries: { workerSalary: BerryDef.workerSalary },
-      stone: { workerSalary: StoneDef.workerSalary },
-      hatchet: { workerSalary: HatchetDef.workerSalary },
-      pickaxe: { workerSalary: PickaxeDef.workerSalary },
-      thatch: { workerSalary: ThatchDef.workerSalary }
-    };
-    const resourceDef = resourceDefs[resourceKey];
-    const workerSalary = resourceDef?.workerSalary || 10;
-
-    set((state) => ({
-      ...state,
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...resource,
-          workers: resource.workers + 1,
-          perSecond: resource.perSecond + 1,
-          workerCost: Math.floor(resource.workerCost * 1.15),
-          workerSalary: workerSalary
-        },
-        gold: {
-          ...gold,
-          amount: gold.amount - resource.workerCost
-        }
-      }
-    }));
-  }
-}
-
 export function startGatheringFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
   return function (resourceKey: string): void {
     const state = get();
