@@ -64,16 +64,6 @@ export interface GameActions {
     // Initialize resource
     initializeResource: (resourceKey: string) => void;
 
-    // Selling
-    sellResource: (resourceKey: string, amount: number) => void;
-    sellResourcePercentage: (resourceKey: string, percentage: number) => void;
-    sellAllResource: (resourceKey: string) => void;
-
-    // Auto-sell
-    setAutoSellThreshold: (resourceKey: string, threshold: number) => void;
-    setAutoSellEnabled: (resourceKey: string, enabled: boolean) => void;
-    checkAutoSell: (resourceKey: string) => void;
-
     // Equipment management
     equipTool: (toolKey: string) => void;
     unequipTool: (toolKey: string) => void;
