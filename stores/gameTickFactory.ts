@@ -87,20 +87,6 @@ function processWorkerProduction(
 }
 
 /**
- * Processes salary payments for all resources
- */
-function processSalaryPayments(
-  state: GameState, 
-  get: () => GameStore
-): void {
-  if (state.tickCount && state.tickCount % SALARY_PAYMENT_INTERVAL === 0) {
-    Object.keys(state.resources).forEach(resourceKey => {
-      get().payWorkerSalaries(resourceKey);
-    });
-  }
-}
-
-/**
  * Calculates auto-sell updates for a single resource
  */
 function calculateAutoSellUpdates(
@@ -224,10 +210,7 @@ export function gameTickFactory(set: (fn: (state: GameState) => Partial<GameStat
         resourceUpdates[resourceKey] = resourceUpdate;
       }
     });
-
-    // Process salary payments
-    processSalaryPayments(state, get);
-
+    
     // Process auto-sell
     const autoSellUpdates = processAutoSell(state, resourceUpdates);
 

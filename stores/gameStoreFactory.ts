@@ -370,56 +370,6 @@ export function checkAutoSellFactory(get: () => GameStore) {
   }
 }
 
-export function payWorkerSalariesFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
-  return function (resourceKey: string): void {
-    const state = get();
-    const resource = state.resources[resourceKey];
-    if (!resource || resource.workers === 0 || resource.workerSalary <= 0) return;
-
-    const gold = state.resources.gold;
-    if (!gold) return;
-
-    const totalSalaryCost = resource.workers * resource.workerSalary;
-
-    if (gold.amount >= totalSalaryCost) {
-      // Pay all workers
-      set((state) => ({
-        ...state,
-        resources: {
-          ...state.resources,
-          [resourceKey]: {
-            ...resource,
-            paidWorkers: resource.workers
-          },
-          gold: {
-            ...gold,
-            amount: gold.amount - totalSalaryCost
-          }
-        }
-      }));
-    } else {
-      // Pay as many workers as possible
-      const affordableWorkers = Math.floor(gold.amount / resource.workerSalary);
-      const actualCost = affordableWorkers * resource.workerSalary;
-
-      set((state) => ({
-        ...state,
-        resources: {
-          ...state.resources,
-          [resourceKey]: {
-            ...resource,
-            paidWorkers: affordableWorkers
-          },
-          gold: {
-            ...gold,
-            amount: gold.amount - actualCost
-          }
-        }
-      }));
-    }
-  }
-}
-
 export function equipToolFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
   return function (toolKey: string): void {
     const state = get();

@@ -75,9 +75,6 @@ export interface GameActions {
     setAutoSellEnabled: (resourceKey: string, enabled: boolean) => void;
     checkAutoSell: (resourceKey: string) => void;
 
-    // Salary system
-    payWorkerSalaries: (resourceKey: string) => void;
-
     // Equipment management
     equipTool: (toolKey: string) => void;
     unequipTool: (toolKey: string) => void;
