@@ -27,21 +27,8 @@ const useGameStore = create<GameStore>((set, get) => ({
   setResourceAmount: setResourceAmountFactory(set),
   addResourceAmount: addResourceAmountFactory(set),
   setResourcePerSecond: setResourcePerSecondFactory(set),
-  setResourceWorkers: setResourceWorkersFactory(set),
-  setResourcePaidWorkers: setResourcePaidWorkersFactory(set),
-  setResourceWorkerCost: setResourceWorkerCostFactory(set),
-  setResourceWorkerSalary: setResourceWorkerSalaryFactory(set),
   setResourceIsGathering: setResourceIsGatheringFactory(set),
   setResourceGatherProgress: setResourceGatherProgressFactory(set),
-  setResourceWorkerProgress: setResourceWorkerProgressFactory(set),
-
-  // Home management
-  buildHome: buildHomeFactory(set, get),
-  upgradeHome: upgradeHomeFactory(set, get),
-  getHomeCost: getHomeCostFactory(get),
-  getHomeUpgradeCost: getHomeUpgradeCostFactory(get),
-  canBuildHome: canBuildHomeFactory(get),
-  canUpgradeHome: canUpgradeHomeFactory(get),
 
   // Bootstrap
   bootstrap: bootstrapFactory(set, get),
@@ -49,7 +36,6 @@ const useGameStore = create<GameStore>((set, get) => ({
 
   startGathering: startGatheringFactory(set, get),
   resetGatherProgress: resetGatherProgressFactory(set),
-  resetWorkerProgress: resetWorkerProgressFactory(set),
 
   // Initialize resource
   initializeResource: initializeResourceFactory(set, get),

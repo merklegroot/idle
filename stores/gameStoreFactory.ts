@@ -63,38 +63,6 @@ export function setResourcePerSecondFactory(set: (fn: (state: GameState) => Part
   }
 }
 
-export function setResourceWorkersFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
-  return function (resourceKey: string, workers: number): void {
-    set((state) => ({
-      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], workers } }
-    }));
-  }
-}
-
-export function setResourcePaidWorkersFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
-  return function (resourceKey: string, paidWorkers: number): void {
-    set((state) => ({
-      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], paidWorkers } }
-    }));
-  }
-}
-
-export function setResourceWorkerCostFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
-  return function (resourceKey: string, workerCost: number): void {
-    set((state) => ({
-      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], workerCost } }
-    }));
-  }
-}
-
-export function setResourceWorkerSalaryFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
-  return function (resourceKey: string, workerSalary: number): void {
-    set((state) => ({
-      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], workerSalary } }
-    }));
-  }
-}
-
 export function setResourceIsGatheringFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
   return function (resourceKey: string, isGathering: boolean): void {
     set((state) => ({
@@ -107,14 +75,6 @@ export function setResourceGatherProgressFactory(set: (fn: (state: GameState) =>
   return function (resourceKey: string, gatherProgress: number): void {
     set((state) => ({
       resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], gatherProgress } }
-    }));
-  }
-}
-
-export function setResourceWorkerProgressFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
-  return function (resourceKey: string, workerProgress: number): void {
-    set((state) => ({
-      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], workerProgress } }
     }));
   }
 }
@@ -133,137 +93,6 @@ export function getHomeCostFactory(get: () => GameState) {
       stone: Math.floor(30 * multiplier),
       gold: Math.floor(200 * multiplier)
     };
-  }
-}
-
-export function canBuildHomeFactory(get: () => GameState) {
-  return function (): boolean {
-    const state = get();
-    const cost = getHomeCostFactory(get)();
-
-    const wood = state.resources.wood;
-    const stone = state.resources.stone;
-    const gold = state.resources.gold;
-
-    return (
-      wood && wood.amount >= cost.wood &&
-      stone && stone.amount >= cost.stone &&
-      gold && gold.amount >= cost.gold
-    );
-  }
-}
-
-export function getHomeUpgradeCostFactory(get: () => GameState) {
-  return function (homeId: string) {
-    const state = get();
-    const home = state.homes.find(h => h.id === homeId);
-    if (!home) return { wood: 0, stone: 0, gold: 0 };
-
-    // Upgrade costs: 25 wood, 15 stone, 100 gold per level
-    const multiplier = Math.pow(1.2, home.level);
-
-    return {
-      wood: Math.floor(25 * multiplier),
-      stone: Math.floor(15 * multiplier),
-      gold: Math.floor(100 * multiplier)
-    };
-  }
-}
-
-export function canUpgradeHomeFactory(get: () => GameState) {
-  return function (homeId: string) {
-    const state = get();
-    const home = state.homes.find(h => h.id === homeId);
-    if (!home) return false;
-
-    const cost = getHomeUpgradeCostFactory(get)(homeId);
-
-    const wood = state.resources.wood;
-    const stone = state.resources.stone;
-    const gold = state.resources.gold;
-
-    return (
-      wood && wood.amount >= cost.wood &&
-      stone && stone.amount >= cost.stone &&
-      gold && gold.amount >= cost.gold
-    );
-  }
-}
-
-export function buildHomeFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
-  return function (): void {
-    const state = get();
-    const cost = getHomeCostFactory(get)();
-
-    if (!canBuildHomeFactory(get)()) return;
-
-    const newHome: Home = {
-      id: `home-${Date.now()}`,
-      level: 1,
-      population: 2,
-      happiness: 50
-    };
-
-    // Consume materials
-    const updatedResources = { ...state.resources };
-    updatedResources.wood = {
-      ...updatedResources.wood,
-      amount: updatedResources.wood.amount - cost.wood
-    };
-    updatedResources.stone = {
-      ...updatedResources.stone,
-      amount: updatedResources.stone.amount - cost.stone
-    };
-    updatedResources.gold = {
-      ...updatedResources.gold,
-      amount: updatedResources.gold.amount - cost.gold
-    };
-
-    set((state) => ({
-      ...state,
-      homes: [...state.homes, newHome],
-      resources: updatedResources
-    }));
-  }
-}
-
-export function upgradeHomeFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
-  return function (homeId: string) {
-    const state = get();
-    const home = state.homes.find(h => h.id === homeId);
-    if (!home || !canUpgradeHomeFactory(get)(homeId)) return;
-
-    const upgradeCost = getHomeUpgradeCostFactory(get)(homeId);
-
-    // Consume materials
-    const updatedResources = { ...state.resources };
-    updatedResources.wood = {
-      ...updatedResources.wood,
-      amount: updatedResources.wood.amount - upgradeCost.wood
-    };
-    updatedResources.stone = {
-      ...updatedResources.stone,
-      amount: updatedResources.stone.amount - upgradeCost.stone
-    };
-    updatedResources.gold = {
-      ...updatedResources.gold,
-      amount: updatedResources.gold.amount - upgradeCost.gold
-    };
-
-    set((state) => ({
-      ...state,
-      homes: state.homes.map(h =>
-        h.id === homeId
-          ? {
-            ...h,
-            level: h.level + 1,
-            population: h.population + 1,
-            happiness: Math.min(100, h.happiness + 10)
-          }
-          : h
-      ),
-      resources: updatedResources
-    }));
   }
 }
 
@@ -384,20 +213,6 @@ export function resetGatherProgressFactory(set: (fn: (state: GameState) => Parti
           ...state.resources[resourceKey],
           isGathering: false,
           gatherProgress: 0
-        }
-      }
-    }));
-  }
-}
-
-export function resetWorkerProgressFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
-  return function (resourceKey: string): void {
-    set((state) => ({
-      resources: {
-        ...state.resources,
-        [resourceKey]: {
-          ...state.resources[resourceKey],
-          workerProgress: 0
         }
       }
     }));

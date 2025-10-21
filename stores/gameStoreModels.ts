@@ -53,21 +53,7 @@ export interface GameActions {
     setResourceAmount: (resourceKey: string, amount: number) => void;
     addResourceAmount: (resourceKey: string, amount: number) => void;
     setResourcePerSecond: (resourceKey: string, perSecond: number) => void;
-    setResourceWorkers: (resourceKey: string, workers: number) => void;
-    setResourcePaidWorkers: (resourceKey: string, paidWorkers: number) => void;
-    setResourceWorkerCost: (resourceKey: string, workerCost: number) => void;
-    setResourceWorkerSalary: (resourceKey: string, workerSalary: number) => void;
     setResourceIsGathering: (resourceKey: string, isGathering: boolean) => void;
-    setResourceGatherProgress: (resourceKey: string, gatherProgress: number) => void;
-    setResourceWorkerProgress: (resourceKey: string, workerProgress: number) => void;
-
-    // Home management
-    buildHome: () => void;
-    upgradeHome: (homeId: string) => void;
-    getHomeCost: () => HomeCost;
-    getHomeUpgradeCost: (homeId: string) => HomeCost;
-    canBuildHome: () => boolean;
-    canUpgradeHome: (homeId: string) => boolean;
 
     // Bootstrap
     bootstrap: () => void;
@@ -75,7 +61,6 @@ export interface GameActions {
     // Actions
     startGathering: (resourceKey: string) => void;
     resetGatherProgress: (resourceKey: string) => void;
-    resetWorkerProgress: (resourceKey: string) => void;
 
     // Initialize resource
     initializeResource: (resourceKey: string) => void;
