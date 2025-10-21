@@ -64,16 +64,6 @@ export interface GameActions {
     // Initialize resource
     initializeResource: (resourceKey: string) => void;
 
-    // Equipment management
-    equipTool: (toolKey: string) => void;
-    unequipTool: (toolKey: string) => void;
-    getEquippedTool: (toolKey: string) => string | undefined;
-    getToolBonus: (resourceKey: string) => number;
-
-    // Worker equipment management
-    getWorkerToolBonus: (resourceKey: string) => number;
-    getWorkersWithTools: (resourceKey: string) => number;
-
     // Game loop
     startGameLoop: () => void;
     stopGameLoop: () => void;

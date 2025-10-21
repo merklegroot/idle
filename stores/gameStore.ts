@@ -38,14 +38,6 @@ const useGameStore = create<GameStore>((set, get) => ({
   // Initialize resource
   initializeResource: initializeResourceFactory(set, get),
 
-  // Equipment management
-  equipTool: equipToolFactory(set, get),
-  unequipTool: unequipToolFactory(set, get),
-  getEquippedTool: getEquippedToolFactory(get),
-  getToolBonus: getToolBonusFactory(get),
-  getWorkerToolBonus: getWorkerToolBonusFactory(get),
-  getWorkersWithTools: getWorkersWithToolsFactory(get),
-
   // Game loop
   startGameLoop: startGameLoopFactory(set, get),
   stopGameLoop: stopGameLoopFactory(set, get),
