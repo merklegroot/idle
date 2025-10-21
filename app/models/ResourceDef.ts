@@ -33,3 +33,21 @@ export const GoldDef: ResourceDef = {
     resourceKey: 'gold',
     icon: '🪙',
 };
+
+export const StickDef: ResourceDef = {
+    name: 'Stick',
+    resourceKey: 'stick',
+    icon: '╱',
+};
+
+export const TwineDef: ResourceDef = {
+    name: 'Twine',
+    resourceKey: 'twine',
+    icon: '🧵',
+};
+
+export const KnappedAxeHeadDef: ResourceDef = {
+    name: 'Knapped Axe Head',
+    resourceKey: 'knapped-axe-head',
+    icon: '🪨',
+};

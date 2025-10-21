@@ -1,4 +1,3 @@
-import { CharacterEquipment } from "../app/models/ResourceDef";
 import { CraftingRecipe } from "../models/CraftingRecipe";
 
 export interface ResourceState {
@@ -6,7 +5,6 @@ export interface ResourceState {
     perSecond: number;
     workers: number;
     paidWorkers: number;
-    workerCost: number;
     isGathering: boolean;
     gatherProgress: number;
     workerProgress: number;
@@ -38,7 +36,6 @@ export interface GameState {
     resources: Record<string, ResourceState>;
     gameLoopInterval?: NodeJS.Timeout;
     tickCount: number;
-    characterEquipment: CharacterEquipment;
     homes: Home[];
     playerStats: PlayerStats;
     timeOfDay: number; // 0-24 hours

@@ -30,7 +30,6 @@ export function addResourceAmountFactory(set: (fn: (state: GameState) => Partial
               perSecond: 0,
               workers: 0,
               paidWorkers: 0,
-              workerCost: 100,
               isGathering: false,
               gatherProgress: 0,
               workerProgress: 0,
@@ -126,7 +125,6 @@ export function bootstrapFactory(set: (fn: (state: GameState) => Partial<GameSta
           perSecond: 0,
           workers: 0,
           paidWorkers: 0,
-          workerCost: 100,
           isGathering: false,
           gatherProgress: 0,
           workerProgress: 0,
@@ -222,17 +220,6 @@ export function initializeResourceFactory(set: (fn: (state: GameState) => Partia
     const state = get();
     if (state.resources[resourceKey]) return; // Already initialized
 
-    // Get default values from resource definitions
-    const resourceDefs: Record<string, { workerCost: number; }> = {
-      wood: { workerCost: WoodDef.workerCost },
-      berries: { workerCost: BerryDef.workerCost },
-      stone: { workerCost: StoneDef.workerCost },
-      hatchet: { workerCost: HatchetDef.workerCost },
-      pickaxe: { workerCost: PickaxeDef.workerCost },
-      thatch: { workerCost: ThatchDef.workerCost }
-    };
-    const resourceDef = resourceDefs[resourceKey];
-    const defaultWorkerCost = resourceDef?.workerCost || 100;
 
     set((state) => ({
       ...state,
@@ -243,7 +230,6 @@ export function initializeResourceFactory(set: (fn: (state: GameState) => Partia
           perSecond: 0,
           workers: 0,
           paidWorkers: 0,
-          workerCost: defaultWorkerCost,
           isGathering: false,
           gatherProgress: 0,
           workerProgress: 0,
@@ -470,7 +456,6 @@ export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameS
             perSecond: 0,
             workers: 0,
             paidWorkers: 0,
-            workerCost: 100,
             isGathering: false,
             gatherProgress: 0,
             workerProgress: 0,

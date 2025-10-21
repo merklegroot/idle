@@ -1,7 +1,7 @@
 'use client'
 
 import useGameStore from '@/stores/gameStore'
-import { WoodDef, BerryDef, StoneDef, GoldDef, ResourceDef } from '@/app/models/ResourceDef'
+import { WoodDef, BerryDef, StoneDef, GoldDef, ResourceDef, StickDef, ThatchDef, TwineDef, KnappedAxeHeadDef } from '@/app/models/ResourceDef'
 import InventoryItem from './InventoryItem'
 
 export default function InventoryWidget() {
@@ -22,25 +22,8 @@ export default function InventoryWidget() {
     }
   }
 
-  const allResources = [
-    toResourceInventoryItemDef(WoodDef),
-    toResourceInventoryItemDef(BerryDef),
-    toResourceInventoryItemDef(StoneDef),
-    toResourceInventoryItemDef(GoldDef)
-  ]
-
-  // Add additional resources that might exist in the game
-  const additionalResources = [
-    { key: 'stick', name: 'Stick', icon: '╱', value: 0.05 },
-    { key: 'thatch', name: 'Thatch', icon: '🌾', value: 0.03 },
-    { key: 'twine', name: 'Twine', icon: '🧵', value: 0.1 },
-    { key: 'knapped-axe-head', name: 'Knapped Axe Head', icon: '🪨', value: 0.2 },
-    { key: 'rope', name: 'Rope', icon: '🪢', value: 0.5 },
-    { key: 'cloth', name: 'Cloth', icon: '🧶', value: 2 },
-    { key: 'leather', name: 'Leather', icon: '🦬', value: 5 }
-  ]
-
-  const allItems = [...allResources, ...additionalResources]
+  const allItems = [WoodDef, BerryDef, StoneDef, GoldDef, StickDef, ThatchDef, TwineDef, KnappedAxeHeadDef]
+      .map(resource => toResourceInventoryItemDef(resource));
 
   const inventoryItems = allItems.map(resource => {
     const resourceData = getResource(resource.key)
@@ -49,7 +32,7 @@ export default function InventoryWidget() {
       amount: resourceData?.amount || 0
     }
   }).filter(item => item.amount > 0)
-    .sort((a, b) => b.amount - a.amount)
+    .sort((a, b) => b.amount - a.amount);
 
   return (
     <div className={`p-3 bg-white rounded-lg border border-gray-200 shadow-sm`}>
@@ -70,5 +53,5 @@ export default function InventoryWidget() {
         ))}
       </div>
     </div>
-  )
+  );
 }
