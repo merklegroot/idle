@@ -61,6 +61,12 @@ const TILE_VARIANTS: { [key: string]: TileVariant } = {
     offsetX: 0,
     offsetY: 0
   },
+  // Berry bush tile
+  'berry-bush': {
+    src: '/assets/cute-fantasy-rpg/Outdoor decoration/Oak_Tree_Small.png',
+    offsetX: 0,
+    offsetY: 0
+  },
 }
 
 // Function to determine tile variant based on neighbors
@@ -89,6 +95,11 @@ function hasTreeAt(x: number, y: number, treeData: SceneryTileMap[]): boolean {
 // Helper function to check if there's a stone at specific coordinates
 function hasStoneAt(x: number, y: number, treeData: SceneryTileMap[]): boolean {
   return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === SceneryEnum.Rock)
+}
+
+// Helper function to check if there's a berry bush at specific coordinates
+function hasBerryBushAt(x: number, y: number, treeData: SceneryTileMap[]): boolean {
+  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === SceneryEnum.BerryBush)
 }
 
 // Helper function to calculate vertical offset for non-square images
@@ -434,6 +445,26 @@ export default function MapComponent({
                       style={{ fontSize: `${tileSize * 0.6}px` }}
                     >
                       <span className="text-gray-600 font-bold drop-shadow-lg">S</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Berry bush overlay */}
+              {hasBerryBushAt(tile.x, tile.y, treeData) && (
+                <div className="absolute inset-0 pointer-events-none">
+                  <div
+                    className="flex items-center justify-center"
+                    style={{ fontSize: `${tileSize * 0.6}px` }}
+                  >
+                    <span className="text-red-600 font-bold drop-shadow-lg">🫐</span>
+                  </div>
+                  {shouldShowTileLetters && (
+                    <div
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                      style={{ fontSize: `${tileSize * 0.6}px` }}
+                    >
+                      <span className="text-red-600 font-bold drop-shadow-lg">B</span>
                     </div>
                   )}
                 </div>

@@ -2,5 +2,6 @@ export enum SceneryEnum {
     Invalid,
     Empty,
     Tree,
-    Rock
+    Rock,
+    BerryBush
 }

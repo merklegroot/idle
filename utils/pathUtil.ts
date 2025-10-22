@@ -190,7 +190,7 @@ function parseTreeMapData(treeMapData: string): SceneryTileMap[] {
     
     lines.forEach((line, y) => {
         line.split('').forEach((char, x) => {
-            if (char === '.' || char === 't' || char === 's') {
+            if (char === '.' || char === 't' || char === 's' || char === 'b') {
                 tiles.push({
                     sceneryType: parseSceneryType(char),
                     x,
@@ -210,6 +210,8 @@ function parseSceneryType(sceneryType: string): SceneryEnum {
         return SceneryEnum.Tree;
     if (sceneryType === 's')
         return SceneryEnum.Rock;
+    if (sceneryType === 'b')
+        return SceneryEnum.BerryBush;
 
     return SceneryEnum.Invalid;
 }
