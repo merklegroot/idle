@@ -338,6 +338,7 @@ export default function MapPage() {
               containsThatch={containsThatch || false}
               containsWater={selectedMapTile?.terrainType === TerrainEnum.Water || false}
               hasLeanTo={selectedMapTile?.hasLeanTo || false}
+              foliageType={selectedTreeTile ? SceneryEnum[selectedTreeTile.sceneryType] : null}
               onGatherStick={handleGatherStick}
               onGatherStone={handleGatherStone}
               onGatherThatch={handleGatherThatch}

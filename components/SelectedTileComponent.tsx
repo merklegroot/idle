@@ -11,6 +11,7 @@ interface SelectedTileComponentProps {
   containsThatch: boolean;
   containsWater: boolean;
   hasLeanTo?: boolean;
+  foliageType?: string | null;
   onGatherStick?: () => void;
   onGatherStone?: () => void;
   onGatherThatch?: () => void;
@@ -53,6 +54,40 @@ function getTileTypeIcon(terrainType: TerrainEnum | undefined | null) {
   return '❓';
 }
 
+function getFoliageTypeText(foliageType: string | null | undefined) {
+  if (!foliageType) return 'None';
+  
+  switch (foliageType.toLowerCase()) {
+    case 'tree':
+      return 'Tree';
+    case 'rock':
+      return 'Rock';
+    case 'berrybush':
+      return 'Berry Bush';
+    case 'empty':
+      return 'None';
+    default:
+      return foliageType;
+  }
+}
+
+function getFoliageTypeIcon(foliageType: string | null | undefined) {
+  if (!foliageType) return '';
+  
+  switch (foliageType.toLowerCase()) {
+    case 'tree':
+      return '🌳';
+    case 'rock':
+      return '🪨';
+    case 'berrybush':
+      return '🫐';
+    case 'empty':
+      return '';
+    default:
+      return '🌿';
+  }
+}
+
 export default function SelectedTileComponent({
   selectedTile,
   terrainType,
@@ -61,6 +96,7 @@ export default function SelectedTileComponent({
   containsThatch,
   containsWater,
   hasLeanTo = false,
+  foliageType = null,
   onGatherStick,
   onGatherStone,
   onGatherThatch,
@@ -117,6 +153,12 @@ export default function SelectedTileComponent({
       <div className="space-y-3">
         <div className="space-y-1 text-sm">
           <p><span className="font-medium">Resources:</span> {getResourcesText()}</p>
+          <p><span className="font-medium">Foliage:</span> 
+            {getFoliageTypeIcon(foliageType) && (
+              <span className="ml-1">{getFoliageTypeIcon(foliageType)}</span>
+            )}
+            <span className="ml-1">{getFoliageTypeText(foliageType)}</span>
+          </p>
         </div>
 
         {containsTree && onGatherStick && (
