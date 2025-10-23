@@ -64,7 +64,6 @@ export interface GameActions {
     // Game loop
     startGameLoop: () => void;
     stopGameLoop: () => void;
-    gameTick: () => void;
 
     // Player stats management
     getPlayerStats: () => PlayerStats;

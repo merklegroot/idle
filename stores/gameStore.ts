@@ -1,8 +1,7 @@
 import { create } from 'zustand';
 import { GameStore } from './gameStoreModels';
 import { getResourceFactory, setResourceAmountFactory, addResourceAmountFactory, setResourcePerSecondFactory, setResourceIsGatheringFactory, setResourceGatherProgressFactory } from './gameStoreFactory';
-import { bootstrapFactory, startGatheringFactory, resetGatherProgressFactory, initializeResourceFactory, sellResourceFactory, sellResourcePercentageFactory, sellAllResourceFactory, setAutoSellThresholdFactory, setAutoSellEnabledFactory, checkAutoSellFactory, equipToolFactory, unequipToolFactory, getEquippedToolFactory, getToolBonusFactory, getWorkerToolBonusFactory, getWorkersWithToolsFactory, startGameLoopFactory, stopGameLoopFactory, getPlayerStatsFactory, setPlayerStatsFactory, updatePlayerWarmthFactory, drinkWaterFactory, getTimeOfDayFactory, getDayFactory, setTimeOfDayFactory, setDayFactory, advanceTimeFactory, getCraftingRecipesFactory, canCraftRecipeFactory, craftRecipeFactory, unlockRecipeFactory } from './gameStoreFactory';
-import { gameTickFactory } from './gameTickFactory';
+import { bootstrapFactory, startGatheringFactory, resetGatherProgressFactory, initializeResourceFactory, startGameLoopFactory, stopGameLoopFactory, getPlayerStatsFactory, setPlayerStatsFactory, updatePlayerWarmthFactory, drinkWaterFactory, getTimeOfDayFactory, getDayFactory, setTimeOfDayFactory, setDayFactory, advanceTimeFactory, getCraftingRecipesFactory, canCraftRecipeFactory, craftRecipeFactory, unlockRecipeFactory } from './gameStoreFactory';
 
 const useGameStore = create<GameStore>((set, get) => ({
   // Initial state
@@ -41,7 +40,6 @@ const useGameStore = create<GameStore>((set, get) => ({
   // Game loop
   startGameLoop: startGameLoopFactory(set, get),
   stopGameLoop: stopGameLoopFactory(set, get),
-  gameTick: gameTickFactory(set, get),
 
   // Player stats management
   getPlayerStats: getPlayerStatsFactory(get),

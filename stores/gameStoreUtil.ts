@@ -1,18 +1,7 @@
-import { BerryDef, HatchetDef, PickaxeDef, StoneDef, WoodDef } from "@/app/models/ResourceDef";
+import { BerryDef, StoneDef, WoodDef } from "@/app/models/ResourceDef";
 import { GameState } from "./gameStoreModels";
 
 // Helper function to get sell prices
-function getSellPrice(resourceKey: string): number {
-    const prices: Record<string, number> = {
-        wood: WoodDef.sellPrice || 20,    // Wood sells for 20 gold each
-        berries: BerryDef.sellPrice || 30,  // Berries sell for 30 gold each
-        stone: StoneDef.sellPrice || 50,   // Stone sells for 50 gold each
-        hatchet: HatchetDef.sellPrice || 75, // Hatchet sells for 75 gold each
-        pickaxe: PickaxeDef.sellPrice || 100 // Pickaxe sells for 100 gold each
-    };
-    return prices[resourceKey] || 1;
-};
-
 // Helper function to check if materials are available (without consuming)
 function checkMaterialsAvailable(resourceKey: string, state: GameState): boolean {
     const resourceDefs: Record<string, { materials?: Array<{ resourceKey: string; amount: number }> }> = {
@@ -70,7 +59,6 @@ function checkAndConsumeMaterials(resourceKey: string, state: GameState): boolea
 };
 
 export const gameStoreUtil = {
-    getSellPrice,
     checkMaterialsAvailable,
     checkAndConsumeMaterials
 }
