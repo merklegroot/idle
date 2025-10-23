@@ -1,0 +1,49 @@
+---
+description: TypeScript Rules
+globs:
+alwaysApply: true
+---
+
+## Semicolons
+Use semicolons to terminate statements.
+
+## Function Declarations
+Prefer function declarations over const arrow functions for methods *especially* with exports.
+This makes jest unit test mocking more flexible.
+
+Exceptions to this include when it there's a concern about behavior with `this`.
+
+## Boolean Naming
+Boolean variable names should be phrased as questions using verbs.
+This makes the code more readable and self-documenting.
+
+Examples:
+``` text
+wasSuccessful
+isCompleted
+hasPermission
+canExecute
+```
+
+## Control Flow
+Ternaries are often best for simple conditionals.
+Avoid `else if` chains when possible.
+Prefer early returns, guard clauses, or switch statements for better readability.
+Exception: Use `else if` only when it eliminates code duplication.
+
+## Switch Statements
+Don't use switch statements in TypeScript/JavaScript.
+Never use them.
+Stop using them.
+If you use one, I need you to write on the chalkboard 50 times "I will stop using switch statements."
+In other languages that support pattern matching, the pattern matching switch statment can be ok. TypeScript and JavaScipt don't support it.
+
+## Code Nesting
+Minimize nesting levels to improve readability.
+Use early returns, extract functions, or refactor conditions to reduce complexity.
+
+## Cross-Platform Concerns
+When splitting lines, do so in a way that works with the major EOL formats, including \n, \r, and \r\n
+When creating a line break, make sure to use the proper EOL format for the platform.
+Note that this sometimes may not apply to text that's rendered in the browser, as browsers on all platforms (even Windows) use \n.
+When joining paths, please do so in context of the OS's path format.
