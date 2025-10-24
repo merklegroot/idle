@@ -61,10 +61,6 @@ export interface GameActions {
     // Initialize resource
     initializeResource: (resourceKey: string) => void;
 
-    // Game loop
-    startGameLoop: () => void;
-    stopGameLoop: () => void;
-
     // Player stats management
     getPlayerStats: () => PlayerStats;
     setPlayerStats: (stats: Partial<PlayerStats>) => void;

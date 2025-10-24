@@ -17,42 +17,42 @@ import { SceneryEnum } from '@/models/SceneryEnum'
 
 export default function MapPage() {
   const { addResourceAmount, initializeResource, getResource, drinkWater, bootstrap, canCraftRecipe, craftRecipe } = useGameStore()
-  const [mapData, setMapData] = useState<MapTile[]>([])
-  const [treeData, setTreeData] = useState<SceneryTileMap[]>([])
-  const [loading, setLoading] = useState(true)
-  const [debugMode, setDebugMode] = useState(false)
-  const [shouldShowGrid, setShouldShowGrid] = useState(false)
-  const [shouldShowTileLetters, setShouldShowTileLetters] = useState(false)
-  const [shouldShowTileVariants, setShouldShowTileVariants] = useState(false)
-  const [selectedTile, setSelectedTile] = useState<{ x: number; y: number } | null>(null)
+  const [mapData, setMapData] = useState<MapTile[]>([]);
+  const [treeData, setTreeData] = useState<SceneryTileMap[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDebugMode, setIsDebugMode] = useState(false);
+  const [shouldShowGrid, setShouldShowGrid] = useState(false);
+  const [shouldShowTileLetters, setShouldShowTileLetters] = useState(false);
+  const [shouldShowTileVariants, setShouldShowTileVariants] = useState(false);
+  const [selectedTile, setSelectedTile] = useState<{ x: number; y: number } | null>(null);
   const [gatheringProgress, setGatheringProgress] = useState<{
-    isActive: boolean
-    progress: number
-    tile: { x: number; y: number }
-    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head'
-  } | null>(null)
-  const completionHandled = useRef(false)
+    isActive: boolean;
+    progress: number;
+    tile: { x: number; y: number };
+    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head';
+  } | null>(null);
+  const completionHandled = useRef(false);
 
   useEffect(() => {
     const loadMapData = async () => {
       try {
-        const response = await fetch('/api/map-data')
-        const data = await response.json()
-        setMapData(data.tiles)
-        setTreeData(data.treeTiles)
+        const response = await fetch('/api/map-data');
+        const data = await response.json();
+        setMapData(data.tiles);
+        setTreeData(data.treeTiles);
       } catch (error) {
-        console.error('Failed to load map data:', error)
+        console.error('Failed to load map data:', error);
       } finally {
-        setLoading(false)
+        setIsLoading(false);
       }
     }
 
     // Initialize game with bootstrap (includes crafting recipes)
-    bootstrap()
-    loadMapData()
+    bootstrap();
+    loadMapData();
   }, [bootstrap])
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-xl text-gray-600">Loading map...</div>
@@ -61,58 +61,58 @@ export default function MapPage() {
   }
 
   // Calculate map dimensions for legend
-  const maxX = Math.max(...mapData.map(tile => tile.x))
-  const maxY = Math.max(...mapData.map(tile => tile.y))
+  const maxX = Math.max(...mapData.map(tile => tile.x));
+  const maxY = Math.max(...mapData.map(tile => tile.y));
 
   // Calculate selected tile information
   const selectedMapTile = selectedTile
     ? mapData.find(tile => tile.x === selectedTile.x && tile.y === selectedTile.y)
-    : null
+    : null;
 
   const selectedTreeTile = selectedTile
     ? treeData.find(tree => tree.x === selectedTile.x && tree.y === selectedTile.y)
-    : null
+    : null;
 
   // Check if selected tile contains thatch (grass tiles)
   const containsThatch = selectedTile && selectedMapTile?.terrainType === TerrainEnum.Grass;
 
-  const handleTileSelect = (x: number | null, y: number | null) => {
+  function handleTileSelect(x: number | null, y: number | null) {
     if (x === null || y === null) {
-      setSelectedTile(null)
-    } else {
-      setSelectedTile({ x, y })
+      setSelectedTile(null);
+      return;
     }
+    setSelectedTile({ x, y });
   }
 
-  const startGathering = (resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head') => {
+  function startGathering(resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head') {
     // For crafting actions, allow starting without a selected tile
-    const isCraftAction = resourceType === 'craft-twine' || resourceType === 'craft-knapped-axe-head'
-    if (!selectedTile && !isCraftAction) return
+    const isCraftAction = resourceType === 'craft-twine' || resourceType === 'craft-knapped-axe-head';
+    if (!selectedTile && !isCraftAction) return;
 
-    // For construction, check if player has enough resources first
+    // Handle construction resource check
     if (resourceType === 'construct-lean-to') {
-      const stickResource = getResource('stick')
+      const stickResource = getResource('stick');
       if (!stickResource || stickResource.amount < 1) {
-        alert('You need at least 1 stick to construct a lean-to!')
-        return
+        alert('You need at least 1 stick to construct a lean-to!');
+        return;
       }
-    } else if (resourceType === 'craft-twine') {
-      if (!canCraftRecipe('twine')) {
-        return
-      }
-    } else if (resourceType === 'craft-knapped-axe-head') {
-      if (!canCraftRecipe('knapped-axe-head')) {
-        return
-      }
-    } else {
-      // Initialize resource if it doesn't exist
-      if (!getResource(resourceType)) {
-        initializeResource(resourceType)
-      }
+    }
+
+    // Handle crafting recipe checks
+    if (resourceType === 'craft-twine' && !canCraftRecipe('twine')) {
+      return;
+    }
+    if (resourceType === 'craft-knapped-axe-head' && !canCraftRecipe('knapped-axe-head')) {
+      return;
+    }
+
+    // Initialize resource if it doesn't exist (for non-crafting actions)
+    if (!isCraftAction && resourceType !== 'construct-lean-to' && !getResource(resourceType)) {
+      initializeResource(resourceType);
     }
 
     // Reset completion flag
-    completionHandled.current = false
+    completionHandled.current = false;
 
     // Start gathering progress
     setGatheringProgress({
@@ -120,119 +120,126 @@ export default function MapPage() {
       progress: 0,
       tile: selectedTile || { x: 0, y: 0 },
       resourceType
-    })
+    });
 
     // Simulate gathering progress over 3 seconds
     const interval = setInterval(() => {
       setGatheringProgress(prev => {
-        if (!prev) return null
+        if (!prev) return null;
 
-        const newProgress = prev.progress + 10
+        const newProgress = prev.progress + 10;
         if (newProgress >= 100) {
-          clearInterval(interval)
+          clearInterval(interval);
 
           // Only handle completion once
           if (!completionHandled.current) {
-            completionHandled.current = true
+            completionHandled.current = true;
             setTimeout(() => {
-              // Add resource to inventory after delay
-              if (prev.resourceType === 'stone') {
-                addResourceAmount('stone', 1);
-              }
-
-              if (prev.resourceType === 'stick') {
-                addResourceAmount('stick', 1);
-              }
-
-              if (prev.resourceType === 'thatch') {
-                addResourceAmount('thatch', 1);
-              }
-
-              if (prev.resourceType === 'water') {
-                drinkWater();
-              }
-
-              if (prev.resourceType === 'construct-lean-to') {
-                // Deduct the cost and show success message
-                addResourceAmount('stick', -1);
-                
-                // Mark the tile as having a lean-to
-                setMapData(prevMapData => 
-                  prevMapData.map(tile => 
-                    tile.x === prev.tile.x && tile.y === prev.tile.y
-                      ? { ...tile, hasLeanTo: true }
-                      : tile
-                  )
-                );
-                
-                alert('Lean-to constructed successfully!');
-              }
-
-              if (prev.resourceType === 'craft-twine') {
-                // Craft twine using the crafting system
-                craftRecipe('twine');
-              }
-
-              if (prev.resourceType === 'craft-knapped-axe-head') {
-                // Craft knapped axe head using the crafting system
-                craftRecipe('knapped-axe-head');
-              }
-
-              setGatheringProgress(null)
-            }, 500)
+              handleGatheringCompletion(prev);
+            }, 500);
           }
 
           return {
             ...prev,
             progress: 100
-          }
+          };
         }
 
         return {
           ...prev,
           progress: newProgress
-        }
-      })
-    }, 300)
+        };
+      });
+    }, 300);
   }
 
-  const handleGatherStick = () => {
-    startGathering('stick')
+  function handleGatherStick() {
+    startGathering('stick');
   }
 
-  const handleGatherStone = () => {
-    startGathering('stone')
+  function handleGatherStone() {
+    startGathering('stone');
   }
 
-  const handleGatherThatch = () => {
-    startGathering('thatch')
+  function handleGatherThatch() {
+    startGathering('thatch');
   }
 
-  const handleDrinkWater = () => {
-    startGathering('water')
+  function handleDrinkWater() {
+    startGathering('water');
   }
 
-  const handleConstructLeanTo = () => {
-    startGathering('construct-lean-to')
+  function handleConstructLeanTo() {
+    startGathering('construct-lean-to');
   }
 
-  const handleCraftTwine = () => {
+  function handleCraftTwine() {
     if (!canCraftRecipe('twine')) {
-      alert('You need at least 1 thatch to craft twine!')
-      return
+      alert('You need at least 1 thatch to craft twine!');
+      return;
     }
-    startGathering('craft-twine')
+    startGathering('craft-twine');
   }
 
   // Check if player can construct a lean-to (has at least 1 stick)
-  const canConstructLeanTo = () => {
-    const stickResource = getResource('stick')
-    return stickResource && stickResource.amount >= 1
+  function canConstructLeanTo() {
+    const stickResource = getResource('stick');
+    return stickResource && stickResource.amount >= 1;
   }
 
   // Check if player can craft twine (has at least 1 thatch)
-  const canCraftTwine = () => {
-    return canCraftRecipe('twine')
+  function canCraftTwine() {
+    return canCraftRecipe('twine');
+  }
+
+  function handleGatheringCompletion(prev: {
+    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head';
+    tile: { x: number; y: number };
+  }) {
+    // Add resource to inventory after delay
+    if (prev.resourceType === 'stone') {
+      addResourceAmount('stone', 1);
+    }
+
+    if (prev.resourceType === 'stick') {
+      addResourceAmount('stick', 1);
+    }
+
+    if (prev.resourceType === 'thatch') {
+      addResourceAmount('thatch', 1);
+    }
+
+    if (prev.resourceType === 'water') {
+      drinkWater();
+    }
+
+    if (prev.resourceType === 'construct-lean-to') {
+      // Deduct the cost and show success message
+      addResourceAmount('stick', -1);
+      
+      // Mark the tile as having a lean-to
+      setMapData(prevMapData => 
+        prevMapData.map(tile => 
+          tile.x === prev.tile.x && tile.y === prev.tile.y
+            ? { ...tile, hasLeanTo: true }
+            : tile
+        )
+      );
+      
+      alert('Lean-to constructed successfully!');
+    }
+
+    if (prev.resourceType === 'craft-twine') {
+      // Craft twine using the crafting system
+      craftRecipe('twine');
+    }
+
+    if (prev.resourceType === 'craft-knapped-axe-head') {
+      // Craft knapped axe head using the crafting system
+      craftRecipe('knapped-axe-head');
+    }
+
+    setGatheringProgress(null);
   }
 
   return (
@@ -271,13 +278,13 @@ export default function MapPage() {
             {shouldShowTileVariants ? 'Hide Variants' : 'Show Variants'}
           </button>
           <button
-            onClick={() => setDebugMode(!debugMode)}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${debugMode
+            onClick={() => setIsDebugMode(!isDebugMode)}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors text-sm ${isDebugMode
                 ? 'bg-red-600 hover:bg-red-700 text-white'
                 : 'bg-gray-600 hover:bg-gray-700 text-white'
               }`}
           >
-            {debugMode ? 'Hide Debug' : 'Show Debug'}
+            {isDebugMode ? 'Hide Debug' : 'Show Debug'}
           </button>
           {selectedTile && (
             <button
@@ -307,7 +314,7 @@ export default function MapPage() {
             shouldShowGrid={shouldShowGrid}
             shouldShowTileLetters={shouldShowTileLetters}
             shouldShowTileVariants={shouldShowTileVariants}
-            isDebugMode={debugMode}
+            isDebugMode={isDebugMode}
             selectedTile={selectedTile}
             onTileSelect={handleTileSelect}
           />

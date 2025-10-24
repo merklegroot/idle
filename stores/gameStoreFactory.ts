@@ -1,4 +1,3 @@
-import { WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, ThatchDef, toolEffectiveness, toolBonuses, toolCategories } from '../app/models/ResourceDef';
 import { GameState, GameStore, HomeCost, Home, PlayerStats } from './gameStoreModels';
 import { gameStoreUtil } from './gameStoreUtil';
 
@@ -178,11 +177,6 @@ export function startGatheringFactory(set: (fn: (state: GameState) => Partial<Ga
     const resource = state.resources[resourceKey];
     if (!resource) return;
 
-    // Check if materials are available before starting gathering
-    if (!gameStoreUtil.checkMaterialsAvailable(resourceKey, state)) {
-      return; // Don't start gathering if materials aren't available
-    }
-
     // Only start gathering if not already gathering
     if (!resource.isGathering) {
       set((state) => ({
@@ -238,29 +232,6 @@ export function initializeResourceFactory(set: (fn: (state: GameState) => Partia
         }
       }
     }));
-  }
-}
-
-export function startGameLoopFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameStore) {
-  return function (): void {
-    const state = get();
-    if (state.gameLoopInterval) return; // Already running
-
-    const interval = setInterval(() => {
-      get().gameTick();
-    }, 20); // 20ms = 50 FPS
-
-    set((state) => ({ ...state, gameLoopInterval: interval }));
-  }
-}
-
-export function stopGameLoopFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameStore) {
-  return function (): void {
-    const state = get();
-    if (state.gameLoopInterval) {
-      clearInterval(state.gameLoopInterval);
-      set((state) => ({ ...state, gameLoopInterval: undefined }));
-    }
   }
 }
 

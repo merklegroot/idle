@@ -37,10 +37,6 @@ const useGameStore = create<GameStore>((set, get) => ({
   // Initialize resource
   initializeResource: initializeResourceFactory(set, get),
 
-  // Game loop
-  startGameLoop: startGameLoopFactory(set, get),
-  stopGameLoop: stopGameLoopFactory(set, get),
-
   // Player stats management
   getPlayerStats: getPlayerStatsFactory(get),
   setPlayerStats: setPlayerStatsFactory(set),
