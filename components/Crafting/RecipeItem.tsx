@@ -1,23 +1,16 @@
 'use client'
 
-import { WoodDef, BerryDef, StoneDef, GoldDef, ResourceDef, StickDef, ThatchDef, TwineDef, KnappedAxeHeadDef } from '@/app/models/ResourceDef'
+import { CraftingRecipe } from '@/models/CraftingRecipe'
+import { resourceUtil } from '@/utils/resourceUtil'
 
 interface RecipeItemProps {
-  recipe: any
+  recipe: CraftingRecipe
   isSelected: boolean
   onSelect: (recipeId: string) => void
 }
 
 export default function RecipeItem({ recipe, isSelected, onSelect }: RecipeItemProps) {
-  // Create a lookup map for resource icons
-  const resourceDefs: ResourceDef[] = [WoodDef, BerryDef, StoneDef, GoldDef, StickDef, ThatchDef, TwineDef, KnappedAxeHeadDef];
-  const resourceIconMap = resourceDefs.reduce((map, def) => {
-    map[def.resourceKey] = def.icon;
-    return map;
-  }, {} as Record<string, string>);
-
-  // Get the icon for the recipe result
-  const resultIcon = resourceIconMap[recipe.result.resourceKey] || '❓';
+  const recipeIcon = resourceUtil.getRecipeIcon(recipe);
 
   return (
     <button
@@ -28,9 +21,9 @@ export default function RecipeItem({ recipe, isSelected, onSelect }: RecipeItemP
       }`}
     >
       <div className="flex flex-col items-center gap-1">
-        <div className="text-lg">{resultIcon}</div>
+        <div className="text-lg">{recipeIcon}</div>
         <div className="text-xs font-medium text-gray-800">{recipe.name}</div>
       </div>
     </button>
-  )
+  );
 }

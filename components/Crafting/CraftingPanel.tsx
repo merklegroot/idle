@@ -6,11 +6,10 @@ import RecipeDetails from './RecipeDetails'
 import RecipeItem from './RecipeItem'
 
 interface CraftingPanelProps {
-  onClose?: () => void
   onStartCrafting?: (recipeId: string) => void
 }
 
-export default function CraftingPanel({ onClose, onStartCrafting }: CraftingPanelProps) {
+export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
   const { getCraftingRecipes } = useGameStore()
   
   const recipes = getCraftingRecipes()

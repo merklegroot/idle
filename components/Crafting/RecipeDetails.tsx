@@ -1,11 +1,12 @@
 'use client'
 
-import { useMemo } from 'react'
 import useGameStore from '@/stores/gameStore'
 import { getResourceDisplayName, getResourceColorClass } from '@/models/ResourceType'
+import { CraftingRecipe } from '@/models/CraftingRecipe'
+import { resourceUtil } from '@/utils/resourceUtil'
 
 interface RecipeDetailsProps {
-  selectedRecipe: any
+  selectedRecipe: CraftingRecipe | null
   onCraft: (recipeId: string) => void
 }
 
@@ -17,47 +18,39 @@ export default function RecipeDetails({ selectedRecipe, onCraft }: RecipeDetails
     const hasEnough = resource && resource.amount >= ingredient.amount
     const colorClass = hasEnough ? getResourceColorClass(ingredient.resourceKey as any) : 'text-red-600'
     
+    const ingredientIcon = resourceUtil.getIngredientIcon(ingredient);
+
     return (
       <span key={ingredient.resourceKey} className={colorClass}>
-        {ingredient.amount} {getResourceDisplayName(ingredient.resourceKey as any)}
+        {ingredientIcon} {ingredient.amount} {getResourceDisplayName(ingredient.resourceKey as any)}
         {resource && ` (${resource.amount})`}
       </span>
-    )
+    );
   }
 
   if (!selectedRecipe) {
     return (
       <div className="text-center text-gray-500 py-12">Select a recipe to view details</div>
-    )
+    );
   }
 
   return (
     <div className="flex flex-col h-full">
       <div className="mb-3">
-        <h3 className="text-lg font-semibold text-gray-800">{selectedRecipe.name}</h3>
-        {selectedRecipe.description && (
-          <p className="text-sm text-gray-600 mt-1">{selectedRecipe.description}</p>
-        )}
+        <h3 className="text-lg font-semibold text-gray-800">{resourceUtil.getRecipeIcon(selectedRecipe)} {selectedRecipe.name}</h3>
       </div>
 
       <div className="space-y-3">
         <div className="flex items-start gap-2">
           <span className="text-sm font-medium text-gray-700 mt-0.5">Ingredients:</span>
           <div className="flex flex-wrap gap-2">
-            {selectedRecipe.ingredients.map((ingredient, index) => (
+            {selectedRecipe.ingredients.map((ingredient: { resourceKey: string; amount: number }, index: number) => (
               <span key={ingredient.resourceKey}>
                 {getIngredientDisplay(ingredient)}
                 {index < selectedRecipe.ingredients.length - 1 && <span className="text-gray-400">, </span>}
               </span>
             ))}
           </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">Result:</span>
-          <span className={`${getResourceColorClass(selectedRecipe.result.resourceKey as any)} font-medium`}>
-            {selectedRecipe.result.amount} {getResourceDisplayName(selectedRecipe.result.resourceKey as any)}
-          </span>
         </div>
       </div>
 
