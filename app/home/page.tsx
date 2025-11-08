@@ -323,39 +323,47 @@ export default function MapPage() {
         {/* Info Panels */}
         <div className="flex-1 min-w-0 space-y-4">          
           <InventoryWidget />
-          <CraftingPanel onStartCrafting={(recipeId) => {
-            if (recipeId === 'twine') {
-              handleCraftTwine()
-              return
-            }
-            if (recipeId === 'knapped-axe-head') {
-              // Route through gathering progress like twine
-              if (!canCraftRecipe('knapped-axe-head')) return
-              startGathering('craft-knapped-axe-head')
-              return
-            }
-          }} />
           
-          {selectedTile && (
-            <SelectedTileComponent
-              selectedTile={selectedTile}
-              terrainType={selectedMapTile?.terrainType || null}
-              containsTree={selectedTreeTile?.sceneryType === SceneryEnum.Tree || false}
-              containsStone={selectedTreeTile?.sceneryType === SceneryEnum.Rock || false}
-              containsThatch={containsThatch || false}
-              containsWater={selectedMapTile?.terrainType === TerrainEnum.Water || false}
-              hasLeanTo={selectedMapTile?.hasLeanTo || false}
-              foliageType={selectedTreeTile ? SceneryEnum[selectedTreeTile.sceneryType] : null}
-              onGatherStick={handleGatherStick}
-              onGatherStone={handleGatherStone}
-              onGatherThatch={handleGatherThatch}
-              onDrinkWater={handleDrinkWater}
-              onConstructLeanTo={handleConstructLeanTo}
-              onClose={() => handleTileSelect(null, null)}
-              isGathering={gatheringProgress?.isActive || false}
-              canConstructLeanTo={canConstructLeanTo()}
-            />
-          )}
+          {/* Selected Tile and Crafting Panels - Side by Side */}
+          <div className="flex gap-4">
+            {selectedTile && (
+              <div className="flex-1">
+                <SelectedTileComponent
+                  selectedTile={selectedTile}
+                  terrainType={selectedMapTile?.terrainType || null}
+                  containsTree={selectedTreeTile?.sceneryType === SceneryEnum.Tree || false}
+                  containsStone={selectedTreeTile?.sceneryType === SceneryEnum.Rock || false}
+                  containsThatch={containsThatch || false}
+                  containsWater={selectedMapTile?.terrainType === TerrainEnum.Water || false}
+                  hasLeanTo={selectedMapTile?.hasLeanTo || false}
+                  foliageType={selectedTreeTile ? SceneryEnum[selectedTreeTile.sceneryType] : null}
+                  onGatherStick={handleGatherStick}
+                  onGatherStone={handleGatherStone}
+                  onGatherThatch={handleGatherThatch}
+                  onDrinkWater={handleDrinkWater}
+                  onConstructLeanTo={handleConstructLeanTo}
+                  onClose={() => handleTileSelect(null, null)}
+                  isGathering={gatheringProgress?.isActive || false}
+                  canConstructLeanTo={canConstructLeanTo()}
+                />
+              </div>
+            )}
+            
+            <div className="flex-1">
+              <CraftingPanel onStartCrafting={(recipeId) => {
+                if (recipeId === 'twine') {
+                  handleCraftTwine()
+                  return
+                }
+                if (recipeId === 'knapped-axe-head') {
+                  // Route through gathering progress like twine
+                  if (!canCraftRecipe('knapped-axe-head')) return
+                  startGathering('craft-knapped-axe-head')
+                  return
+                }
+              }} />
+            </div>
+          </div>
         </div>
       </div>
 

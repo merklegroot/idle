@@ -55,23 +55,25 @@ export default function CraftingPanel({ onClose, onStartCrafting }: CraftingPane
           <p className="text-sm mt-2">Gather more resources to unlock new recipes!</p>
         </div>
       ) : (
-        <div className="flex gap-4">
-          {/* Left: recipe list */}
-          <div className="w-1/3 border rounded-lg border-gray-200 overflow-hidden">
-            <div className="max-h-80 overflow-y-auto">
-              {unlockedRecipes.map(recipe => (
-                <RecipeItem
-                  key={recipe.id}
-                  recipe={recipe}
-                  isSelected={recipe.id === selectedRecipeId}
-                  onSelect={setSelectedRecipeId}
-                />
-              ))}
+        <div className="space-y-4">
+          {/* Top: recipe list */}
+          <div className="border rounded-lg border-gray-200 overflow-hidden">
+            <div className="max-h-40 overflow-y-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-2">
+                {unlockedRecipes.map(recipe => (
+                  <RecipeItem
+                    key={recipe.id}
+                    recipe={recipe}
+                    isSelected={recipe.id === selectedRecipeId}
+                    onSelect={setSelectedRecipeId}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Right: selected recipe details */}
-          <div className="flex-1 border rounded-lg border-gray-200 p-4">
+          {/* Bottom: selected recipe details */}
+          <div className="border rounded-lg border-gray-200 p-4">
             <RecipeDetails 
               selectedRecipe={selectedRecipe} 
               onCraft={handleCraft}

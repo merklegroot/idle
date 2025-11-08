@@ -1,6 +1,5 @@
 'use client'
 
-import useGameStore from '@/stores/gameStore'
 import { WoodDef, BerryDef, StoneDef, GoldDef, ResourceDef, StickDef, ThatchDef, TwineDef, KnappedAxeHeadDef } from '@/app/models/ResourceDef'
 
 interface RecipeItemProps {
@@ -24,17 +23,13 @@ export default function RecipeItem({ recipe, isSelected, onSelect }: RecipeItemP
     <button
       key={recipe.id}
       onClick={() => onSelect(recipe.id)}
-      className={`w-full text-left px-3 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
+      className={`w-full text-center px-3 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
         isSelected ? 'bg-gray-100' : ''
       }`}
     >
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <div className="text-lg">{resultIcon}</div>
-          <div>
-            <div className="text-sm font-medium text-gray-800">{recipe.name}</div>
-          </div>
-        </div>
+      <div className="flex flex-col items-center gap-1">
+        <div className="text-lg">{resultIcon}</div>
+        <div className="text-xs font-medium text-gray-800">{recipe.name}</div>
       </div>
     </button>
   )

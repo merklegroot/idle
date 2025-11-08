@@ -1,4 +1,4 @@
-import { GameState, GameStore, HomeCost, Home, PlayerStats } from './gameStoreModels';
+import { GameState, GameStore, PlayerStats } from './gameStoreModels';
 import { gameStoreUtil } from './gameStoreUtil';
 
 export function getResourceFactory(get: () => GameState) {
@@ -73,23 +73,6 @@ export function setResourceGatherProgressFactory(set: (fn: (state: GameState) =>
     set((state) => ({
       resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], gatherProgress } }
     }));
-  }
-}
-
-export function getHomeCostFactory(get: () => GameState) {
-  return function (): HomeCost {
-    const state = get();
-    const homeCount = state.homes.length;
-
-    // Base costs: 50 wood, 30 stone, 200 gold
-    // Costs increase with each home built
-    const multiplier = Math.pow(1.3, homeCount);
-
-    return {
-      wood: Math.floor(50 * multiplier),
-      stone: Math.floor(30 * multiplier),
-      gold: Math.floor(200 * multiplier)
-    };
   }
 }
 

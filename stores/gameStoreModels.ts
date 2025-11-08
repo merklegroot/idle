@@ -12,19 +12,6 @@ export interface ResourceState {
     autoSellEnabled: boolean;
 }
 
-export interface Home {
-    id: string;
-    level: number;
-    population: number;
-    happiness: number;
-}
-
-export interface HomeCost {
-    wood: number;
-    stone: number;
-    gold: number;
-}
-
 export interface PlayerStats {
     health: number;
     warmth: number;
@@ -34,9 +21,6 @@ export interface PlayerStats {
 
 export interface GameState {
     resources: Record<string, ResourceState>;
-    gameLoopInterval?: NodeJS.Timeout;
-    tickCount: number;
-    homes: Home[];
     playerStats: PlayerStats;
     timeOfDay: number; // 0-24 hours
     day: number;

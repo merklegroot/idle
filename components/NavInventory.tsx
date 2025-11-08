@@ -4,7 +4,7 @@ import useGameStore from '@/stores/gameStore'
 import { formattingUtil } from '@/utils/formattingUtil'
 
 export default function NavInventory() {
-  const { bootstrap, getResource, homes } = useGameStore();
+  const { bootstrap, getResource } = useGameStore();
 
   const handleBootstrap = () => {
     bootstrap();
@@ -21,9 +21,6 @@ export default function NavInventory() {
   const stoneAmount = stone?.amount || 0;
   const stickAmount = stick?.amount || 0;
   const thatchAmount = thatch?.amount || 0;
-  
-  // Calculate total population from all homes
-  const totalPopulation = homes.reduce((sum, home) => sum + home.population, 0);
 
   return (
     <div className="flex items-center gap-4">
@@ -39,10 +36,6 @@ export default function NavInventory() {
         <div className="flex items-center gap-1">
           <span className="text-gray-300">🪨</span>
           <span className="font-semibold text-gray-300">{formattingUtil.formatNumber(stoneAmount)}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <span className="text-blue-400">👥</span>
-          <span className="font-semibold text-blue-400">{formattingUtil.formatNumber(totalPopulation)}</span>
         </div>
         <div className="flex items-center gap-1">
           <span className="text-green-400">╱</span>

@@ -6,10 +6,6 @@ import { bootstrapFactory, startGatheringFactory, resetGatherProgressFactory, in
 const useGameStore = create<GameStore>((set, get) => ({
   // Initial state
   resources: {},
-  gameLoopInterval: undefined,
-  tickCount: 0,
-  characterEquipment: {},
-  homes: [],
   playerStats: {
     health: 100,
     warmth: 50,
