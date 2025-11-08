@@ -47,7 +47,7 @@ export default function InventoryWidget() {
         </div>
       </div>
 
-      <div className={`grid gap-2 grid-cols-4 max-h-96 overflow-y-auto`}>
+      <div className={`grid gap-2 grid-cols-6 max-h-96 overflow-y-auto`}>
         {inventoryItems.map(item => (
           <InventoryItem key={item.key} item={item} />
         ))}
