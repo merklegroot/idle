@@ -18,7 +18,78 @@ function getIngredientIcon(ingredient: CraftingIngredient): string {
   return getResourceIcon(ingredient.resourceKey);
 }
 
+
+function getTileTypeText(terrainType: TerrainEnum | undefined | null) {
+  if (terrainType === TerrainEnum.Grass)
+    return 'Grass';
+
+  if (terrainType === TerrainEnum.Path)
+    return 'Path';
+
+  if (terrainType === TerrainEnum.HousingPlot)
+    return 'Housing Plot';
+
+  if (terrainType === TerrainEnum.Water)
+    return 'Water';
+
+  return 'Unknown';
+}
+
+function getTileTypeIcon(terrainType: TerrainEnum | undefined | null) {
+  if (terrainType === TerrainEnum.Grass)
+    return '🌱';
+
+  if (terrainType === TerrainEnum.Path)
+    return '🛤️';
+
+  if (terrainType === TerrainEnum.HousingPlot)
+    return '🏠';
+
+  if (terrainType === TerrainEnum.Water)
+    return '🌊';
+
+  return '❓';
+}
+
+function getFoliageTypeText(foliageType: string | null | undefined) {
+  if (!foliageType) return 'None';
+  
+  switch (foliageType.toLowerCase()) {
+    case 'tree':
+      return 'Tree';
+    case 'rock':
+      return 'Rock';
+    case 'berrybush':
+      return 'Berry Bush';
+    case 'empty':
+      return 'None';
+    default:
+      return foliageType;
+  }
+}
+
+function getFoliageTypeIcon(foliageType: string | null | undefined) {
+  if (!foliageType) return '';
+  
+  switch (foliageType.toLowerCase()) {
+    case 'tree':
+      return '🌳';
+    case 'rock':
+      return '🪨';
+    case 'berrybush':
+      return '🫐';
+    case 'empty':
+      return '';
+    default:
+      return '🌿';
+  }
+}
+
 export const resourceUtil = {
     getRecipeIcon,
-    getIngredientIcon
+    getIngredientIcon,
+    getTileTypeText,
+    getTileTypeIcon,
+    getFoliageTypeText,
+    getFoliageTypeIcon
 }

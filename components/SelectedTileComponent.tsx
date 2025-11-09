@@ -2,6 +2,7 @@
 
 import { TerrainEnum } from "@/models/TerrainEnum";
 import { GatherButton } from "./GatherButton";
+import { resourceUtil } from "@/utils/resourceUtil";
 
 interface SelectedTileComponentProps {
   selectedTile: { x: number; y: number } | null;
@@ -21,72 +22,6 @@ interface SelectedTileComponentProps {
   onClose?: () => void;
   isGathering?: boolean;
   canConstructLeanTo?: boolean;
-}
-
-function getTileTypeText(terrainType: TerrainEnum | undefined | null) {
-  if (terrainType === TerrainEnum.Grass)
-    return 'Grass';
-
-  if (terrainType === TerrainEnum.Path)
-    return 'Path';
-
-  if (terrainType === TerrainEnum.HousingPlot)
-    return 'Housing Plot';
-
-  if (terrainType === TerrainEnum.Water)
-    return 'Water';
-
-  return 'Unknown';
-}
-
-function getTileTypeIcon(terrainType: TerrainEnum | undefined | null) {
-  if (terrainType === TerrainEnum.Grass)
-    return '🌱';
-
-  if (terrainType === TerrainEnum.Path)
-    return '🛤️';
-
-  if (terrainType === TerrainEnum.HousingPlot)
-    return '🏠';
-
-  if (terrainType === TerrainEnum.Water)
-    return '🌊';
-
-  return '❓';
-}
-
-function getFoliageTypeText(foliageType: string | null | undefined) {
-  if (!foliageType) return 'None';
-  
-  switch (foliageType.toLowerCase()) {
-    case 'tree':
-      return 'Tree';
-    case 'rock':
-      return 'Rock';
-    case 'berrybush':
-      return 'Berry Bush';
-    case 'empty':
-      return 'None';
-    default:
-      return foliageType;
-  }
-}
-
-function getFoliageTypeIcon(foliageType: string | null | undefined) {
-  if (!foliageType) return '';
-  
-  switch (foliageType.toLowerCase()) {
-    case 'tree':
-      return '🌳';
-    case 'rock':
-      return '🪨';
-    case 'berrybush':
-      return '🫐';
-    case 'empty':
-      return '';
-    default:
-      return '🌿';
-  }
 }
 
 export default function SelectedTileComponent({
@@ -135,8 +70,8 @@ export default function SelectedTileComponent({
     <div className="bg-white rounded-lg border border-gray-200 p-4 h-fit">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-          <span className="text-2xl">{getTileTypeIcon(terrainType)}</span>
-          {getTileTypeText(terrainType)} ({selectedTile.x}, {selectedTile.y})
+          <span className="text-2xl">{resourceUtil.getTileTypeIcon(terrainType)}</span>
+          {resourceUtil.getTileTypeText(terrainType)} ({selectedTile.x}, {selectedTile.y})
         </h2>
         {onClose && (
           <button
@@ -156,10 +91,10 @@ export default function SelectedTileComponent({
         <div className="space-y-1 text-sm">
           <p><span className="font-medium">Resources:</span> {getResourcesText()}</p>
           <p><span className="font-medium">Foliage:</span> 
-            {getFoliageTypeIcon(foliageType) && (
-              <span className="ml-1">{getFoliageTypeIcon(foliageType)}</span>
+            {resourceUtil.getFoliageTypeIcon(foliageType) && (
+              <span className="ml-1">{resourceUtil.getFoliageTypeIcon(foliageType)}</span>
             )}
-            <span className="ml-1">{getFoliageTypeText(foliageType)}</span>
+            <span className="ml-1">{resourceUtil.getFoliageTypeText(foliageType)}</span>
           </p>
         </div>
 
