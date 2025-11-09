@@ -16,6 +16,7 @@ interface SelectedTileComponentProps {
   onGatherStone?: () => void;
   onGatherThatch?: () => void;
   onDrinkWater?: () => void;
+  onGatherBerry?: () => void;
   onConstructLeanTo?: () => void;
   onClose?: () => void;
   isGathering?: boolean;
@@ -101,6 +102,7 @@ export default function SelectedTileComponent({
   onGatherStone,
   onGatherThatch,
   onDrinkWater,
+  onGatherBerry,
   onConstructLeanTo,
   onClose,
   isGathering = false,
@@ -182,6 +184,12 @@ export default function SelectedTileComponent({
         {containsWater && onDrinkWater && (
           <div className="mt-3">
             <GatherButton resourceType="water" isActing={isGathering} onPress={onDrinkWater} />
+          </div>
+        )}
+
+        {foliageType && foliageType.toLowerCase() === 'berrybush' && onGatherBerry && (
+          <div className="mt-3">
+            <GatherButton resourceType="berry" isActing={isGathering} onPress={onGatherBerry} />
           </div>
         )}
 

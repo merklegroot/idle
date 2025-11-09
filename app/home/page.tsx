@@ -29,7 +29,7 @@ export default function MapPage() {
     isActive: boolean;
     progress: number;
     tile: { x: number; y: number };
-    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head';
+    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head';
   } | null>(null);
   const completionHandled = useRef(false);
 
@@ -84,7 +84,7 @@ export default function MapPage() {
     setSelectedTile({ x, y });
   }
 
-  function startGathering(resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head') {
+  function startGathering(resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head') {
     // For crafting actions, allow starting without a selected tile
     const isCraftAction = resourceType === 'craft-twine' || resourceType === 'craft-knapped-axe-head';
     if (!selectedTile && !isCraftAction) return;
@@ -107,8 +107,11 @@ export default function MapPage() {
     }
 
     // Initialize resource if it doesn't exist (for non-crafting actions)
-    if (!isCraftAction && resourceType !== 'construct-lean-to' && !getResource(resourceType)) {
-      initializeResource(resourceType);
+    if (!isCraftAction && resourceType !== 'construct-lean-to') {
+      const resourceKey = resourceType === 'berry' ? 'berries' : resourceType;
+      if (!getResource(resourceKey)) {
+        initializeResource(resourceKey);
+      }
     }
 
     // Reset completion flag
@@ -169,6 +172,10 @@ export default function MapPage() {
     startGathering('water');
   }
 
+  function handleGatherBerry() {
+    startGathering('berry');
+  }
+
   function handleConstructLeanTo() {
     startGathering('construct-lean-to');
   }
@@ -193,7 +200,7 @@ export default function MapPage() {
   }
 
   function handleGatheringCompletion(prev: {
-    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head';
+    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head';
     tile: { x: number; y: number };
   }) {
     // Add resource to inventory after delay
@@ -211,6 +218,10 @@ export default function MapPage() {
 
     if (prev.resourceType === 'water') {
       drinkWater();
+    }
+
+    if (prev.resourceType === 'berry') {
+      addResourceAmount('berries', 1);
     }
 
     if (prev.resourceType === 'construct-lean-to') {
@@ -341,6 +352,7 @@ export default function MapPage() {
                   onGatherStone={handleGatherStone}
                   onGatherThatch={handleGatherThatch}
                   onDrinkWater={handleDrinkWater}
+                  onGatherBerry={handleGatherBerry}
                   onConstructLeanTo={handleConstructLeanTo}
                   onClose={() => handleTileSelect(null, null)}
                   isGathering={gatheringProgress?.isActive || false}

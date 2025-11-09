@@ -1,6 +1,6 @@
 import { getResourceColorClass, getResourceDisplayName } from "@/models/ResourceType";
 
-export default function GatherProgressComponent({ gatheringProgress }: { gatheringProgress: { isActive: boolean, progress: number, tile: { x: number, y: number }, resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head' } }) {
+export default function GatherProgressComponent({ gatheringProgress }: { gatheringProgress: { isActive: boolean, progress: number, tile: { x: number, y: number }, resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head' } }) {
   const resourceColorClass = gatheringProgress.resourceType === 'construct-lean-to' ? 'text-blue-600' : 
                             gatheringProgress.resourceType === 'craft-twine' ? 'text-amber-600' : 
                             gatheringProgress.resourceType === 'craft-knapped-axe-head' ? 'text-gray-700' :
