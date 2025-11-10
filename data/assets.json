@@ -161,6 +161,13 @@
         "path":"/assets/cute-fantasy-rpg/Tiles/Water_Tile.png"
     },
     {
+        "id":"grass_plus",
+        "name":"Grass+",
+        "packId":"grass-plus",
+        "category":"Tiles",
+        "path":"/assets/grass-plus/GRASS+.png"
+    },
+    {
         "id":"town_hall",
         "name":"Town Hall",
         "packId":"emoji-assets",

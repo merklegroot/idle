@@ -1,5 +1,6 @@
 import { KnappedAxeHeadDef, BerryDef, GoldDef, TwineDef, StickDef, ResourceDef, StoneDef, WoodDef, ThatchDef } from "@/app/models/ResourceDef";
 import { CraftingIngredient, CraftingRecipe } from "@/models/CraftingRecipe";
+import { TerrainEnum } from "@/models/TerrainEnum";
 
 function getResourceIcon(resourceKey: string): string {
   const resourceDefs: ResourceDef[] = [WoodDef, BerryDef, StoneDef, GoldDef, StickDef, ThatchDef, TwineDef, KnappedAxeHeadDef];
@@ -17,7 +18,6 @@ function getRecipeIcon(recipe: CraftingRecipe): string {
 function getIngredientIcon(ingredient: CraftingIngredient): string {
   return getResourceIcon(ingredient.resourceKey);
 }
-
 
 function getTileTypeText(terrainType: TerrainEnum | undefined | null) {
   if (terrainType === TerrainEnum.Grass)

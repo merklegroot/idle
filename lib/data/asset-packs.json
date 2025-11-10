@@ -27,6 +27,15 @@
     ]
   },
   {
+    "id": "grass-plus",
+    "name": "Grass+",
+    "description": "A collection of over 30 grass tiles and 50+ grass décor tiles including flowers, stones, and bushes",
+    "image": { "url": "/assets/grass-plus/GRASS+.png" },
+    "categories": [
+      "Tiles"
+    ]
+  },
+  {
     "id": "custom",
     "name": "Custom",
     "description": "",

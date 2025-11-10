@@ -1,7 +1,7 @@
-import { SceneryEnum } from "./SceneryEnum";
+import { FoliageEnum } from "./FoliageEnum";
 
 export interface SceneryTileMap {
-    sceneryType: SceneryEnum,
+    sceneryType: FoliageEnum,
     x: number
     y: number
 }

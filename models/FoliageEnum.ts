@@ -1,4 +1,4 @@
-export enum SceneryEnum {
+export enum FoliageEnum {
     Invalid,
     Empty,
     Tree,

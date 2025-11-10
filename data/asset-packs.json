@@ -12,6 +12,13 @@
     "description": "A comprehensive collection of emoji-based assets for buildings, terrain, resources, and more",
     "image": "🏛️",
     "categories": ["Town Buildings", "Land & Terrain", "Paths & Roads", "Camps & Settlements", "Food & Agriculture", "Resources"]
+  },
+  {
+    "id": "grass-plus",
+    "name": "Grass+",
+    "description": "A collection of over 30 grass tiles and 50+ grass décor tiles including flowers, stones, and bushes",
+    "image": "/assets/grass-plus/GRASS+.png",
+    "categories": ["Tiles"]
   }
 ]
 

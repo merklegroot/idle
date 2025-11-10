@@ -6,7 +6,7 @@ import type { MapTile } from '@/models/MapTile'
 import type { SceneryTileMap } from '@/models/SceneryTileMap'
 import { pathUtil } from '@/utils/pathUtil'
 import { TerrainEnum } from '@/models/TerrainEnum'
-import { SceneryEnum } from '@/models/SceneryEnum'
+import { FoliageEnum } from '@/models/FoliageEnum'
 import useGameStore from '@/stores/gameStore'
 
 interface TileVariant {
@@ -89,17 +89,17 @@ function getTileVariant(tile: MapTile, mapData: MapTile[]): string {
 
 // Helper function to check if there's a tree at specific coordinates
 function hasTreeAt(x: number, y: number, treeData: SceneryTileMap[]): boolean {
-  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === SceneryEnum.Tree)
+  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === FoliageEnum.Tree)
 }
 
 // Helper function to check if there's a stone at specific coordinates
 function hasStoneAt(x: number, y: number, treeData: SceneryTileMap[]): boolean {
-  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === SceneryEnum.Rock)
+  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === FoliageEnum.Rock)
 }
 
 // Helper function to check if there's a berry bush at specific coordinates
 function hasBerryBushAt(x: number, y: number, treeData: SceneryTileMap[]): boolean {
-  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === SceneryEnum.BerryBush)
+  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === FoliageEnum.BerryBush)
 }
 
 // Helper function to calculate vertical offset for non-square images

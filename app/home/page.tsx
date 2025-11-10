@@ -13,7 +13,7 @@ import MapLegend from '@/components/MapLegend'
 import InventoryWidget from '@/components/Inventory/InventoryWidget'
 import CraftingPanel from '@/components/Crafting/CraftingPanel'
 import { TerrainEnum } from '@/models/TerrainEnum'
-import { SceneryEnum } from '@/models/SceneryEnum'
+import { FoliageEnum } from '@/models/FoliageEnum'
 
 export default function MapPage() {
   const { addResourceAmount, initializeResource, getResource, drinkWater, bootstrap, canCraftRecipe, craftRecipe } = useGameStore()
@@ -342,12 +342,12 @@ export default function MapPage() {
                 <SelectedTileComponent
                   selectedTile={selectedTile}
                   terrainType={selectedMapTile?.terrainType || null}
-                  containsTree={selectedTreeTile?.sceneryType === SceneryEnum.Tree || false}
-                  containsStone={selectedTreeTile?.sceneryType === SceneryEnum.Rock || false}
+                  containsTree={selectedTreeTile?.sceneryType === FoliageEnum.Tree || false}
+                  containsStone={selectedTreeTile?.sceneryType === FoliageEnum.Rock || false}
                   containsThatch={containsThatch || false}
                   containsWater={selectedMapTile?.terrainType === TerrainEnum.Water || false}
                   hasLeanTo={selectedMapTile?.hasLeanTo || false}
-                  foliageType={selectedTreeTile ? SceneryEnum[selectedTreeTile.sceneryType] : null}
+                  foliageType={selectedTreeTile ? FoliageEnum[selectedTreeTile.sceneryType] : null}
                   onGatherStick={handleGatherStick}
                   onGatherStone={handleGatherStone}
                   onGatherThatch={handleGatherThatch}

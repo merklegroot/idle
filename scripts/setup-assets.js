@@ -3,6 +3,7 @@
 /**
  * Asset Setup Script
  * Extracts and organizes the Cute Fantasy RPG assets
+ * Copies and organizes the Grass+ assets
  */
 
 const { execSync } = require('child_process');
@@ -24,8 +25,10 @@ const log = (message, color = 'reset') => {
 
 // Configuration
 const ASSET_DIR = path.join(__dirname, '..', 'public', 'assets', 'cute-fantasy-rpg');
+const GRASS_PLUS_DIR = path.join(__dirname, '..', 'public', 'assets', 'grass-plus');
 const DOWNLOADS_DIR = path.join(__dirname, '..', 'downloads');
 const ZIP_FILE = path.join(DOWNLOADS_DIR, 'Cute_Fantasy_Free.zip');
+const GRASS_PLUS_FILE = path.join(DOWNLOADS_DIR, 'GRASS+.png');
 
 async function checkZipFile() {
   log('🔍 Checking for zip file...', 'blue');
@@ -145,56 +148,168 @@ async function extractAssets() {
   }
 }
 
-async function verifyInstallation() {
-  log('🔍 Verifying installation...', 'blue');
+async function setupGrassPlus() {
+  log('🌱 Setting up Grass+ assets...', 'blue');
   
-  if (!fs.existsSync(ASSET_DIR)) {
-    log('❌ Asset directory not found', 'red');
+  // Create downloads directory if it doesn't exist
+  if (!fs.existsSync(DOWNLOADS_DIR)) {
+    fs.mkdirSync(DOWNLOADS_DIR, { recursive: true });
+    log(`📁 Created downloads directory: ${DOWNLOADS_DIR}`, 'blue');
+  }
+  
+  if (!fs.existsSync(GRASS_PLUS_FILE)) {
+    log('⚠️  GRASS+.png not found in downloads folder', 'yellow');
+    log(`Please download the assets and place them at: ${GRASS_PLUS_FILE}`, 'yellow');
+    log('See ASSET_INSTRUCTIONS.md for download instructions', 'yellow');
     return false;
   }
   
-  const contents = fs.readdirSync(ASSET_DIR);
-  const hasAssets = contents.some(file => {
-    const filePath = path.join(ASSET_DIR, file);
-    if (fs.statSync(filePath).isDirectory()) {
-      // Check if it's an asset directory (like Animals, Enemies, etc.)
-      return ['Animals', 'Enemies', 'Player', 'Tiles', 'Outdoor decoration'].includes(file);
+  try {
+    // Create grass-plus directory if it doesn't exist
+    if (!fs.existsSync(GRASS_PLUS_DIR)) {
+      fs.mkdirSync(GRASS_PLUS_DIR, { recursive: true });
+      log(`📁 Created grass-plus directory: ${GRASS_PLUS_DIR}`, 'blue');
     }
-    return file.endsWith('.png') || 
-           file.endsWith('.jpg') || 
-           file.endsWith('.jpeg') ||
-           file.endsWith('.gif') ||
-           file.endsWith('.ase') ||
-           file.endsWith('.aseprite');
-  });
-  
-  if (hasAssets) {
-    log('✅ Assets verified successfully', 'green');
+    
+    // Copy the PNG file
+    const targetFile = path.join(GRASS_PLUS_DIR, 'GRASS+.png');
+    fs.copyFileSync(GRASS_PLUS_FILE, targetFile);
+    log('✅ Copied GRASS+.png', 'green');
+    
+    // Create README.md if it doesn't exist
+    const readmePath = path.join(GRASS_PLUS_DIR, 'README.md');
+    if (!fs.existsSync(readmePath)) {
+      const readmeContent = `# Grass+ Asset Pack
+
+## Source
+
+**Artist**: SciGho  
+**Source**: https://ninjikin.itch.io/grass  
+**License**: CC0 (Public Domain)  
+**Attribution**: Credit appreciated but not required
+
+## Description
+
+A collection of over 30 (16x16) grass tiles with diverse color variety, plus over 50+ (16x16) tiles of grass décor including:
+
+- **Grass Varieties**: Simple grass, complex grass, short grass, long grass, red grass, dead grass
+- **Grass Décor**: Exquisite flowers, artisanal stones, sensual bushes, and more
+
+## License Details
+
+According to the author (SciGho), this asset pack is licensed under CC0 (Creative Commons Zero), which means it's in the public domain and can be used for any purpose, including commercial use, without restrictions. However, the author appreciates credit when possible.
+
+## Files
+
+- \`GRASS+.png\` - The complete asset pack containing all grass tiles and décor
+
+## Usage
+
+This asset pack is integrated into the game's asset system and can be accessed through the asset showcase and sprite editor.
+`;
+      fs.writeFileSync(readmePath, readmeContent);
+      log('✅ Created README.md', 'green');
+    }
+    
+    log('✅ Grass+ assets set up successfully', 'green');
     return true;
-  } else {
-    log('❌ No asset files found in directory', 'red');
+    
+  } catch (error) {
+    log('❌ Grass+ setup failed:', 'red');
+    log(error.message, 'red');
     return false;
   }
 }
 
+async function verifyInstallation() {
+  log('🔍 Verifying installation...', 'blue');
+  
+  let allGood = true;
+  
+  // Verify Cute Fantasy RPG assets
+  if (fs.existsSync(ASSET_DIR)) {
+    const contents = fs.readdirSync(ASSET_DIR);
+    const hasAssets = contents.some(file => {
+      const filePath = path.join(ASSET_DIR, file);
+      if (fs.statSync(filePath).isDirectory()) {
+        // Check if it's an asset directory (like Animals, Enemies, etc.)
+        return ['Animals', 'Enemies', 'Player', 'Tiles', 'Outdoor decoration'].includes(file);
+      }
+      return file.endsWith('.png') || 
+             file.endsWith('.jpg') || 
+             file.endsWith('.jpeg') ||
+             file.endsWith('.gif') ||
+             file.endsWith('.ase') ||
+             file.endsWith('.aseprite');
+    });
+    
+    if (hasAssets) {
+      log('✅ Cute Fantasy RPG assets verified', 'green');
+    } else {
+      log('⚠️  Cute Fantasy RPG assets directory exists but no assets found', 'yellow');
+      allGood = false;
+    }
+  } else {
+    log('⚠️  Cute Fantasy RPG assets not found (this is okay if you skipped it)', 'yellow');
+  }
+  
+  // Verify Grass+ assets
+  if (fs.existsSync(GRASS_PLUS_DIR)) {
+    const grassPlusFile = path.join(GRASS_PLUS_DIR, 'GRASS+.png');
+    if (fs.existsSync(grassPlusFile)) {
+      log('✅ Grass+ assets verified', 'green');
+    } else {
+      log('⚠️  Grass+ directory exists but GRASS+.png not found', 'yellow');
+      allGood = false;
+    }
+  } else {
+    log('⚠️  Grass+ assets not found (this is okay if you skipped it)', 'yellow');
+  }
+  
+  return allGood;
+}
+
 async function main() {
-  log('🎨 Cute Fantasy RPG Asset Setup', 'blue');
-  log('================================', 'blue');
+  log('🎨 Asset Setup Script', 'blue');
+  log('====================', 'blue');
   log('');
   
   try {
+    let hasAnyAssets = false;
+    
+    // Setup Cute Fantasy RPG assets
+    log('📦 Cute Fantasy RPG Assets', 'blue');
+    log('---------------------------', 'blue');
     const zipExists = await checkZipFile();
-    if (!zipExists) {
-      process.exit(1);
+    if (zipExists) {
+      const extractSuccess = await extractAssets();
+      if (extractSuccess) {
+        hasAnyAssets = true;
+      }
+    } else {
+      log('⏭️  Skipping Cute Fantasy RPG assets', 'yellow');
     }
     
-    const extractSuccess = await extractAssets();
-    if (!extractSuccess) {
-      process.exit(1);
+    log('');
+    
+    // Setup Grass+ assets
+    log('🌱 Grass+ Assets', 'blue');
+    log('----------------', 'blue');
+    const grassPlusSuccess = await setupGrassPlus();
+    if (grassPlusSuccess) {
+      hasAnyAssets = true;
+    } else {
+      log('⏭️  Skipping Grass+ assets', 'yellow');
     }
     
+    log('');
+    
+    // Verify installation
     const verifySuccess = await verifyInstallation();
-    if (!verifySuccess) {
+    
+    if (!hasAnyAssets) {
+      log('⚠️  No assets were set up. Please download assets and place them in the downloads folder.', 'yellow');
+      log('See ASSET_INSTRUCTIONS.md for download instructions', 'yellow');
       process.exit(1);
     }
     
@@ -202,12 +317,21 @@ async function main() {
     log('🎉 Setup Complete!', 'green');
     log('==================', 'green');
     log('');
-    log('The Cute Fantasy RPG assets have been set up successfully!', 'green');
-    log(`Location: ${ASSET_DIR}`, 'blue');
+    
+    if (zipExists && fs.existsSync(ASSET_DIR)) {
+      log('✅ Cute Fantasy RPG assets set up successfully!', 'green');
+      log(`   Location: ${ASSET_DIR}`, 'blue');
+    }
+    
+    if (grassPlusSuccess) {
+      log('✅ Grass+ assets set up successfully!', 'green');
+      log(`   Location: ${GRASS_PLUS_DIR}`, 'blue');
+    }
+    
     log('');
     log('Next steps:', 'blue');
     log('1. Start your development server: npm run dev', 'blue');
-    log('2. Visit /icons to see the asset showcase', 'blue');
+    log('2. Visit /assets to see the asset showcase', 'blue');
     log('3. The assets are now available for use in your game', 'blue');
     log('');
     log('ℹ️  Note: Assets are excluded from git via .gitignore', 'yellow');
