@@ -308,13 +308,15 @@ export default function MapPage() {
         </div>
       </div>
 
-      {/* Compact Stats Bar */}
-      <div className="mb-4">
-        <CompactStatsBar />
+      {/* Compact Stats Bar and Gathering Progress - side by side on larger screens */}
+      <div className="mb-4 flex flex-col sm:flex-row items-center gap-4">
+        <div className="w-full sm:flex-1">
+          <CompactStatsBar />
+        </div>
+        <div className="w-full sm:w-80 md:w-96 sm:min-w-0">
+          <GatheringProgressDisplay gatheringProgress={gatheringProgress} />
+        </div>
       </div>
-
-      {/* Gathering Progress Display */}
-      <GatheringProgressDisplay gatheringProgress={gatheringProgress} />
 
       <div className="flex gap-6">
         {/* Map Component */}
