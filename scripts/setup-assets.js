@@ -199,6 +199,14 @@ A collection of over 30 (16x16) grass tiles with diverse color variety, plus ove
 
 According to the author (SciGho), this asset pack is licensed under CC0 (Creative Commons Zero), which means it's in the public domain and can be used for any purpose, including commercial use, without restrictions. However, the author appreciates credit when possible.
 
+### License Confirmation (from itch.io comments)
+
+**CobraGoose** (3 years ago):  
+> Is the license CC0?
+
+**SciGho** (3 years ago):  
+> Yes, but a credit would be nice
+
 ## Files
 
 - \`GRASS+.png\` - The complete asset pack containing all grass tiles and décor
