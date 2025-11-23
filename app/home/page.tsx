@@ -259,6 +259,14 @@ export default function MapPage() {
         <div className="flex items-center gap-6">
           <h1 className="text-3xl font-bold text-gray-800">Town Map</h1>
           <CompactDayNightCycle />
+          <div className="flex items-center gap-4 ml-4">
+            <div className="w-44 sm:w-64">
+              <CompactStatsBar />
+            </div>
+            <div className="w-60 sm:w-80">
+              <GatheringProgressDisplay gatheringProgress={gatheringProgress} />
+            </div>
+          </div>
         </div>
         <div className="flex gap-3">
           <button
@@ -308,15 +316,7 @@ export default function MapPage() {
         </div>
       </div>
 
-      {/* Compact Stats Bar and Gathering Progress - side by side on larger screens */}
-      <div className="mb-4 flex flex-col sm:flex-row items-center gap-4">
-        <div className="w-full sm:flex-1">
-          <CompactStatsBar />
-        </div>
-        <div className="w-full sm:w-80 md:w-96 sm:min-w-0">
-          <GatheringProgressDisplay gatheringProgress={gatheringProgress} />
-        </div>
-      </div>
+      {/* NOTE: CompactStatsBar and GatheringProgressDisplay have been moved into the header */}
 
       <div className="flex gap-6">
         {/* Map Component */}
