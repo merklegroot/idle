@@ -47,10 +47,8 @@ export default function MapPage() {
       }
     }
 
-    // Initialize game with bootstrap (includes crafting recipes)
-    bootstrap();
     loadMapData();
-  }, [bootstrap])
+  }, [])
 
   if (isLoading) {
     return (
