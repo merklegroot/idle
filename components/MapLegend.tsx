@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import Image from 'next/image'
 
 interface MapLegendProps {
@@ -6,13 +9,23 @@ interface MapLegendProps {
 }
 
 export default function MapLegend({ maxX, maxY }: MapLegendProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   return (
     <div className="mt-6 text-sm text-gray-600">
-      <p className="mb-4">
-        <span className="font-medium">Map size:</span> {maxX + 1} × {maxY + 1} tiles
-      </p>
-      <div className="mt-2">
-        <p className="font-semibold mb-2">Legend:</p>
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="mb-2 px-4 py-2 rounded-lg font-semibold transition-colors text-sm bg-gray-500 hover:bg-gray-600 text-white"
+      >
+        {isExpanded ? '▼ Legend' : '▶ Legend'}
+      </button>
+      {isExpanded && (
+        <>
+          <p className="mb-4">
+            <span className="font-medium">Map size:</span> {maxX + 1} × {maxY + 1} tiles
+          </p>
+          <div className="mt-2">
+            <p className="font-semibold mb-2">Legend:</p>
         <div className="grid grid-cols-4 gap-4">
           <div>
             <p className="font-medium mb-1">Grass Tiles:</p>
@@ -192,6 +205,8 @@ export default function MapLegend({ maxX, maxY }: MapLegendProps) {
           </div>
         </div>
       </div>
+        </>
+      )}
     </div>
   )
 }
