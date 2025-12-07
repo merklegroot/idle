@@ -433,3 +433,20 @@ export function unlockRecipeFactory(set: (fn: (state: GameState) => Partial<Game
     }));
   }
 }
+
+export function resetFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (): void {
+    set(() => ({
+      resources: {},
+      playerStats: {
+        health: 100,
+        warmth: 50,
+        food: 80,
+        hydration: 70
+      },
+      timeOfDay: 12,
+      day: 1,
+      craftingRecipes: []
+    }));
+  }
+}

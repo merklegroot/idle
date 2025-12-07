@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { GameStore } from './gameStoreModels';
 import { getResourceFactory, setResourceAmountFactory, addResourceAmountFactory, setResourcePerSecondFactory, setResourceIsGatheringFactory, setResourceGatherProgressFactory } from './gameStoreFactory';
-import { bootstrapFactory, startGatheringFactory, resetGatherProgressFactory, initializeResourceFactory, getPlayerStatsFactory, setPlayerStatsFactory, updatePlayerWarmthFactory, drinkWaterFactory, getTimeOfDayFactory, getDayFactory, setTimeOfDayFactory, setDayFactory, advanceTimeFactory, getCraftingRecipesFactory, canCraftRecipeFactory, craftRecipeFactory, unlockRecipeFactory } from './gameStoreFactory';
+import { bootstrapFactory, resetFactory, startGatheringFactory, resetGatherProgressFactory, initializeResourceFactory, getPlayerStatsFactory, setPlayerStatsFactory, updatePlayerWarmthFactory, drinkWaterFactory, getTimeOfDayFactory, getDayFactory, setTimeOfDayFactory, setDayFactory, advanceTimeFactory, getCraftingRecipesFactory, canCraftRecipeFactory, craftRecipeFactory, unlockRecipeFactory } from './gameStoreFactory';
 
 const useGameStore = create<GameStore>((set, get) => ({
   // Initial state
@@ -26,6 +26,9 @@ const useGameStore = create<GameStore>((set, get) => ({
 
   // Bootstrap
   bootstrap: bootstrapFactory(set, get),
+
+  // Reset
+  reset: resetFactory(set),
 
   startGathering: startGatheringFactory(set, get),
   resetGatherProgress: resetGatherProgressFactory(set),

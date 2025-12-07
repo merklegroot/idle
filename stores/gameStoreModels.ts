@@ -38,6 +38,9 @@ export interface GameActions {
     // Bootstrap
     bootstrap: () => void;
 
+    // Reset
+    reset: () => void;
+
     // Actions
     startGathering: (resourceKey: string) => void;
     resetGatherProgress: (resourceKey: string) => void;

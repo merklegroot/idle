@@ -4,10 +4,17 @@ import useGameStore from '@/stores/gameStore'
 import { formattingUtil } from '@/utils/formattingUtil'
 
 export default function NavInventory() {
-  const { bootstrap, getResource } = useGameStore();
+  const { bootstrap, reset, getResource } = useGameStore();
 
   const handleBootstrap = () => {
     bootstrap();
+  };
+
+  const handleReset = () => {
+    const confirmed = window.confirm('Are you sure you want to reset the game? This will clear all progress and cannot be undone.');
+    if (confirmed) {
+      reset();
+    }
   };
 
   const gold = getResource('gold');
@@ -51,6 +58,12 @@ export default function NavInventory() {
         className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm"
       >
         Bootstrap
+      </button>
+      <button
+        onClick={handleReset}
+        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm"
+      >
+        Reset
       </button>
     </div>
   )
