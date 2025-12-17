@@ -1,39 +1,22 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import useGameStore from '@/stores/gameStore'
+import { useMemo, useState } from 'react'
 import RecipeDetails from './RecipeDetails'
 import RecipeItem from './RecipeItem'
+import { CRAFTING_RECIPES } from '@/constants/craftingRecipes'
 
 interface CraftingPanelProps {
   onStartCrafting?: (recipeId: string) => void
 }
 
 export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
-  const { getCraftingRecipes } = useGameStore()
-  
-  const recipes = getCraftingRecipes()
-  const unlockedRecipes = recipes.filter(recipe => recipe.unlocked)
   const [selectedRecipeId, setSelectedRecipeId] = useState<string | undefined>(
-    unlockedRecipes[0]?.id
+    CRAFTING_RECIPES[0]?.id
   )
 
-  // Keep selection in sync with unlocked list changes
-  useEffect(() => {
-    if (!unlockedRecipes.length) {
-      setSelectedRecipeId(undefined)
-      return
-    }
-    // If current selection is no longer present, select first
-    const stillExists = unlockedRecipes.some(r => r.id === selectedRecipeId)
-    if (!stillExists) {
-      setSelectedRecipeId(unlockedRecipes[0].id)
-    }
-  }, [unlockedRecipes, selectedRecipeId])
-
   const selectedRecipe = useMemo(() => {
-    return unlockedRecipes.find(r => r.id === selectedRecipeId)
-  }, [unlockedRecipes, selectedRecipeId])
+    return CRAFTING_RECIPES.find(r => r.id === selectedRecipeId)
+  }, [selectedRecipeId])
 
   const handleCraft = (recipeId: string) => {
     if (onStartCrafting) {
@@ -48,10 +31,9 @@ export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
         <h2 className="text-2xl font-bold text-gray-800">Crafting</h2>
       </div>
 
-      {unlockedRecipes.length === 0 ? (
+      {CRAFTING_RECIPES.length === 0 ? (
         <div className="text-center text-gray-500 py-8">
-          <p>No recipes available yet.</p>
-          <p className="text-sm mt-2">Gather more resources to unlock new recipes!</p>
+          <p>No recipes available.</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -59,7 +41,7 @@ export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
           <div className="border rounded-lg border-gray-200 overflow-hidden">
             <div className="max-h-40 overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-2">
-                {unlockedRecipes.map(recipe => (
+                {CRAFTING_RECIPES.map(recipe => (
                   <RecipeItem
                     key={recipe.id}
                     recipe={recipe}

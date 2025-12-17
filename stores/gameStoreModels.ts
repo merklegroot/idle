@@ -1,4 +1,3 @@
-import { CraftingRecipe } from "../models/CraftingRecipe";
 
 export interface ResourceState {
     amount: number;
@@ -24,7 +23,6 @@ export interface GameState {
     playerStats: PlayerStats;
     timeOfDay: number; // 0-24 hours
     day: number;
-    craftingRecipes: CraftingRecipe[];
 }
 
 export interface GameActions {
@@ -62,10 +60,8 @@ export interface GameActions {
     advanceTime: () => void;
 
     // Crafting management
-    getCraftingRecipes: () => CraftingRecipe[];
     canCraftRecipe: (recipeId: string) => boolean;
     craftRecipe: (recipeId: string) => boolean;
-    unlockRecipe: (recipeId: string) => void;
 }
 
 export type GameStore = GameState & GameActions;

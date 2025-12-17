@@ -1,10 +1,10 @@
 'use client'
 
-import { CraftingRecipe } from '@/models/CraftingRecipe'
+import { CRAFTING_RECIPES } from '@/constants/craftingRecipes'
 import { resourceUtil } from '@/utils/resourceUtil'
 
 interface RecipeItemProps {
-  recipe: CraftingRecipe
+  recipe: typeof CRAFTING_RECIPES[number]
   isSelected: boolean
   onSelect: (recipeId: string) => void
 }

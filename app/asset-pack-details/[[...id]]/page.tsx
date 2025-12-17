@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { calculateTotalAssets } from '../../../utils/assetPackUtil';
 import { AssetPack } from '@/app/models/AssetPack';
 import { Asset } from '@/app/models/Asset';
@@ -10,7 +10,8 @@ import { Asset } from '@/app/models/Asset';
 
 export default function AssetPackDetails() {
   const params = useParams();
-  const packId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const idParam = params?.id;
+  const packId = Array.isArray(idParam) ? idParam[0] : idParam;
   const isCreating = !packId || packId === '';
   const [assetPack, setAssetPack] = useState<AssetPackWithTotal | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');

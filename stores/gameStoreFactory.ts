@@ -1,5 +1,6 @@
 import { GameState, GameStore, PlayerStats } from './gameStoreModels';
 import { gameStoreUtil } from './gameStoreUtil';
+import { CRAFTING_RECIPES } from '@/constants/craftingRecipes';
 
 export function getResourceFactory(get: () => GameState) {
   return (resourceKey: string) => {
@@ -116,40 +117,9 @@ export function bootstrapFactory(set: (fn: (state: GameState) => Partial<GameSta
       }
     });
 
-    // Initialize crafting recipes
-    const initialRecipes = [
-      {
-        id: 'twine',
-        name: 'Twine',
-        description: 'A simple cord made from thatch',
-        ingredients: [
-          { resourceKey: 'thatch', amount: 1 }
-        ],
-        result: {
-          resourceKey: 'twine',
-          amount: 1
-        },
-        unlocked: true
-      },
-      {
-        id: 'knapped-axe-head',
-        name: 'Knapped Axe Head',
-        description: 'A chipped stone axe head suitable for hafting',
-        ingredients: [
-          { resourceKey: 'stone', amount: 1 }
-        ],
-        result: {
-          resourceKey: 'knapped-axe-head',
-          amount: 1
-        },
-        unlocked: true
-      }
-    ];
-
     set((state) => ({
       ...state,
-      resources: updatedResources,
-      craftingRecipes: initialRecipes
+      resources: updatedResources
     }));
   }
 }
@@ -330,18 +300,12 @@ export function advanceTimeFactory(set: (fn: (state: GameState) => Partial<GameS
 }
 
 // Crafting management factories
-export function getCraftingRecipesFactory(get: () => GameState) {
-  return function (): any[] {
-    return get().craftingRecipes;
-  }
-}
-
 export function canCraftRecipeFactory(get: () => GameState) {
   return function (recipeId: string): boolean {
     const state = get();
-    const recipe = state.craftingRecipes.find(r => r.id === recipeId);
+    const recipe = CRAFTING_RECIPES.find(r => r.id === recipeId);
     
-    if (!recipe || !recipe.unlocked) {
+    if (!recipe) {
       return false;
     }
     
@@ -356,9 +320,9 @@ export function canCraftRecipeFactory(get: () => GameState) {
 export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
   return function (recipeId: string): boolean {
     const state = get();
-    const recipe = state.craftingRecipes.find(r => r.id === recipeId);
+    const recipe = CRAFTING_RECIPES.find(r => r.id === recipeId);
     
-    if (!recipe || !recipe.unlocked) {
+    if (!recipe) {
       return false;
     }
     
@@ -424,16 +388,6 @@ export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameS
   }
 }
 
-export function unlockRecipeFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
-  return function (recipeId: string): void {
-    set((state) => ({
-      craftingRecipes: state.craftingRecipes.map(recipe =>
-        recipe.id === recipeId ? { ...recipe, unlocked: true } : recipe
-      )
-    }));
-  }
-}
-
 export function resetFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
   return function (): void {
     set(() => ({
@@ -445,8 +399,7 @@ export function resetFactory(set: (fn: (state: GameState) => Partial<GameState>)
         hydration: 70
       },
       timeOfDay: 12,
-      day: 1,
-      craftingRecipes: []
+      day: 1
     }));
   }
 }

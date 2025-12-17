@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { GameStore } from './gameStoreModels';
 import { getResourceFactory, setResourceAmountFactory, addResourceAmountFactory, setResourcePerSecondFactory, setResourceIsGatheringFactory, setResourceGatherProgressFactory } from './gameStoreFactory';
-import { bootstrapFactory, resetFactory, startGatheringFactory, resetGatherProgressFactory, initializeResourceFactory, getPlayerStatsFactory, setPlayerStatsFactory, updatePlayerWarmthFactory, drinkWaterFactory, getTimeOfDayFactory, getDayFactory, setTimeOfDayFactory, setDayFactory, advanceTimeFactory, getCraftingRecipesFactory, canCraftRecipeFactory, craftRecipeFactory, unlockRecipeFactory } from './gameStoreFactory';
+import { bootstrapFactory, resetFactory, startGatheringFactory, resetGatherProgressFactory, initializeResourceFactory, getPlayerStatsFactory, setPlayerStatsFactory, updatePlayerWarmthFactory, drinkWaterFactory, getTimeOfDayFactory, getDayFactory, setTimeOfDayFactory, setDayFactory, advanceTimeFactory, canCraftRecipeFactory, craftRecipeFactory } from './gameStoreFactory';
 
 const useGameStore = create<GameStore>((set, get) => ({
   // Initial state
@@ -14,7 +14,6 @@ const useGameStore = create<GameStore>((set, get) => ({
   },
   timeOfDay: 12, // Start at noon
   day: 1,
-  craftingRecipes: [],
 
   // Resource management
   getResource: getResourceFactory(get),
@@ -50,10 +49,8 @@ const useGameStore = create<GameStore>((set, get) => ({
   advanceTime: advanceTimeFactory(set, get),
 
   // Crafting management
-  getCraftingRecipes: getCraftingRecipesFactory(get),
   canCraftRecipe: canCraftRecipeFactory(get),
-  craftRecipe: craftRecipeFactory(set, get),
-  unlockRecipe: unlockRecipeFactory(set)
+  craftRecipe: craftRecipeFactory(set, get)
 }));
 
 export default useGameStore;

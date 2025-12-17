@@ -12,7 +12,6 @@ export interface CraftingRecipe {
     resourceKey: string;
     amount: number;
   };
-  unlocked: boolean;
 }
 
 export type CraftableResource = 'twine' | 'rope' | 'cloth' | 'leather' | 'knapped-axe-head';

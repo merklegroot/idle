@@ -2,11 +2,11 @@
 
 import useGameStore from '@/stores/gameStore'
 import { getResourceDisplayName, getResourceColorClass } from '@/models/ResourceType'
-import { CraftingRecipe } from '@/models/CraftingRecipe'
+import { CRAFTING_RECIPES } from '@/constants/craftingRecipes'
 import { resourceUtil } from '@/utils/resourceUtil'
 
 interface RecipeDetailsProps {
-  selectedRecipe: CraftingRecipe | null
+  selectedRecipe: typeof CRAFTING_RECIPES[number] | null | undefined
   onCraft: (recipeId: string) => void
 }
 
