@@ -1,6 +1,6 @@
 export interface CraftingIngredient {
   resourceKey: string;
-  amount: number;
+  quantity: number;
 }
 
 export interface CraftingRecipe {
@@ -10,7 +10,7 @@ export interface CraftingRecipe {
   ingredients: CraftingIngredient[];
   result: {
     resourceKey: string;
-    amount: number;
+    quantity: number;
   };
 }
 

@@ -23,34 +23,34 @@ export default function NavInventory() {
   const stick = getResource('stick');
   const thatch = getResource('thatch');
   
-  const goldAmount = gold?.amount || 0;
-  const woodAmount = wood?.amount || 0;
-  const stoneAmount = stone?.amount || 0;
-  const stickAmount = stick?.amount || 0;
-  const thatchAmount = thatch?.amount || 0;
+  const goldQuantity = gold?.quantity || 0;
+  const woodQuantity = wood?.quantity || 0;
+  const stoneQuantity = stone?.quantity || 0;
+  const stickQuantity = stick?.quantity || 0;
+  const thatchQuantity = thatch?.quantity || 0;
 
   return (
     <div className="flex items-center gap-4">
       <div className="flex gap-4 text-sm">
         <div className="flex items-center gap-1">
           <span className="text-yellow-400">💰</span>
-          <span className="font-semibold text-yellow-400">{formattingUtil.formatNumber(goldAmount)}</span>
+          <span className="font-semibold text-yellow-400">{formattingUtil.formatNumber(goldQuantity)}</span>
         </div>
         <div className="flex items-center gap-1">
           <span className="text-green-400">🪵</span>
-          <span className="font-semibold text-green-400">{formattingUtil.formatNumber(woodAmount)}</span>
+          <span className="font-semibold text-green-400">{formattingUtil.formatNumber(woodQuantity)}</span>
         </div>
         <div className="flex items-center gap-1">
           <span className="text-gray-300">🪨</span>
-          <span className="font-semibold text-gray-300">{formattingUtil.formatNumber(stoneAmount)}</span>
+          <span className="font-semibold text-gray-300">{formattingUtil.formatNumber(stoneQuantity)}</span>
         </div>
         <div className="flex items-center gap-1">
           <span className="text-green-400">╱</span>
-          <span className="font-semibold text-green-400">{formattingUtil.formatNumber(stickAmount)}</span>
+          <span className="font-semibold text-green-400">{formattingUtil.formatNumber(stickQuantity)}</span>
         </div>
         <div className="flex items-center gap-1">
           <span className="text-yellow-400">🌾</span>
-          <span className="font-semibold text-yellow-400">{formattingUtil.formatNumber(thatchAmount)}</span>
+          <span className="font-semibold text-yellow-400">{formattingUtil.formatNumber(thatchQuantity)}</span>
         </div>
       </div>
       <button

@@ -29,10 +29,10 @@ export default function InventoryWidget() {
     const resourceData = getResource(resource.key)
     return {
       ...resource,
-      amount: resourceData?.amount || 0
+      quantity: resourceData?.quantity || 0
     }
-  }).filter(item => item.amount > 0)
-    .sort((a, b) => b.amount - a.amount);
+  }).filter(item => item.quantity > 0)
+    .sort((a, b) => b.quantity - a.quantity);
 
   return (
     <div className={`p-3 bg-white rounded-lg border border-gray-200 shadow-sm`}>

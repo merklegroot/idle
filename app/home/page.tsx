@@ -17,7 +17,7 @@ import { TerrainEnum } from '@/models/TerrainEnum'
 import { FoliageEnum } from '@/models/FoliageEnum'
 
 export default function MapPage() {
-  const { addResourceAmount, initializeResource, getResource, drinkWater, bootstrap, canCraftRecipe, craftRecipe } = useGameStore()
+  const { addResourceQuantity, initializeResource, getResource, drinkWater, bootstrap, canCraftRecipe, craftRecipe } = useGameStore()
   const [mapData, setMapData] = useState<MapTile[]>([]);
   const [treeData, setTreeData] = useState<SceneryTileMap[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -91,7 +91,7 @@ export default function MapPage() {
     // Handle construction resource check
     if (resourceType === 'construct-lean-to') {
       const stickResource = getResource('stick');
-      if (!stickResource || stickResource.amount < 1) {
+      if (!stickResource || stickResource.quantity < 1) {
         alert('You need at least 1 stick to construct a lean-to!');
         return;
       }
@@ -190,7 +190,7 @@ export default function MapPage() {
   // Check if player can construct a lean-to (has at least 1 stick)
   function canConstructLeanTo() {
     const stickResource = getResource('stick');
-    return stickResource && stickResource.amount >= 1;
+    return stickResource && stickResource.quantity >= 1;
   }
 
   // Check if player can craft twine (has at least 1 thatch)
@@ -204,15 +204,15 @@ export default function MapPage() {
   }) {
     // Add resource to inventory after delay
     if (prev.resourceType === 'stone') {
-      addResourceAmount('stone', 1);
+      addResourceQuantity('stone', 1);
     }
 
     if (prev.resourceType === 'stick') {
-      addResourceAmount('stick', 1);
+      addResourceQuantity('stick', 1);
     }
 
     if (prev.resourceType === 'thatch') {
-      addResourceAmount('thatch', 1);
+      addResourceQuantity('thatch', 1);
     }
 
     if (prev.resourceType === 'water') {
@@ -220,12 +220,12 @@ export default function MapPage() {
     }
 
     if (prev.resourceType === 'berry') {
-      addResourceAmount('berries', 1);
+      addResourceQuantity('berries', 1);
     }
 
     if (prev.resourceType === 'construct-lean-to') {
       // Deduct the cost and show success message
-      addResourceAmount('stick', -1);
+      addResourceQuantity('stick', -1);
       
       // Mark the tile as having a lean-to
       setMapData(prevMapData => 

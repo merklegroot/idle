@@ -8,16 +8,16 @@ export function getResourceFactory(get: () => GameState) {
   }
 }
 
-export function setResourceAmountFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
-  return function (resourceKey: string, amount: number): void {
+export function setResourceQuantityFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, quantity: number): void {
     set((state) => ({
-      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], amount } }
+      resources: { ...state.resources, [resourceKey]: { ...state.resources[resourceKey], quantity } }
     }));
   }
 }
 
-export function addResourceAmountFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
-  return function (resourceKey: string, amount: number): void {
+export function addResourceQuantityFactory(set: (fn: (state: GameState) => Partial<GameState>) => void) {
+  return function (resourceKey: string, quantity: number): void {
     set((state) => {
       const existingResource = state.resources[resourceKey];
       if (!existingResource) {
@@ -26,7 +26,7 @@ export function addResourceAmountFactory(set: (fn: (state: GameState) => Partial
           resources: {
             ...state.resources,
             [resourceKey]: {
-              amount: amount,
+              quantity: quantity,
               perSecond: 0,
               workers: 0,
               paidWorkers: 0,
@@ -45,7 +45,7 @@ export function addResourceAmountFactory(set: (fn: (state: GameState) => Partial
           ...state.resources, 
           [resourceKey]: { 
             ...existingResource, 
-            amount: existingResource.amount + amount 
+            quantity: existingResource.quantity + quantity 
           } 
         }
       };
@@ -82,7 +82,7 @@ export function bootstrapFactory(set: (fn: (state: GameState) => Partial<GameSta
     const state = get();
 
     // Give instant resources
-    const bootstrapAmounts = {
+    const bootstrapQuantities = {
       wood: 1000,
       berries: 500,
       stone: 800,
@@ -94,17 +94,17 @@ export function bootstrapFactory(set: (fn: (state: GameState) => Partial<GameSta
 
     const updatedResources = { ...state.resources };
 
-    // Add resources to existing amounts
-    Object.entries(bootstrapAmounts).forEach(([resourceKey, amount]) => {
+    // Add resources to existing quantities
+    Object.entries(bootstrapQuantities).forEach(([resourceKey, quantity]) => {
       if (updatedResources[resourceKey]) {
         updatedResources[resourceKey] = {
           ...updatedResources[resourceKey],
-          amount: updatedResources[resourceKey].amount + amount
+          quantity: updatedResources[resourceKey].quantity + quantity
         };
       } else {
         // Initialize resource if it doesn't exist
         updatedResources[resourceKey] = {
-          amount: amount,
+          quantity: quantity,
           perSecond: 0,
           workers: 0,
           paidWorkers: 0,
@@ -173,7 +173,7 @@ export function initializeResourceFactory(set: (fn: (state: GameState) => Partia
       resources: {
         ...state.resources,
         [resourceKey]: {
-          amount: 0,
+          quantity: 0,
           perSecond: 0,
           workers: 0,
           paidWorkers: 0,
@@ -312,7 +312,7 @@ export function canCraftRecipeFactory(get: () => GameState) {
     // Check if player has all required ingredients
     return recipe.ingredients.every(ingredient => {
       const resource = state.resources[ingredient.resourceKey];
-      return resource && resource.amount >= ingredient.amount;
+      return resource && resource.quantity >= ingredient.quantity;
     });
   }
 }
@@ -329,7 +329,7 @@ export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameS
     // Check if player can craft this recipe
     const canCraft = recipe.ingredients.every(ingredient => {
       const resource = state.resources[ingredient.resourceKey];
-      return resource && resource.amount >= ingredient.amount;
+      return resource && resource.quantity >= ingredient.quantity;
     });
     
     if (!canCraft) {
@@ -345,7 +345,7 @@ export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameS
             ...state.resources,
             [ingredient.resourceKey]: {
               ...resource,
-              amount: resource.amount - ingredient.amount
+              quantity: resource.quantity - ingredient.quantity
             }
           }
         }));
@@ -360,7 +360,7 @@ export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameS
           ...state.resources,
           [recipe.result.resourceKey]: {
             ...resultResource,
-            amount: resultResource.amount + recipe.result.amount
+            quantity: resultResource.quantity + recipe.result.quantity
           }
         }
       }));
@@ -370,7 +370,7 @@ export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameS
         resources: {
           ...state.resources,
           [recipe.result.resourceKey]: {
-            amount: recipe.result.amount,
+            quantity: recipe.result.quantity,
             perSecond: 0,
             workers: 0,
             paidWorkers: 0,

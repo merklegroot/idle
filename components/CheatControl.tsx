@@ -1,19 +1,19 @@
 import useGameStore from '@/stores/gameStore';
 
 export function CheatControl() {
-    const { addResourceAmount, initializeResource } = useGameStore();
+    const { addResourceQuantity, initializeResource } = useGameStore();
 
     const addDebugWood = () => {
-        addResourceAmount('wood', 10);
+        addResourceQuantity('wood', 10);
     };
 
     const addDebugBerries = () => {
-        addResourceAmount('berries', 10);
+        addResourceQuantity('berries', 10);
     };
 
     const addDebugGold = () => {
         initializeResource('gold');
-        addResourceAmount('gold', 100);
+        addResourceQuantity('gold', 100);
     };
 
     return (

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { GameStore } from './gameStoreModels';
-import { getResourceFactory, setResourceAmountFactory, addResourceAmountFactory, setResourcePerSecondFactory, setResourceIsGatheringFactory, setResourceGatherProgressFactory } from './gameStoreFactory';
+import { getResourceFactory, setResourceQuantityFactory, addResourceQuantityFactory, setResourcePerSecondFactory, setResourceIsGatheringFactory, setResourceGatherProgressFactory } from './gameStoreFactory';
 import { bootstrapFactory, resetFactory, startGatheringFactory, resetGatherProgressFactory, initializeResourceFactory, getPlayerStatsFactory, setPlayerStatsFactory, updatePlayerWarmthFactory, drinkWaterFactory, getTimeOfDayFactory, getDayFactory, setTimeOfDayFactory, setDayFactory, advanceTimeFactory, canCraftRecipeFactory, craftRecipeFactory } from './gameStoreFactory';
 
 const useGameStore = create<GameStore>((set, get) => ({
@@ -17,8 +17,8 @@ const useGameStore = create<GameStore>((set, get) => ({
 
   // Resource management
   getResource: getResourceFactory(get),
-  setResourceAmount: setResourceAmountFactory(set),
-  addResourceAmount: addResourceAmountFactory(set),
+  setResourceQuantity: setResourceQuantityFactory(set),
+  addResourceQuantity: addResourceQuantityFactory(set),
   setResourcePerSecond: setResourcePerSecondFactory(set),
   setResourceIsGathering: setResourceIsGatheringFactory(set),
   setResourceGatherProgress: setResourceGatherProgressFactory(set),

@@ -7,7 +7,7 @@ interface InventoryItemProps {
     key: string
     name: string
     icon: string
-    amount: number
+    quantity: number
     value?: number
   }
 }
@@ -25,7 +25,7 @@ export default function InventoryItem({ item }: InventoryItemProps) {
             {item.name}
           </div>
           <div className={`text-xs text-gray-500`}>
-            {formattingUtil.formatNumber(item.amount)}
+            {formattingUtil.formatNumber(item.quantity)}
           </div>
         </div>
       </div>

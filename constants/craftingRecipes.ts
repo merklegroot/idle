@@ -6,11 +6,11 @@ export const CRAFTING_RECIPES: CraftingRecipe[] = [
     name: 'Twine',
     description: 'A simple cord made from thatch',
     ingredients: [
-      { resourceKey: 'thatch', amount: 1 }
+      { resourceKey: 'thatch', quantity: 1 }
     ],
     result: {
       resourceKey: 'twine',
-      amount: 1
+      quantity: 1
     }
   },
   {
@@ -18,11 +18,11 @@ export const CRAFTING_RECIPES: CraftingRecipe[] = [
     name: 'Knapped Axe Head',
     description: 'A chipped stone axe head suitable for hafting',
     ingredients: [
-      { resourceKey: 'stone', amount: 1 }
+      { resourceKey: 'stone', quantity: 1 }
     ],
     result: {
       resourceKey: 'knapped-axe-head',
-      amount: 1
+      quantity: 1
     }
   }
 ];

@@ -1,6 +1,6 @@
 
 export interface ResourceState {
-    amount: number;
+    quantity: number;
     perSecond: number;
     workers: number;
     paidWorkers: number;
@@ -28,8 +28,8 @@ export interface GameState {
 export interface GameActions {
     // Resource management
     getResource: (resourceKey: string) => ResourceState | undefined;
-    setResourceAmount: (resourceKey: string, amount: number) => void;
-    addResourceAmount: (resourceKey: string, amount: number) => void;
+    setResourceQuantity: (resourceKey: string, quantity: number) => void;
+    addResourceQuantity: (resourceKey: string, quantity: number) => void;
     setResourcePerSecond: (resourceKey: string, perSecond: number) => void;
     setResourceIsGathering: (resourceKey: string, isGathering: boolean) => void;
 
