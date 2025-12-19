@@ -40,6 +40,12 @@ export const StickDef: ResourceDef = {
     icon: '╱',
 };
 
+export const HandleDef: ResourceDef = {
+    name: 'Tool Handle',
+    resourceKey: 'tool-handle',
+    icon: '🪥',
+};
+
 export const TwineDef: ResourceDef = {
     name: 'Twine',
     resourceKey: 'twine',

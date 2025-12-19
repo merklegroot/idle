@@ -24,8 +24,18 @@ export const CRAFTING_RECIPES: CraftingRecipe[] = [
       resourceKey: 'knapped-axe-head',
       quantity: 1
     }
+  },
+  {
+    id: 'tool-handle-recipe',
+    name: 'Tool Handle',
+    description: 'A handle for a tool',
+    ingredients: [
+      { resourceKey: 'stick', quantity: 3 },
+      { resourceKey: 'twine', quantity: 1 }
+    ],
+    result: {
+      resourceKey: 'tool-handle',
+      quantity: 1
+    }
   }
-];
-
-
-
+]; 
