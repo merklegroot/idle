@@ -63,3 +63,22 @@ export const ToolhandleDef: ResourceDef = {
     resourceKey: 'tool-handle',
     icon: '🪥',
 };
+
+export const FlimsyAxeDef: ResourceDef = {
+    name: 'Flimsy Axe',
+    resourceKey: 'flimsy-axe',
+    icon: '🪓',
+};
+
+export const AllResourceDefs: ResourceDef[] = [
+    WoodDef,
+    BerryDef,
+    StoneDef,
+    ThatchDef,
+    GoldDef,
+    StickDef,
+    TwineDef,
+    KnappedAxeHeadDef,
+    ToolhandleDef,
+    FlimsyAxeDef
+];

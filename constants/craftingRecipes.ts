@@ -37,5 +37,18 @@ export const CRAFTING_RECIPES: CraftingRecipe[] = [
       resourceKey: 'tool-handle',
       quantity: 1
     }
+  },
+  {
+    id: 'flimsy-axe-recipe',
+    name: 'Flimsy Axe',
+    description: 'A basic axe for chopping wood',
+    ingredients: [
+      { resourceKey: 'knapped-axe-head', quantity: 1 },
+      { resourceKey: 'tool-handle', quantity: 1 }
+    ],
+    result: {
+      resourceKey: 'flimsy-axe',
+      quantity: 1
+    }
   }
 ]; 

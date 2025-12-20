@@ -1,10 +1,9 @@
-import { KnappedAxeHeadDef, BerryDef, GoldDef, TwineDef, StickDef, ResourceDef, StoneDef, WoodDef, ThatchDef, ToolhandleDef } from "@/app/models/ResourceDef";
+import { ResourceDef, AllResourceDefs } from "@/app/models/ResourceDef";
 import { CraftingIngredient, CraftingRecipe } from "@/models/CraftingRecipe";
 import { TerrainEnum } from "@/models/TerrainEnum";
 
 function getResourceIcon(resourceKey: string): string {
-  const resourceDefs: ResourceDef[] = [WoodDef, BerryDef, StoneDef, GoldDef, StickDef, ThatchDef, TwineDef, KnappedAxeHeadDef, ToolhandleDef];
-  const resourceIconMap = resourceDefs.reduce((map: Record<string, string>, def: ResourceDef) => {
+  const resourceIconMap = AllResourceDefs.reduce((map: Record<string, string>, def: ResourceDef) => {
     map[def.resourceKey] = def.icon;
     return map;
   }, {} as Record<string, string>);
