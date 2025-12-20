@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import useGameStore from '@/stores/gameStore'
-import { WoodDef, BerryDef, StoneDef, GoldDef, ResourceDef, StickDef, ThatchDef, TwineDef, KnappedAxeHeadDef } from '@/app/models/ResourceDef'
+import { ResourceDef } from '@/app/models/ResourceDef'
 import InventoryItem from './InventoryItem'
+import { ALL_RESOURCE_DEFS } from '@/constants/resourceDefs'
 
 export default function InventoryWidget() {
   const { getResource } = useGameStore()
@@ -24,7 +25,7 @@ export default function InventoryWidget() {
     }
   }
 
-  const allItems = [WoodDef, BerryDef, StoneDef, GoldDef, StickDef, ThatchDef, TwineDef, KnappedAxeHeadDef]
+  const allItems = ALL_RESOURCE_DEFS
       .map(resource => toResourceInventoryItemDef(resource));
 
   const inventoryItems = allItems.map(resource => {
@@ -33,8 +34,7 @@ export default function InventoryWidget() {
       ...resource,
       quantity: resourceData?.quantity || 0
     }
-  }).filter(item => showAllResources || item.quantity > 0)
-    .sort((a, b) => b.quantity - a.quantity);
+  }).filter(item => showAllResources || item.quantity > 0);
 
   return (
     <div className={`p-3 bg-white rounded-lg border border-gray-200 shadow-sm`}>

@@ -1,9 +1,10 @@
-import { ResourceDef, AllResourceDefs } from "@/app/models/ResourceDef";
+import { ResourceDef } from "@/app/models/ResourceDef";
+import { ALL_RESOURCE_DEFS } from "@/constants/resourceDefs";
 import { CraftingIngredient, CraftingRecipe } from "@/models/CraftingRecipe";
 import { TerrainEnum } from "@/models/TerrainEnum";
 
 function getResourceIcon(resourceKey: string): string {
-  const resourceIconMap = AllResourceDefs.reduce((map: Record<string, string>, def: ResourceDef) => {
+  const resourceIconMap = ALL_RESOURCE_DEFS.reduce((map: Record<string, string>, def: ResourceDef) => {
     map[def.resourceKey] = def.icon;
     return map;
   }, {} as Record<string, string>);
