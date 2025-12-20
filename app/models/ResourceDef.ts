@@ -57,3 +57,9 @@ export const KnappedAxeHeadDef: ResourceDef = {
     resourceKey: 'knapped-axe-head',
     icon: '🪨',
 };
+
+export const ToolhandleDef: ResourceDef = {
+    name: 'Tool Handle',
+    resourceKey: 'tool-handle',
+    icon: '🪥',
+};
