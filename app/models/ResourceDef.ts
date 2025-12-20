@@ -4,81 +4,69 @@ export interface ResourceDef {
     icon: string;
 };
 
-export const WoodDef: ResourceDef = {
-    name: 'Wood',
-    resourceKey: 'wood',
-    icon: '🪵'
+const resourceData: Record<string, ResourceDef> = {
+    wood: {
+        name: 'Wood',
+        resourceKey: 'wood',
+        icon: '🪵'
+    },
+    berries: {
+        name: 'Berries',
+        resourceKey: 'berries',
+        icon: '🫐',
+    },
+    stone: {
+        name: 'Stone',
+        resourceKey: 'stone',
+        icon: '🪨',
+    },
+    thatch: {
+        name: 'Thatch',
+        resourceKey: 'thatch',
+        icon: '🌾',
+    },
+    gold: {
+        name: 'Gold',
+        resourceKey: 'gold',
+        icon: '🪙',
+    },
+    stick: {
+        name: 'Stick',
+        resourceKey: 'stick',
+        icon: '╱',
+    },
+    'tool-handle'   : {
+        name: 'Tool Handle',
+        resourceKey: 'tool-handle',
+        icon: '🪥',
+    },
+    'twine': {
+        name: 'Twine',
+        resourceKey: 'twine',
+        icon: '🧵',
+    },
+    'knapped-axe-head': {
+        name: 'Knapped Axe Head',
+        resourceKey: 'knapped-axe-head',
+        icon: '🪨',
+    },
+    'flimsy-axe': {
+        name: 'Flimsy Axe',
+        resourceKey: 'flimsy-axe',
+        icon: '🪓',
+    },
 };
 
-export const BerryDef: ResourceDef = {
-    name: 'Berries',
-    resourceKey: 'berries',
-    icon: '🫐',
-};
+export const WoodDef: ResourceDef = resourceData.wood;
+export const BerryDef: ResourceDef = resourceData.berries;
+export const StoneDef: ResourceDef = resourceData.stone;
+export const ThatchDef: ResourceDef = resourceData.thatch;
+export const GoldDef: ResourceDef = resourceData.gold;
+export const StickDef: ResourceDef = resourceData.stick;
+export const HandleDef: ResourceDef = resourceData['tool-handle'];
+export const TwineDef: ResourceDef = resourceData.twine;
+export const KnappedAxeHeadDef: ResourceDef = resourceData['knapped-axe-head'];
+export const ToolhandleDef: ResourceDef = resourceData['tool-handle'];
+export const FlimsyAxeDef: ResourceDef = resourceData['flimsy-axe'];
 
-export const StoneDef: ResourceDef = {
-    name: 'Stone',
-    resourceKey: 'stone',
-    icon: '🪨',
-};
-
-export const ThatchDef: ResourceDef = {
-    name: 'Thatch',
-    resourceKey: 'thatch',
-    icon: '🌾',
-};
-
-export const GoldDef: ResourceDef = {
-    name: 'Gold',
-    resourceKey: 'gold',
-    icon: '🪙',
-};
-
-export const StickDef: ResourceDef = {
-    name: 'Stick',
-    resourceKey: 'stick',
-    icon: '╱',
-};
-
-export const HandleDef: ResourceDef = {
-    name: 'Tool Handle',
-    resourceKey: 'tool-handle',
-    icon: '🪥',
-};
-
-export const TwineDef: ResourceDef = {
-    name: 'Twine',
-    resourceKey: 'twine',
-    icon: '🧵',
-};
-
-export const KnappedAxeHeadDef: ResourceDef = {
-    name: 'Knapped Axe Head',
-    resourceKey: 'knapped-axe-head',
-    icon: '🪨',
-};
-
-export const ToolhandleDef: ResourceDef = {
-    name: 'Tool Handle',
-    resourceKey: 'tool-handle',
-    icon: '🪥',
-};
-
-export const FlimsyAxeDef: ResourceDef = {
-    name: 'Flimsy Axe',
-    resourceKey: 'flimsy-axe',
-    icon: '🪓',
-};
-
-export const AllResourceDefs: ResourceDef[] = [
-    WoodDef,
-    BerryDef,
-    StoneDef,
-    ThatchDef,
-    GoldDef,
-    StickDef,
-    TwineDef,
-    KnappedAxeHeadDef,
-    ToolhandleDef,
-    FlimsyAxeDef
-];
+export const AllResourceDefs: ResourceDef[] = Object.values(resourceData) as ResourceDef[];
