@@ -1,6 +1,7 @@
 'use client'
 
 import { formattingUtil } from '@/utils/formattingUtil'
+import useGameStore from '@/stores/gameStore'
 
 interface InventoryItemProps {
   item: {
@@ -13,6 +14,12 @@ interface InventoryItemProps {
 }
 
 export default function InventoryItem({ item }: InventoryItemProps) {
+  const { addResourceQuantity } = useGameStore();
+
+  function handleIncrement() {
+    addResourceQuantity(item.key, 1);
+  }
+
   return (
     <div
       key={item.key}
@@ -29,6 +36,13 @@ export default function InventoryItem({ item }: InventoryItemProps) {
           </div>
         </div>
       </div>
+      <button
+        onClick={handleIncrement}
+        className="mt-1 text-xs px-1 py-0.5 rounded border border-gray-300 hover:bg-gray-50 text-gray-600 hover:text-gray-800 transition-colors w-full"
+        title="Debug: Add 1 to inventory"
+      >
+        +1 (Debug)
+      </button>
     </div>
   )
 }
