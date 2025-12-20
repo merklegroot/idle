@@ -15,3 +15,18 @@
 
 # vercel
 .vercel
+
+# testing
+/coverage
+*.log
+
+# typescript
+*.tsbuildinfo
+
+# downloads (large files)
+/downloads
+
+# cache
+.cache
+.parcel-cache
+.eslintcache
