@@ -1,11 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import useGameStore from '@/stores/gameStore'
 import { WoodDef, BerryDef, StoneDef, GoldDef, ResourceDef, StickDef, ThatchDef, TwineDef, KnappedAxeHeadDef } from '@/app/models/ResourceDef'
 import InventoryItem from './InventoryItem'
 
 export default function InventoryWidget() {
   const { getResource } = useGameStore()
+  const [showAllResources, setShowAllResources] = useState(false)
 
   interface ResourceInventoryItemDef {
     key: string
@@ -31,7 +33,7 @@ export default function InventoryWidget() {
       ...resource,
       quantity: resourceData?.quantity || 0
     }
-  }).filter(item => item.quantity > 0)
+  }).filter(item => showAllResources || item.quantity > 0)
     .sort((a, b) => b.quantity - a.quantity);
 
   return (
@@ -41,6 +43,13 @@ export default function InventoryWidget() {
           Inventory
         </h3>
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowAllResources(!showAllResources)}
+            className="text-xs px-2 py-1 rounded border border-gray-300 hover:bg-gray-50 text-gray-600 hover:text-gray-800 transition-colors"
+            title={showAllResources ? 'Hide empty resources' : 'Show all resources'}
+          >
+            {showAllResources ? 'Hide Empty' : 'Show All'}
+          </button>
           <div className="text-xs text-gray-500">
             {inventoryItems.length} item{inventoryItems.length !== 1 ? 's' : ''}
           </div>
