@@ -34,6 +34,7 @@ export default function Navigation() {
             <NavLink href="/home" label="Home" />
             <NavLink href="/numbers" label="Numbers" />
             <NavLink href="/asset-packs" label="Assets" />
+            <NavLink href="/resource-list" label="Resources" />
           </ul>
         </div>
         <NavInventory />
