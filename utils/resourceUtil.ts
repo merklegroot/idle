@@ -1,6 +1,9 @@
 import { ResourceDef } from "@/app/models/ResourceDef";
+import { FOLIAGE_DEFS } from "@/constants/FoliageDefs";
 import { ALL_RESOURCE_DEFS } from "@/constants/resourceDefs";
+import { TERRAIN_DEFS } from "@/constants/terrainDefs";
 import { CraftingIngredient, CraftingRecipe } from "@/models/CraftingRecipe";
+import { FoliageEnum } from "@/models/FoliageEnum";
 import { TerrainEnum } from "@/models/TerrainEnum";
 
 function getResourceIcon(resourceKey: string): string {
@@ -21,69 +24,31 @@ function getIngredientIcon(ingredient: CraftingIngredient): string {
 }
 
 function getTileTypeText(terrainType: TerrainEnum | undefined | null) {
-  if (terrainType === TerrainEnum.Grass)
-    return 'Grass';
+  if (!terrainType) return 'None';
 
-  if (terrainType === TerrainEnum.Path)
-    return 'Path';
-
-  if (terrainType === TerrainEnum.HousingPlot)
-    return 'Housing Plot';
-
-  if (terrainType === TerrainEnum.Water)
-    return 'Water';
-
-  return 'Unknown';
+  const terrainDef = TERRAIN_DEFS[terrainType as TerrainEnum];
+  return terrainDef?.name || '❓';
 }
 
 function getTileTypeIcon(terrainType: TerrainEnum | undefined | null) {
-  if (terrainType === TerrainEnum.Grass)
-    return '🌱';
+  if (!terrainType) return 'None';
 
-  if (terrainType === TerrainEnum.Path)
-    return '🛤️';
-
-  if (terrainType === TerrainEnum.HousingPlot)
-    return '🏠';
-
-  if (terrainType === TerrainEnum.Water)
-    return '🌊';
-
-  return '❓';
+  const terrainDef = TERRAIN_DEFS[terrainType as TerrainEnum];
+  return terrainDef?.icon || '❓';
 }
 
-function getFoliageTypeText(foliageType: string | null | undefined) {
+function getFoliageTypeText(foliageType: FoliageEnum | null | undefined) {
   if (!foliageType) return 'None';
-  
-  switch (foliageType.toLowerCase()) {
-    case 'tree':
-      return 'Tree';
-    case 'rock':
-      return 'Rock';
-    case 'berrybush':
-      return 'Berry Bush';
-    case 'empty':
-      return 'None';
-    default:
-      return foliageType;
-  }
+
+  const foliageDef = FOLIAGE_DEFS[foliageType as FoliageEnum];
+  return foliageDef?.name || '❓';
 }
 
-function getFoliageTypeIcon(foliageType: string | null | undefined) {
-  if (!foliageType) return '';
-  
-  switch (foliageType.toLowerCase()) {
-    case 'tree':
-      return '🌳';
-    case 'rock':
-      return '🪨';
-    case 'berrybush':
-      return '🫐';
-    case 'empty':
-      return '';
-    default:
-      return '🌿';
-  }
+function getFoliageTypeIcon(foliageType: FoliageEnum | null | undefined) {
+  if (!foliageType) return 'None';
+
+  const foliageDef = FOLIAGE_DEFS[foliageType as FoliageEnum];
+  return foliageDef?.icon || '❓';
 }
 
 export const resourceUtil = {
