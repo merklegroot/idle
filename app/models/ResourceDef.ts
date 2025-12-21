@@ -2,4 +2,5 @@ export interface ResourceDef {
     name: string;
     resourceKey: string;
     icon: string;
+    isGatherable?: boolean;
 };

@@ -1,10 +1,11 @@
 import GatherProgressComponent from '@/components/GatherProgressComponent'
+import { ResourceType } from '@/models/ResourceType'
 
 interface GatheringProgress {
   isActive: boolean
   progress: number
   tile: { x: number; y: number }
-  resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head'
+  resourceType: ResourceType
 }
 
 interface GatheringProgressDisplayProps {

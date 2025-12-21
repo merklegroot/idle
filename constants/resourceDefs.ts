@@ -4,22 +4,26 @@ const resourceData: Record<string, ResourceDef> = {
     wood: {
         name: 'Wood',
         resourceKey: 'wood',
-        icon: '🪵'
+        icon: '🪵',
+        isGatherable: true,
     },
     berries: {
         name: 'Berries',
         resourceKey: 'berries',
         icon: '🫐',
+        isGatherable: true,
     },
     stone: {
         name: 'Stone',
         resourceKey: 'stone',
         icon: '🪨',
+        isGatherable: true,
     },
     thatch: {
         name: 'Thatch',
         resourceKey: 'thatch',
         icon: '🌾',
+        isGatherable: true,
     },
     gold: {
         name: 'Gold',
@@ -30,6 +34,7 @@ const resourceData: Record<string, ResourceDef> = {
         name: 'Stick',
         resourceKey: 'stick',
         icon: '╱',
+        isGatherable: true,
     },
     'tool-handle'   : {
         name: 'Tool Handle',
