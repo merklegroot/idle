@@ -83,9 +83,9 @@ export default function MapPage() {
     setSelectedTile({ x, y });
   }
 
-  function startGathering(resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head') {
+  function startGathering(resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head' | 'craft-tool-handle-recipe' | 'craft-flimsy-axe-recipe') {
     // For crafting actions, allow starting without a selected tile
-    const isCraftAction = resourceType === 'craft-twine' || resourceType === 'craft-knapped-axe-head';
+    const isCraftAction = resourceType === 'craft-twine' || resourceType === 'craft-knapped-axe-head' || resourceType === 'craft-tool-handle-recipe' || resourceType === 'craft-flimsy-axe-recipe';
     if (!selectedTile && !isCraftAction) return;
 
     // Handle construction resource check
@@ -102,6 +102,12 @@ export default function MapPage() {
       return;
     }
     if (resourceType === 'craft-knapped-axe-head' && !canCraftRecipe('knapped-axe-head')) {
+      return;
+    }
+    if (resourceType === 'craft-tool-handle-recipe' && !canCraftRecipe('tool-handle-recipe')) {
+      return;
+    }
+    if (resourceType === 'craft-flimsy-axe-recipe' && !canCraftRecipe('flimsy-axe-recipe')) {
       return;
     }
 
@@ -199,7 +205,7 @@ export default function MapPage() {
   }
 
   function handleGatheringCompletion(prev: {
-    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head';
+    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head' | 'craft-tool-handle-recipe' | 'craft-flimsy-axe-recipe';
     tile: { x: number; y: number };
   }) {
     // Add resource to inventory after delay
@@ -247,6 +253,16 @@ export default function MapPage() {
     if (prev.resourceType === 'craft-knapped-axe-head') {
       // Craft knapped axe head using the crafting system
       craftRecipe('knapped-axe-head');
+    }
+
+    if (prev.resourceType === 'craft-tool-handle-recipe') {
+      // Craft tool handle using the crafting system
+      craftRecipe('tool-handle-recipe');
+    }
+
+    if (prev.resourceType === 'craft-flimsy-axe-recipe') {
+      // Craft flimsy axe using the crafting system
+      craftRecipe('flimsy-axe-recipe');
     }
 
     setGatheringProgress(null);
@@ -333,6 +349,18 @@ export default function MapPage() {
                   // Route through gathering progress like twine
                   if (!canCraftRecipe('knapped-axe-head')) return
                   startGathering('craft-knapped-axe-head')
+                  return
+                }
+                if (recipeId === 'tool-handle-recipe') {
+                  // Route through gathering progress like twine
+                  if (!canCraftRecipe('tool-handle-recipe')) return
+                  startGathering('craft-tool-handle-recipe')
+                  return
+                }
+                if (recipeId === 'flimsy-axe-recipe') {
+                  // Route through gathering progress like twine
+                  if (!canCraftRecipe('flimsy-axe-recipe')) return
+                  startGathering('craft-flimsy-axe-recipe')
                   return
                 }
               }} />
