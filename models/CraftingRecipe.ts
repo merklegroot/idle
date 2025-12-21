@@ -1,5 +1,7 @@
+import { ResourceType } from "./ResourceType";
+
 export interface CraftingIngredient {
-  resourceKey: string;
+  resourceKey: ResourceType;
   quantity: number;
 }
 
@@ -9,7 +11,7 @@ export interface CraftingRecipe {
   description: string;
   ingredients: CraftingIngredient[];
   result: {
-    resourceKey: string;
+    resourceKey: ResourceType;
     quantity: number;
   };
 }
