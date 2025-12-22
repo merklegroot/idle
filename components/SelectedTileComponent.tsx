@@ -3,6 +3,7 @@
 import { TerrainEnum } from "@/models/TerrainEnum";
 import { GatherButton } from "./GatherButton";
 import { resourceUtil } from "@/utils/resourceUtil";
+import { FoliageEnum } from "@/models/FoliageEnum";
 
 interface SelectedTileComponentProps {
   selectedTile: { x: number; y: number } | null;
@@ -12,7 +13,7 @@ interface SelectedTileComponentProps {
   containsThatch: boolean;
   containsWater: boolean;
   hasLeanTo?: boolean;
-  foliageType?: string | null;
+  foliageType?: FoliageEnum | undefined | null;
   onGatherStick?: () => void;
   onGatherStone?: () => void;
   onGatherThatch?: () => void;
@@ -91,10 +92,10 @@ export default function SelectedTileComponent({
         <div className="space-y-1 text-sm">
           <p><span className="font-medium">Resources:</span> {getResourcesText()}</p>
           <p><span className="font-medium">Foliage:</span> 
-            {resourceUtil.getFoliageTypeIcon(foliageType) && (
-              <span className="ml-1">{resourceUtil.getFoliageTypeIcon(foliageType)}</span>
+            {resourceUtil.getFoliageTypeIcon(foliageType as FoliageEnum) && (
+              <span className="ml-1">{resourceUtil.getFoliageTypeIcon(foliageType as FoliageEnum)}</span>
             )}
-            <span className="ml-1">{resourceUtil.getFoliageTypeText(foliageType)}</span>
+            <span className="ml-1">{resourceUtil.getFoliageTypeText(foliageType as FoliageEnum)}</span>
           </p>
         </div>
 
@@ -122,7 +123,7 @@ export default function SelectedTileComponent({
           </div>
         )}
 
-        {foliageType && foliageType.toLowerCase() === 'berrybush' && onGatherBerry && (
+        {foliageType && foliageType === FoliageEnum.BerryBush && onGatherBerry && (
           <div className="mt-3">
             <GatherButton resourceType="berry" isActing={isGathering} onPress={onGatherBerry} />
           </div>
