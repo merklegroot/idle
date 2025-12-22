@@ -1,6 +1,6 @@
 import { ResourceDef } from "@/app/models/ResourceDef";
 import { FOLIAGE_DEFS } from "@/constants/FoliageDefs";
-import { ALL_RESOURCE_DEFS } from "@/constants/resourceDefs";
+import { ALL_RESOURCE_DEFS, DefaultResourceColorClass } from "@/constants/resourceDefs";
 import { TERRAIN_DEFS } from "@/constants/terrainDefs";
 import { CraftingIngredient, CraftingRecipe } from "@/models/CraftingRecipe";
 import { FoliageEnum } from "@/models/FoliageEnum";
@@ -69,6 +69,11 @@ function getActionVerb(resourceType: ResourceType): string {
       : 'Crafting';  
 }
 
+function getResourceColorClass(resourceType: ResourceType): string {
+  const resourceDef = resourceUtil.getResourceDef(resourceType);
+  return resourceDef?.colorClass || DefaultResourceColorClass;
+}
+
 export const resourceUtil = {
     getRecipeIcon,
     getIngredientIcon,
@@ -78,5 +83,6 @@ export const resourceUtil = {
     getFoliageTypeIcon,
     getActionVerb,
     getResourceDef,
-    getResourceDisplayName
+    getResourceDisplayName,
+    getResourceColorClass
 }
