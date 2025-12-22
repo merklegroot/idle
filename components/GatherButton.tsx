@@ -1,7 +1,8 @@
-import { getResourceDisplayName, ResourceType } from "@/models/ResourceType";
+import { ResourceType } from "@/models/ResourceType";
+import { resourceUtil } from "@/utils/resourceUtil";
 
 export function GatherButton({ resourceType, isActing, onPress }: { resourceType: ResourceType, isActing: boolean, onPress: () => void }) {
-    const resourceDisplayName = getResourceDisplayName(resourceType);
+    const resourceDisplayName = resourceUtil.getResourceDisplayName(resourceType);
     const verb = resourceType === 'water' ? 'Drink' : 'Gather';
     const verbPresentParticiple = resourceType === 'water' ? 'Drinking' : 'Gathering';
 

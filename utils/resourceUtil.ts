@@ -11,6 +11,10 @@ function getResourceDef(resourceType: ResourceType) : ResourceDef | undefined {
   return ALL_RESOURCE_DEFS.find(def => def.resourceKey === resourceType);
 }
 
+function getResourceDisplayName(resourceType: ResourceType): string {
+  return getResourceDef(resourceType)?.name || 'Unknown';
+}
+
 function getResourceIcon(resourceKey: ResourceType): string {
   const resourceIconMap = ALL_RESOURCE_DEFS.reduce((map: Record<string, string>, def: ResourceDef) => {
     map[def.resourceKey] = def.icon;
@@ -73,5 +77,6 @@ export const resourceUtil = {
     getFoliageTypeText,
     getFoliageTypeIcon,
     getActionVerb,
-    getResourceDef
+    getResourceDef,
+    getResourceDisplayName
 }

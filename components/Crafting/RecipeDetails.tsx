@@ -1,7 +1,7 @@
 'use client'
 
 import useGameStore from '@/stores/gameStore'
-import { getResourceDisplayName, getResourceColorClass } from '@/models/ResourceType'
+import { getResourceColorClass } from '@/models/ResourceType'
 import { CRAFTING_RECIPES } from '@/constants/craftingRecipes'
 import { resourceUtil } from '@/utils/resourceUtil'
 import { CraftingIngredient } from '@/models/CraftingRecipe'
@@ -23,7 +23,7 @@ export default function RecipeDetails({ selectedRecipe, onCraft }: RecipeDetails
 
     return (
       <span key={ingredient.resourceKey} className={colorClass}>
-        {ingredientIcon} {ingredient.quantity} {getResourceDisplayName(ingredient.resourceKey as any)}
+        {ingredientIcon} {ingredient.quantity} {resourceUtil.getResourceDisplayName(ingredient.resourceKey as any)}
         {resource && ` (${resource.quantity})`}
       </span>
     );

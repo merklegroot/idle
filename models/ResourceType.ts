@@ -1,26 +1,5 @@
 export type ResourceType = 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 
-'twine' | 'rope' | 'cloth' | 'leather' | 'knapped-axe-head' | 'tool-handle';
-
-const ResourceDisplayNameMap: Record<ResourceType, string> = {
-    stick: 'Stick',
-    stone: 'Stone',
-    thatch: 'Thatch',
-    water: 'Water',
-    berry: 'Berries',
-    twine: 'Twine',
-    rope: 'Rope',
-    cloth: 'Cloth',
-    leather: 'Leather',
-    'knapped-axe-head': 'Knapped Axe Head',
-    'tool-handle': 'Tool Handle'
-};
-
-// New crafted component resources
-ResourceDisplayNameMap['knapped-axe-head'] = 'Knapped Axe Head';
-
-export function getResourceDisplayName(resourceType: ResourceType): string {
-    return ResourceDisplayNameMap[resourceType];
-}
+'twine' | 'rope' | 'cloth' | 'leather' | 'knapped-axe-head' | 'tool-handle' | 'flimsy-axe';
 
 const ResourceColorClassMap: Record<ResourceType, string> = {
     stick: 'text-green-800',
@@ -33,7 +12,8 @@ const ResourceColorClassMap: Record<ResourceType, string> = {
     cloth: 'text-purple-800',
     leather: 'text-brown-800',
     'knapped-axe-head': 'text-gray-700',
-    'tool-handle': 'text-gray-700'
+    'tool-handle': 'text-gray-700',
+    'flimsy-axe': 'text-gray-700'
 };
 
 export function getResourceColorClass(resourceType: ResourceType): string {
