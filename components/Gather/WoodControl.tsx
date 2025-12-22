@@ -1,5 +1,5 @@
 import ResourceControl from "../ResourceControl";
-import { WoodDef } from "../../app/models/ResourceDef";
+import { WoodDef } from "../../constants/resourceDefs";
 
 export default function WoodControl() {
   return <ResourceControl resourceDef={WoodDef} />;

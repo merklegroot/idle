@@ -23,7 +23,7 @@ import {
   
   // Existing Resources
   WoodDef, BerryDef, StoneDef, HatchetDef, PickaxeDef, GoldDef, HouseDef
-} from '@/app/models/ResourceDef';
+} from '@/constants/resourceDefs';
 
 export default function EmojiAssetsSection() {
   const [isEmojiSectionOpen, setIsEmojiSectionOpen] = useState(false);

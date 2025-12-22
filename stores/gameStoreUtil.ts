@@ -1,4 +1,4 @@
-import { BerryDef, StoneDef, WoodDef } from "@/app/models/ResourceDef";
+import { BerryDef, StoneDef, WoodDef } from "@/constants/resourceDefs";
 import { GameState } from "./gameStoreModels";
 
 

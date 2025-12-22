@@ -30,7 +30,7 @@ export default function MapPage() {
     isActive: boolean;
     progress: number;
     tile: { x: number; y: number };
-    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head';
+    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head' | 'craft-tool-handle-recipe' | 'craft-flimsy-axe-recipe';
   } | null>(null);
   const completionHandled = useRef(false);
 
@@ -325,7 +325,7 @@ export default function MapPage() {
                   containsThatch={containsThatch || false}
                   containsWater={selectedMapTile?.terrainType === TerrainEnum.Water || false}
                   hasLeanTo={selectedMapTile?.hasLeanTo || false}
-                  foliageType={selectedTreeTile ? FoliageEnum[selectedTreeTile.sceneryType] : null}
+                  foliageType={selectedTreeTile ? selectedTreeTile.sceneryType : null}
                   onGatherStick={handleGatherStick}
                   onGatherStone={handleGatherStone}
                   onGatherThatch={handleGatherThatch}

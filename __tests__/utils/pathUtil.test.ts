@@ -1,18 +1,18 @@
 import { pathUtil } from '../../utils/pathUtil';
 import type { MapTile } from '@/models/MapTile';
-import type { SceneryTileMap } from '@/models/SceneryTileMap';
+import { TerrainEnum } from '@/models/TerrainEnum';
 import os from 'os';
 
 describe('pathUtil', () => {
   describe('getPathTile3x3Grid', () => {
     it('path surroundd by grass', () => {
       const mapData: MapTile[] = [
-        { type: 'g', x: 0, y: 0 }, { type: 'g', x: 1, y: 0 }, { type: 'g', x: 2, y: 0 },
-        { type: 'g', x: 0, y: 1 }, { type: 'p', x: 1, y: 1 }, { type: 'g', x: 2, y: 1 },
-        { type: 'g', x: 0, y: 2 }, { type: 'g', x: 1, y: 2 }, { type: 'g', x: 2, y: 2 },
+        { terrainType: TerrainEnum.Grass, x: 0, y: 0 }, { terrainType: TerrainEnum.Grass, x: 1, y: 0 }, { terrainType: TerrainEnum.Grass, x: 2, y: 0 },
+        { terrainType: TerrainEnum.Grass, x: 0, y: 1 }, { terrainType: TerrainEnum.Path, x: 1, y: 1 }, { terrainType: TerrainEnum.Grass, x: 2, y: 1 },
+        { terrainType: TerrainEnum.Grass, x: 0, y: 2 }, { terrainType: TerrainEnum.Grass, x: 1, y: 2 }, { terrainType: TerrainEnum.Grass, x: 2, y: 2 },
       ];
 
-      const pathTile: MapTile = { type: 'p', x: 1, y: 1 };
+      const pathTile: MapTile = { terrainType: TerrainEnum.Path, x: 1, y: 1 };
       const result = pathUtil.getPathTile3x3Grid(pathTile, mapData);
       
       expect(result[0][0]).toBe('tl');
@@ -169,22 +169,22 @@ describe('pathUtil', () => {
       expect(result).toHaveLength(12);
       
       // Check first row (y=0)
-      expect(result[0]).toEqual({ type: 'g', x: 0, y: 0 });
-      expect(result[1]).toEqual({ type: 'g', x: 1, y: 0 });
-      expect(result[2]).toEqual({ type: 'g', x: 2, y: 0 });
-      expect(result[3]).toEqual({ type: 'g', x: 3, y: 0 });
+      expect(result[0]).toEqual({ terrainType: TerrainEnum.Grass, x: 0, y: 0 });
+      expect(result[1]).toEqual({ terrainType: TerrainEnum.Grass, x: 1, y: 0 });
+      expect(result[2]).toEqual({ terrainType: TerrainEnum.Grass, x: 2, y: 0 });
+      expect(result[3]).toEqual({ terrainType: TerrainEnum.Grass, x: 3, y: 0 });
       
       // Check second row (y=1)
-      expect(result[4]).toEqual({ type: 'g', x: 0, y: 1 });
-      expect(result[5]).toEqual({ type: 'p', x: 1, y: 1 });
-      expect(result[6]).toEqual({ type: 'p', x: 2, y: 1 });
-      expect(result[7]).toEqual({ type: 'g', x: 3, y: 1 });
+      expect(result[4]).toEqual({ terrainType: TerrainEnum.Grass, x: 0, y: 1 });
+      expect(result[5]).toEqual({ terrainType: TerrainEnum.Path, x: 1, y: 1 });
+      expect(result[6]).toEqual({ terrainType: TerrainEnum.Path, x: 2, y: 1 });
+      expect(result[7]).toEqual({ terrainType: TerrainEnum.Grass, x: 3, y: 1 });
       
       // Check third row (y=2)
-      expect(result[8]).toEqual({ type: 'g', x: 0, y: 2 });
-      expect(result[9]).toEqual({ type: 'g', x: 1, y: 2 });
-      expect(result[10]).toEqual({ type: 'g', x: 2, y: 2 });
-      expect(result[11]).toEqual({ type: 'g', x: 3, y: 2 });
+      expect(result[8]).toEqual({ terrainType: TerrainEnum.Grass, x: 0, y: 2 });
+      expect(result[9]).toEqual({ terrainType: TerrainEnum.Grass, x: 1, y: 2 });
+      expect(result[10]).toEqual({ terrainType: TerrainEnum.Grass, x: 2, y: 2 });
+      expect(result[11]).toEqual({ terrainType: TerrainEnum.Grass, x: 3, y: 2 });
     });
 
     it('should handle empty map data', () => {
@@ -213,11 +213,11 @@ describe('pathUtil', () => {
       
       // Check that housing plot was parsed correctly (at position x=2, y=1)
       const housingTile = result.find(tile => tile.x === 2 && tile.y === 1);
-      expect(housingTile).toEqual({ type: 'l', x: 2, y: 1 });
+      expect(housingTile).toEqual({ terrainType: TerrainEnum.HousingPlot, x: 2, y: 1 });
       
       // Check that other tiles are still parsed correctly
       const pathTile = result.find(tile => tile.x === 1 && tile.y === 1);
-      expect(pathTile).toEqual({ type: 'p', x: 1, y: 1 });
+      expect(pathTile).toEqual({ terrainType: TerrainEnum.Path, x: 1, y: 1 });
     });
   });
 

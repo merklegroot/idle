@@ -1,5 +1,5 @@
 import ResourceControl from '../ResourceControl';
-import { HatchetDef } from '../../app/models/ResourceDef';
+import { HatchetDef } from '../../constants/resourceDefs';
 
 export default function HatchetControl() {
   return <ResourceControl resourceDef={HatchetDef} />;

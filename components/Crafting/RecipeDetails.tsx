@@ -1,7 +1,7 @@
 'use client'
 
 import useGameStore from '@/stores/gameStore'
-import { getResourceColorClass } from '@/models/ResourceType'
+import { getResourceColorClass } from '@/models/ResourceType';
 import { CRAFTING_RECIPES } from '@/constants/craftingRecipes'
 import { resourceUtil } from '@/utils/resourceUtil'
 import { CraftingIngredient } from '@/models/CraftingRecipe'

@@ -47,14 +47,14 @@ function getTileTypeIcon(terrainType: TerrainEnum | undefined | null) {
 }
 
 function getFoliageTypeText(foliageType: FoliageEnum | null | undefined) {
-  if (!foliageType) return 'None';
+  if (!foliageType || foliageType === FoliageEnum.Invalid || foliageType === FoliageEnum.Empty) return 'None';
 
   const foliageDef = FOLIAGE_DEFS[foliageType as FoliageEnum];
   return foliageDef?.name || '❓';
 }
 
 function getFoliageTypeIcon(foliageType: FoliageEnum | null | undefined) {
-  if (!foliageType) return 'None';
+  if (!foliageType || foliageType === FoliageEnum.Invalid || foliageType === FoliageEnum.Empty) return null;
 
   const foliageDef = FOLIAGE_DEFS[foliageType as FoliageEnum];
   return foliageDef?.icon || '❓';
