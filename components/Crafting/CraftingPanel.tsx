@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import RecipeDetails from './RecipeDetails'
 import RecipeItem from './RecipeItem'
-import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipes'
+import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipeDefs'
 import { recipeUtil } from '@/utils/recipeUtil'
 
 interface CraftingPanelProps {

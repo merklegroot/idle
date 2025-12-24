@@ -1,11 +1,11 @@
 import { ResourceDef } from "@/app/models/ResourceDef";
 import { FOLIAGE_DEFS } from "@/constants/FoliageDefs";
-import { ALL_RESOURCE_DEFS, DefaultResourceColorClass } from "@/constants/resourceDefs";
-import { TERRAIN_DEFS } from "@/constants/terrainDefs";
-import { CraftingIngredient } from "@/constants/CraftingRecipes";
-import { CraftingRecipe } from "@/constants/CraftingRecipes";
+import { ALL_RESOURCE_DEFS, DefaultResourceColorClass } from "@/constants/ResourceDefs";
+import { TERRAIN_DEFS } from "@/constants/TerrainDefs";
+import { CraftingIngredient } from "@/constants/CraftingRecipeDefs";
+import { CraftingRecipe } from "@/constants/CraftingRecipeDefs";
 import { FoliageEnum } from "@/models/FoliageEnum";
-import { ResourceType } from "@/constants/resourceDefs";
+import { ResourceType } from "@/constants/ResourceDefs";
 import { TerrainEnum } from "@/models/TerrainEnum";
 
 function getResourceDef(resourceType: ResourceType) : ResourceDef | undefined {

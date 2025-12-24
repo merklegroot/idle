@@ -2,9 +2,9 @@
 
 import useGameStore from '@/stores/gameStore'
 import { getResourceColorClass } from '@/models/ResourceType';
-import { CraftingRecipe } from '@/constants/CraftingRecipes'
+import { CraftingRecipe } from '@/constants/CraftingRecipeDefs'
 import { resourceUtil } from '@/utils/resourceUtil'
-import { CraftingIngredient } from '@/constants/CraftingRecipes'
+import { CraftingIngredient } from '@/constants/CraftingRecipeDefs'
 
 interface RecipeDetailsProps {
   selectedRecipe: CraftingRecipe | null | undefined

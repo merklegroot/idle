@@ -1,6 +1,6 @@
 import { resourceUtil } from "@/utils/resourceUtil";
 import { ResourceType } from "@/models/ResourceType";
-import { CRAFTING_RECIPES } from "@/constants/CraftingRecipes";
+import { CRAFTING_RECIPES } from "@/constants/CraftingRecipeDefs";
 
 type GatheringActionType = ResourceType | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head' | 'craft-tool-handle-recipe' | 'craft-flimsy-axe-recipe';
 

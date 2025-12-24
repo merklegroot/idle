@@ -1,7 +1,7 @@
 import { recipeUtil } from '@/utils/recipeUtil';
 import { GameState, GameStore, PlayerStats } from './gameStoreModels';
 import { gameStoreUtil } from './gameStoreUtil';
-import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipes';
+import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipeDefs';
 
 export function getResourceFactory(get: () => GameState) {
   return (resourceKey: string) => {

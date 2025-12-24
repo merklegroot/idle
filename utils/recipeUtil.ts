@@ -1,5 +1,5 @@
-import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipes'
-import { CraftingRecipe } from '@/constants/CraftingRecipes'
+import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipeDefs'
+import { CraftingRecipe } from '@/constants/CraftingRecipeDefs'
 
 function getRecipeById(recipeId: CraftingRecipeId): CraftingRecipe {
   const result = CRAFTING_RECIPES[recipeId];

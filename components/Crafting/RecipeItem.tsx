@@ -1,6 +1,6 @@
 'use client'
 
-import { CraftingRecipe } from '@/constants/CraftingRecipes'
+import { CraftingRecipe } from '@/constants/CraftingRecipeDefs'
 import { resourceUtil } from '@/utils/resourceUtil'
 
 interface RecipeItemProps {

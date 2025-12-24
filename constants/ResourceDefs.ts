@@ -2,7 +2,7 @@ import { ResourceDef } from "@/app/models/ResourceDef";
 
 export type ResourceType = 
     'wood' |
-    'berries' |
+    'berry' |
     'stone' |
     'thatch' |
     'gold' |
@@ -10,80 +10,77 @@ export type ResourceType =
     'tool-handle' |
     'twine' |
     'knapped-axe-head' |
-    'flimsy-axe';
+    'flimsy-axe' |
+    'water';
 
 export const DefaultResourceColorClass = 'text-gray-700';
 
 export const resourceData: Record<ResourceType, ResourceDef> = {
     wood: {
         name: 'Wood',
-        resourceKey: 'wood',
         icon: '🪵',
         isGatherable: true,
         colorClass: 'text-green-800',
     },
-    berries: {
+    berry: {
         name: 'Berries',
-        resourceKey: 'berries',
         icon: '🫐',
         isGatherable: true,
         colorClass: 'text-purple-800',
     },
     stone: {
         name: 'Stone',
-        resourceKey: 'stone',
         icon: '🪨',
         isGatherable: true,
         colorClass: 'text-gray-800',
     },
     thatch: {
         name: 'Thatch',
-        resourceKey: 'thatch',
         icon: '🌾',
         isGatherable: true,
         colorClass: 'text-yellow-800',
     },
     gold: {
         name: 'Gold',
-        resourceKey: 'gold',
         icon: '🪙',
         colorClass: 'text-gray-800',
     },
     stick: {
         name: 'Stick',
-        resourceKey: 'stick',
         icon: '╱',
         isGatherable: true,
         colorClass: 'text-green-800',
     },
     'tool-handle'   : {
         name: 'Tool Handle',
-        resourceKey: 'tool-handle',
         icon: '🪥',
         colorClass: 'text-gray-700',
     },
     'twine': {
         name: 'Twine',
-        resourceKey: 'twine',
         icon: '🧵',
         colorClass: 'text-amber-800',
     },
     'knapped-axe-head': {
         name: 'Knapped Axe Head',
-        resourceKey: 'knapped-axe-head',
         icon: '🪨',
         colorClass: 'text-gray-700',
     },
     'flimsy-axe': {
         name: 'Flimsy Axe',
-        resourceKey: 'flimsy-axe',
         icon: '🪓',
         colorClass: 'text-gray-700',
+    },
+    'water': {
+        name: 'Water',
+        icon: '💧',
+        isGatherable: true,
+        colorClass: 'text-blue-800',
     },
 };
 
 export const WoodDef: ResourceDef = resourceData.wood;
-export const BerryDef: ResourceDef = resourceData.berries;
+export const BerryDef: ResourceDef = resourceData.berry;
 export const StoneDef: ResourceDef = resourceData.stone;
 export const ThatchDef: ResourceDef = resourceData.thatch;
 export const GoldDef: ResourceDef = resourceData.gold;

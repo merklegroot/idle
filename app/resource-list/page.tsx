@@ -1,6 +1,6 @@
 'use client'
 
-import { ALL_RESOURCE_DEFS } from '@/constants/resourceDefs'
+import { ALL_RESOURCE_DEFS } from '@/constants/ResourceDefs'
 import { ResourceDef } from '../models/ResourceDef'
 
 export default function ResourcesPage() {

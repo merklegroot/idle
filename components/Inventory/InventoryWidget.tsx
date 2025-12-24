@@ -4,7 +4,7 @@ import { useState } from 'react'
 import useGameStore from '@/stores/gameStore'
 import { ResourceDef } from '@/app/models/ResourceDef'
 import InventoryItem from './InventoryItem'
-import { ALL_RESOURCE_DEFS } from '@/constants/resourceDefs'
+import { ALL_RESOURCE_DEFS } from '@/constants/ResourceDefs'
 
 export default function InventoryWidget() {
   const { getResource } = useGameStore()
