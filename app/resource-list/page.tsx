@@ -1,7 +1,7 @@
 'use client'
 
-import { AllResourceDefs } from "../../constants/resourceDefs"
-
+import { ALL_RESOURCE_DEFS } from '@/constants/resourceDefs'
+import { ResourceDef } from '../models/ResourceDef'
 
 export default function ResourcesPage() {
     return (
@@ -13,7 +13,7 @@ export default function ResourcesPage() {
                 </div>
                 <div className="p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {AllResourceDefs.map((def: import('../../app/models/ResourceDef').ResourceDef) => (
+                        {ALL_RESOURCE_DEFS.map((def: ResourceDef) => (
                             <div key={def.resourceKey} className="border border-gray-200 rounded-lg p-4">
                                 <div className="flex items-center mb-2">
                                     <span className="text-2xl mr-2">{def.icon}</span>

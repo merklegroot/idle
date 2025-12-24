@@ -1,4 +1,4 @@
-import { ResourceType } from "@/models/ResourceType";
+import { ResourceType } from "@/constants/resourceDefs";
 import { resourceUtil } from "@/utils/resourceUtil";
 
 export function GatherButton({ resourceType, isActing, onPress }: { resourceType: ResourceType, isActing: boolean, onPress: () => void }) {

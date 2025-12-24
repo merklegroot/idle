@@ -2,12 +2,12 @@
 
 import useGameStore from '@/stores/gameStore'
 import { getResourceColorClass } from '@/models/ResourceType';
-import { CRAFTING_RECIPES } from '@/constants/craftingRecipes'
+import { CraftingRecipe } from '@/constants/CraftingRecipes'
 import { resourceUtil } from '@/utils/resourceUtil'
-import { CraftingIngredient } from '@/models/CraftingRecipe'
+import { CraftingIngredient } from '@/constants/CraftingRecipes'
 
 interface RecipeDetailsProps {
-  selectedRecipe: typeof CRAFTING_RECIPES[number] | null | undefined
+  selectedRecipe: CraftingRecipe | null | undefined
   onCraft: (recipeId: string) => void
 }
 
@@ -15,15 +15,15 @@ export default function RecipeDetails({ selectedRecipe, onCraft }: RecipeDetails
   const { canCraftRecipe, getResource } = useGameStore()
 
   const getIngredientDisplay = (ingredient: CraftingIngredient) => {
-    const resource = getResource(ingredient.resourceKey)
+    const resource = getResource(ingredient.resourceId)
     const hasEnough = resource && resource.quantity >= ingredient.quantity
-    const colorClass = hasEnough ? getResourceColorClass(ingredient.resourceKey as any) : 'text-red-600'
+    const colorClass = hasEnough ? getResourceColorClass(ingredient.resourceId as any) : 'text-red-600'
     
     const ingredientIcon = resourceUtil.getIngredientIcon(ingredient);
 
     return (
-      <span key={ingredient.resourceKey} className={colorClass}>
-        {ingredientIcon} {ingredient.quantity} {resourceUtil.getResourceDisplayName(ingredient.resourceKey as any)}
+      <span key={ingredient.resourceId} className={colorClass}>
+        {ingredientIcon} {ingredient.quantity} {resourceUtil.getResourceDisplayName(ingredient.resourceId as any)}
         {resource && ` (${resource.quantity})`}
       </span>
     );
@@ -46,7 +46,7 @@ export default function RecipeDetails({ selectedRecipe, onCraft }: RecipeDetails
           <span className="text-sm font-medium text-gray-700 mt-0.5">Ingredients:</span>
           <div className="flex flex-wrap gap-2">
             {selectedRecipe.ingredients.map((ingredient: CraftingIngredient, index: number) => (
-              <span key={ingredient.resourceKey}>
+              <span key={ingredient.resourceId}>
                 {getIngredientDisplay(ingredient)}
                 {index < selectedRecipe.ingredients.length - 1 && <span className="text-gray-400">, </span>}
               </span>

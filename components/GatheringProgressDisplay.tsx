@@ -1,7 +1,5 @@
 import GatherProgressComponent from '@/components/GatherProgressComponent'
-import { ResourceType } from '@/models/ResourceType'
-
-type GatheringActionType = ResourceType | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head' | 'craft-tool-handle-recipe' | 'craft-flimsy-axe-recipe';
+import { ResourceType } from '@/constants/resourceDefs'
 
 interface GatheringProgress {
   isActive: boolean

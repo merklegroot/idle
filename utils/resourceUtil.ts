@@ -2,9 +2,10 @@ import { ResourceDef } from "@/app/models/ResourceDef";
 import { FOLIAGE_DEFS } from "@/constants/FoliageDefs";
 import { ALL_RESOURCE_DEFS, DefaultResourceColorClass } from "@/constants/resourceDefs";
 import { TERRAIN_DEFS } from "@/constants/terrainDefs";
-import { CraftingIngredient, CraftingRecipe } from "@/models/CraftingRecipe";
+import { CraftingIngredient } from "@/constants/CraftingRecipes";
+import { CraftingRecipe } from "@/constants/CraftingRecipes";
 import { FoliageEnum } from "@/models/FoliageEnum";
-import { ResourceType } from "@/models/ResourceType";
+import { ResourceType } from "@/constants/resourceDefs";
 import { TerrainEnum } from "@/models/TerrainEnum";
 
 function getResourceDef(resourceType: ResourceType) : ResourceDef | undefined {
@@ -29,7 +30,7 @@ function getRecipeIcon(recipe: CraftingRecipe): string {
 }
 
 function getIngredientIcon(ingredient: CraftingIngredient): string {
-  return getResourceIcon(ingredient.resourceKey);
+  return getResourceIcon(ingredient.resourceId);
 }
 
 function getTileTypeText(terrainType: TerrainEnum | undefined | null) {

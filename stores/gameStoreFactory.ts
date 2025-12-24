@@ -1,6 +1,7 @@
+import { recipeUtil } from '@/utils/recipeUtil';
 import { GameState, GameStore, PlayerStats } from './gameStoreModels';
 import { gameStoreUtil } from './gameStoreUtil';
-import { CRAFTING_RECIPES } from '@/constants/craftingRecipes';
+import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipes';
 
 export function getResourceFactory(get: () => GameState) {
   return (resourceKey: string) => {
@@ -303,7 +304,7 @@ export function advanceTimeFactory(set: (fn: (state: GameState) => Partial<GameS
 export function canCraftRecipeFactory(get: () => GameState) {
   return function (recipeId: string): boolean {
     const state = get();
-    const recipe = CRAFTING_RECIPES.find(r => r.id === recipeId);
+    const recipe = recipeUtil.getRecipeById(recipeId as CraftingRecipeId);
     
     if (!recipe) {
       return false;
@@ -311,7 +312,7 @@ export function canCraftRecipeFactory(get: () => GameState) {
     
     // Check if player has all required ingredients
     return recipe.ingredients.every(ingredient => {
-      const resource = state.resources[ingredient.resourceKey];
+      const resource = state.resources[ingredient.resourceId];
       return resource && resource.quantity >= ingredient.quantity;
     });
   }
@@ -320,7 +321,7 @@ export function canCraftRecipeFactory(get: () => GameState) {
 export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameState>) => void, get: () => GameState) {
   return function (recipeId: string): boolean {
     const state = get();
-    const recipe = CRAFTING_RECIPES.find(r => r.id === recipeId);
+    const recipe = recipeUtil.getRecipeById(recipeId as CraftingRecipeId);
     
     if (!recipe) {
       return false;
@@ -328,7 +329,7 @@ export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameS
     
     // Check if player can craft this recipe
     const canCraft = recipe.ingredients.every(ingredient => {
-      const resource = state.resources[ingredient.resourceKey];
+      const resource = state.resources[ingredient.resourceId];
       return resource && resource.quantity >= ingredient.quantity;
     });
     
@@ -338,12 +339,12 @@ export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameS
     
     // Deduct ingredients
     recipe.ingredients.forEach(ingredient => {
-      const resource = state.resources[ingredient.resourceKey];
+      const resource = state.resources[ingredient.resourceId];
       if (resource) {
         set((state) => ({
           resources: {
             ...state.resources,
-            [ingredient.resourceKey]: {
+            [ingredient.resourceId]: {
               ...resource,
               quantity: resource.quantity - ingredient.quantity
             }

@@ -3,7 +3,8 @@
 import { useMemo, useState } from 'react'
 import RecipeDetails from './RecipeDetails'
 import RecipeItem from './RecipeItem'
-import { CRAFTING_RECIPES } from '@/constants/craftingRecipes'
+import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipes'
+import { recipeUtil } from '@/utils/recipeUtil'
 
 interface CraftingPanelProps {
   onStartCrafting?: (recipeId: string) => void
@@ -11,11 +12,11 @@ interface CraftingPanelProps {
 
 export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
   const [selectedRecipeId, setSelectedRecipeId] = useState<string | undefined>(
-    CRAFTING_RECIPES[0]?.id
+    Object.keys(CRAFTING_RECIPES)[0]
   )
 
   const selectedRecipe = useMemo(() => {
-    return CRAFTING_RECIPES.find(r => r.id === selectedRecipeId)
+    return CRAFTING_RECIPES[selectedRecipeId as CraftingRecipeId]
   }, [selectedRecipeId])
 
   const handleCraft = (recipeId: string) => {
@@ -31,7 +32,7 @@ export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
         <h2 className="text-2xl font-bold text-gray-800">Crafting</h2>
       </div>
 
-      {CRAFTING_RECIPES.length === 0 ? (
+      {Object.keys(CRAFTING_RECIPES).length === 0 ? (
         <div className="text-center text-gray-500 py-8">
           <p>No recipes available.</p>
         </div>
@@ -41,14 +42,16 @@ export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
           <div className="border rounded-lg border-gray-200 overflow-hidden">
             <div className="max-h-40 overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-2">
-                {CRAFTING_RECIPES.map(recipe => (
-                  <RecipeItem
-                    key={recipe.id}
-                    recipe={recipe}
-                    isSelected={recipe.id === selectedRecipeId}
+                {Object.keys(CRAFTING_RECIPES).map(recipeId => {
+                  return (
+                    <RecipeItem
+                    key={recipeId}
+                    recipe={recipeUtil.getRecipeById(recipeId as CraftingRecipeId)}
+                    isSelected={recipeId === selectedRecipeId}
                     onSelect={setSelectedRecipeId}
                   />
-                ))}
+                )
+                })}
               </div>
             </div>
           </div>

@@ -1,8 +1,20 @@
 import { ResourceDef } from "@/app/models/ResourceDef";
 
+export type ResourceType = 
+    'wood' |
+    'berries' |
+    'stone' |
+    'thatch' |
+    'gold' |
+    'stick' |
+    'tool-handle' |
+    'twine' |
+    'knapped-axe-head' |
+    'flimsy-axe';
+
 export const DefaultResourceColorClass = 'text-gray-700';
 
-const resourceData: Record<string, ResourceDef> = {
+export const resourceData: Record<ResourceType, ResourceDef> = {
     wood: {
         name: 'Wood',
         resourceKey: 'wood',
