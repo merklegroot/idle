@@ -16,7 +16,7 @@ export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
   )
 
   const selectedRecipe = useMemo(() => {
-    return CRAFTING_RECIPES[selectedRecipeId as CraftingRecipeId]
+    return recipeUtil.getRecipeById(selectedRecipeId as CraftingRecipeId)
   }, [selectedRecipeId])
 
   const handleCraft = (recipeId: string) => {
