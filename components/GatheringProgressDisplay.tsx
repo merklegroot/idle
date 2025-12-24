@@ -1,5 +1,5 @@
 import GatherProgressComponent from '@/components/GatherProgressComponent'
-import { ResourceType } from '@/constants/ResourceDefs'
+import { ResourceId } from '@/constants/ResourceDefs'
 
 interface GatheringProgress {
   isActive: boolean

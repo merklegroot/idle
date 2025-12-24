@@ -1,7 +1,7 @@
-import { ResourceType } from "@/constants/ResourceDefs";
+import { ResourceId } from "@/constants/ResourceDefs";
 import { resourceUtil } from "@/utils/resourceUtil";
 
-export function GatherButton({ resourceType, isActing, onPress }: { resourceType: ResourceType, isActing: boolean, onPress: () => void }) {
+export function GatherButton({ resourceType, isActing, onPress }: { resourceType: ResourceId, isActing: boolean, onPress: () => void }) {
     const resourceDisplayName = resourceUtil.getResourceDisplayName(resourceType);
     const verb = resourceType === 'water' ? 'Drink' : 'Gather';
     const verbPresentParticiple = resourceType === 'water' ? 'Drinking' : 'Gathering';

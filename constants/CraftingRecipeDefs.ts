@@ -1,4 +1,4 @@
-import { ResourceType } from "./ResourceDefs";
+import { ResourceId } from "./ResourceDefs";
 
 // while most recipe ids are similar tocraft-{resulting-resource-id}, this is not a guarantee
 // don't rely on this being a convention
@@ -10,7 +10,7 @@ export type CraftingRecipeId =
 | 'craft-flimsy-axe-recipe';
 
 export interface CraftingIngredient {
-  resourceId: ResourceType;
+  resourceId: ResourceId;
   quantity: number;
 }
 
@@ -18,7 +18,7 @@ export interface CraftingRecipeDef {
   id: string;
   displayName: string;
   ingredients: CraftingIngredient[];
-  resultingResourceId: ResourceType;
+  resultingResourceId: ResourceId;
 }
 
 const craftTwineRecipe: CraftingRecipeDef = {

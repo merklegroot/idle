@@ -5,18 +5,18 @@ import { TERRAIN_DEFS } from "@/constants/TerrainDefs";
 import { CraftingIngredient } from "@/constants/CraftingRecipeDefs";
 import { CraftingRecipe } from "@/constants/CraftingRecipeDefs";
 import { FoliageEnum } from "@/models/FoliageEnum";
-import { ResourceType } from "@/constants/ResourceDefs";
+import { ResourceId } from "@/constants/ResourceDefs";
 import { TerrainEnum } from "@/models/TerrainEnum";
 
-function getResourceDef(resourceType: ResourceType) : ResourceDef | undefined {
+function getResourceDef(resourceType: ResourceId) : ResourceDef | undefined {
   return ALL_RESOURCE_DEFS.find(def => def.resourceKey === resourceType);
 }
 
-function getResourceDisplayName(resourceType: ResourceType): string {
+function getResourceDisplayName(resourceType: ResourceId): string {
   return getResourceDef(resourceType)?.name || 'Unknown';
 }
 
-function getResourceIcon(resourceKey: ResourceType): string {
+function getResourceIcon(resourceKey: ResourceId): string {
   const resourceIconMap = ALL_RESOURCE_DEFS.reduce((map: Record<string, string>, def: ResourceDef) => {
     map[def.resourceKey] = def.icon;
     return map;
@@ -61,7 +61,7 @@ function getFoliageTypeIcon(foliageType: FoliageEnum | null | undefined) {
   return foliageDef?.icon || '❓';
 }
 
-function getActionVerb(resourceType: ResourceType): string {
+function getActionVerb(resourceType: ResourceId): string {
   const resourceDef = ALL_RESOURCE_DEFS.find(def => def.resourceKey === resourceType);
   if (!resourceDef) throw new Error(`ResourceDef not found for resourceType: ${resourceType}`);
 
@@ -70,7 +70,7 @@ function getActionVerb(resourceType: ResourceType): string {
       : 'Crafting';  
 }
 
-function getResourceColorClass(resourceType: ResourceType): string {
+function getResourceColorClass(resourceType: ResourceId): string {
   const resourceDef = resourceUtil.getResourceDef(resourceType);
   return resourceDef?.colorClass || DefaultResourceColorClass;
 }

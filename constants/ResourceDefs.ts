@@ -1,6 +1,4 @@
-import { ResourceDef } from "@/app/models/ResourceDef";
-
-export type ResourceType = 
+export type ResourceId = 
     'wood' |
     'berry' |
     'stone' |
@@ -13,82 +11,108 @@ export type ResourceType =
     'flimsy-axe' |
     'water';
 
+export interface ResourceDef {
+    id: string;
+    displayName: string;
+    icon: string;
+    colorClass?: string;
+    isGatherable?: boolean;
+}; 
+
 export const DefaultResourceColorClass = 'text-gray-700';
 
-export const resourceData: Record<ResourceType, ResourceDef> = {
-    wood: {
-        name: 'Wood',
-        icon: '🪵',
-        isGatherable: true,
-        colorClass: 'text-green-800',
-    },
-    berry: {
-        name: 'Berries',
-        icon: '🫐',
-        isGatherable: true,
-        colorClass: 'text-purple-800',
-    },
-    stone: {
-        name: 'Stone',
-        icon: '🪨',
-        isGatherable: true,
-        colorClass: 'text-gray-800',
-    },
-    thatch: {
-        name: 'Thatch',
-        icon: '🌾',
-        isGatherable: true,
-        colorClass: 'text-yellow-800',
-    },
-    gold: {
-        name: 'Gold',
-        icon: '🪙',
-        colorClass: 'text-gray-800',
-    },
-    stick: {
-        name: 'Stick',
-        icon: '╱',
-        isGatherable: true,
-        colorClass: 'text-green-800',
-    },
-    'tool-handle'   : {
-        name: 'Tool Handle',
-        icon: '🪥',
-        colorClass: 'text-gray-700',
-    },
-    'twine': {
-        name: 'Twine',
-        icon: '🧵',
-        colorClass: 'text-amber-800',
-    },
-    'knapped-axe-head': {
-        name: 'Knapped Axe Head',
-        icon: '🪨',
-        colorClass: 'text-gray-700',
-    },
-    'flimsy-axe': {
-        name: 'Flimsy Axe',
-        icon: '🪓',
-        colorClass: 'text-gray-700',
-    },
-    'water': {
-        name: 'Water',
-        icon: '💧',
-        isGatherable: true,
-        colorClass: 'text-blue-800',
-    },
-};
+const woodDef: ResourceDef = {
+    id: 'wood',
+    displayName: 'Wood',
+    icon: '🪵',
+    isGatherable: true,
+    colorClass: 'text-green-800',
+}
 
-export const WoodDef: ResourceDef = resourceData.wood;
-export const BerryDef: ResourceDef = resourceData.berry;
-export const StoneDef: ResourceDef = resourceData.stone;
-export const ThatchDef: ResourceDef = resourceData.thatch;
-export const GoldDef: ResourceDef = resourceData.gold;
-export const StickDef: ResourceDef = resourceData.stick;
-export const HandleDef: ResourceDef = resourceData['tool-handle'];
-export const TwineDef: ResourceDef = resourceData.twine;
-export const KnappedAxeHeadDef: ResourceDef = resourceData['knapped-axe-head'];
-export const ToolhandleDef: ResourceDef = resourceData['tool-handle'];
-export const FlimsyAxeDef: ResourceDef = resourceData['flimsy-axe'];
+const berryDef: ResourceDef = {
+    id: 'berry',
+    displayName: 'Berries',
+    icon: '🫐',
+    isGatherable: true,
+    colorClass: 'text-purple-800',
+}
 
-export const ALL_RESOURCE_DEFS: ResourceDef[] = Object.values(resourceData) as ResourceDef[];
+const stoneDef: ResourceDef = {
+    id: 'stone',
+    displayName: 'Stone',
+    icon: '🪨',
+    isGatherable: true,
+    colorClass: 'text-gray-800',
+}
+
+const thatchDef: ResourceDef = {
+    id: 'thatch',
+    displayName: 'Thatch',
+    icon: '🌾',
+    isGatherable: true,
+    colorClass: 'text-yellow-800',
+}
+
+const goldDef: ResourceDef = {
+    id: 'gold',
+    displayName: 'Gold',
+    icon: '🪙',
+    colorClass: 'text-gray-800',
+}
+
+const stickDef: ResourceDef = {
+    id: 'stick',
+    displayName: 'Stick',
+    icon: '╱',
+    isGatherable: true,
+    colorClass: 'text-green-800',
+}
+
+const toolHandleDef: ResourceDef = {
+    id: 'tool-handle',
+    displayName: 'Tool Handle',
+    icon: '🪥',
+    colorClass: 'text-gray-700',
+}
+
+const twineDef: ResourceDef = {
+    id: 'twine',
+    displayName: 'Twine',
+    icon: '🧵',
+    colorClass: 'text-amber-800',
+}
+
+const knappedAxeHeadDef: ResourceDef = {
+    id: 'knapped-axe-head',
+    displayName: 'Knapped Axe Head',
+    icon: '🪨',
+    colorClass: 'text-gray-700',
+}
+
+const flimsyAxeDef: ResourceDef = {
+    id: 'flimsy-axe',
+    displayName: 'Flimsy Axe',
+    icon: '🪓',
+    colorClass: 'text-gray-700',
+}
+
+const waterDef: ResourceDef = {
+    id: 'water',
+    displayName: 'Water',
+    icon: '💧',
+    isGatherable: true,
+    colorClass: 'text-blue-800',
+}
+export const RESOURCE_DEFS: ResourceDef[] = [
+    woodDef,
+    berryDef,
+    stoneDef,
+    thatchDef,
+    goldDef,
+    stickDef,
+    toolHandleDef,
+    twineDef,
+    knappedAxeHeadDef,
+    flimsyAxeDef,
+    waterDef,
+]
