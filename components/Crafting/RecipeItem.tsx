@@ -1,12 +1,12 @@
 'use client'
 
-import { CraftingRecipeDef } from '@/constants/CraftingRecipeDefs'
+import { CraftingRecipeDef, CraftingRecipeId } from '@/constants/CraftingRecipeDefs'
 import { resourceUtil } from '@/utils/resourceUtil'
 
 interface RecipeItemProps {
   recipe: CraftingRecipeDef
   isSelected: boolean 
-  onSelect: (recipeId: string) => void
+  onSelect: (recipeId: CraftingRecipeId) => void
 }
 
 export default function RecipeItem({ recipe, isSelected, onSelect }: RecipeItemProps) {

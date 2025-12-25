@@ -15,7 +15,7 @@ export interface CraftingIngredient {
 }
 
 export interface CraftingRecipeDef {
-  id: string;
+  id: CraftingRecipeId;
   displayName: string;
   ingredients: CraftingIngredient[];
   resultingResourceId: ResourceId;

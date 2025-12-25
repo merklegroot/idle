@@ -11,8 +11,8 @@ interface CraftingPanelProps {
 }
 
 export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
-  const [selectedRecipeId, setSelectedRecipeId] = useState<string | undefined>(
-    Object.keys(CRAFTING_RECIPES)[0]
+  const [selectedRecipeId, setSelectedRecipeId] = useState<CraftingRecipeId | undefined>(
+    CRAFTING_RECIPES[0].id
   )
 
   const selectedRecipe = useMemo(() => {
@@ -42,12 +42,12 @@ export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
           <div className="border rounded-lg border-gray-200 overflow-hidden">
             <div className="max-h-40 overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-2">
-                {Object.keys(CRAFTING_RECIPES).map(recipeId => {
+                {CRAFTING_RECIPES.map(recipe => {
                   return (
                     <RecipeItem
-                    key={recipeId}
-                    recipe={recipeUtil.getRecipeById(recipeId as CraftingRecipeId)}
-                    isSelected={recipeId === selectedRecipeId}
+                    key={recipe.id}
+                    recipe={recipe}
+                    isSelected={recipe.id === selectedRecipe?.id}
                     onSelect={setSelectedRecipeId}
                   />
                 )
