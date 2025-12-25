@@ -1,32 +1,29 @@
 import { resourceUtil } from "@/utils/resourceUtil";
-import { ResourceType } from "@/models/ResourceType";
-import { CRAFTING_RECIPES } from "@/constants/CraftingRecipeDefs";
+import { ResourceId } from "@/constants/ResourceDefs";
+import { CRAFTING_RECIPES, CraftingRecipeId } from "@/constants/CraftingRecipeDefs";
+import { GatherActionId } from "@/constants/GatherDefs";
+import { ActionId } from "@/constants/ActionDefs";
+import { GATHER_ACTION_DEFS, GatherActionDef } from "@/constants/GatherDefs";
 
-type GatheringActionType = ResourceType | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head' | 'craft-tool-handle-recipe' | 'craft-flimsy-axe-recipe';
+function getResourceTypeFromActionType(actionId: ActionId): ResourceId | null {
+  const gatherAction = GATHER_ACTION_DEFS.find(g => g.id === actionId);
+  if (gatherAction) return gatherAction.resultingResourceId;
 
-function getResourceTypeFromActionType(actionType: GatheringActionType): ResourceType | null {
   // Check if the actionType matches a recipe ID directly
-  const recipe = CRAFTING_RECIPES.find(r => r.id === actionType);
-  if(!recipe) throw Error(`Recipe not found for action type: ${actionType}`);
+  const recipe = CRAFTING_RECIPES.find(r => r.id === actionId);
+  if (!recipe) throw Error(`Recipe not found for action id: ${actionId}`);
   
-  return recipe.result.resourceKey;
+  return recipe.resultingResourceId;
 }
 
 export default function GatherProgressComponent(
   { gatheringProgress }: { gatheringProgress: 
     { isActive: boolean, progress: number, tile: { x: number, y: number }, 
-    resourceType: GatheringActionType } }) {
-  const actualResourceType = getResourceTypeFromActionType(gatheringProgress.resourceType);
+    actionId: CraftingRecipeId | GatherActionId } }) {
+  const actualResourceType = getResourceTypeFromActionType(gatheringProgress.actionId);
   
   // Handle special cases that don't have resource types
   if (!actualResourceType) {
-    if (gatheringProgress.resourceType === 'construct-lean-to') {
-      return (
-        <h3 className="text-lg font-semibold text-gray-700">
-          Constructing Lean-to at ({gatheringProgress.tile.x}, {gatheringProgress.tile.y})
-        </h3>
-      );
-    }
     return (
       <h3 className="text-lg font-semibold text-gray-700">
         Unknown action

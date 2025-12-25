@@ -1,7 +1,6 @@
 import { recipeUtil } from '@/utils/recipeUtil';
 import { GameState, GameStore, PlayerStats } from './gameStoreModels';
-import { gameStoreUtil } from './gameStoreUtil';
-import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipeDefs';
+import { CraftingRecipeId } from '@/constants/CraftingRecipeDefs';
 
 export function getResourceFactory(get: () => GameState) {
   return (resourceKey: string) => {
@@ -354,14 +353,14 @@ export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameS
     });
     
     // Add result
-    const resultResource = state.resources[recipe.result.resourceKey];
+    const resultResource = state.resources[recipe.resultingResourceId];
     if (resultResource) {
       set((state) => ({
         resources: {
           ...state.resources,
-          [recipe.result.resourceKey]: {
+          [recipe.resultingResourceId]: {
             ...resultResource,
-            quantity: resultResource.quantity + recipe.result.quantity
+            quantity: resultResource.quantity + 1
           }
         }
       }));
@@ -370,8 +369,8 @@ export function craftRecipeFactory(set: (fn: (state: GameState) => Partial<GameS
       set((state) => ({
         resources: {
           ...state.resources,
-          [recipe.result.resourceKey]: {
-            quantity: recipe.result.quantity,
+          [recipe.resultingResourceId]: {
+            quantity: 1,
             perSecond: 0,
             workers: 0,
             paidWorkers: 0,

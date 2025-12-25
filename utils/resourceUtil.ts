@@ -1,32 +1,32 @@
-import { ResourceDef } from "@/app/models/ResourceDef";
+import { ResourceDef } from "@/constants/ResourceDefs";
 import { FOLIAGE_DEFS } from "@/constants/FoliageDefs";
-import { ALL_RESOURCE_DEFS, DefaultResourceColorClass } from "@/constants/ResourceDefs";
+import { RESOURCE_DEFS, DefaultResourceColorClass } from "@/constants/ResourceDefs";
 import { TERRAIN_DEFS } from "@/constants/TerrainDefs";
 import { CraftingIngredient } from "@/constants/CraftingRecipeDefs";
-import { CraftingRecipe } from "@/constants/CraftingRecipeDefs";
+import { CraftingRecipeDef } from "@/constants/CraftingRecipeDefs";
 import { FoliageEnum } from "@/models/FoliageEnum";
 import { ResourceId } from "@/constants/ResourceDefs";
 import { TerrainEnum } from "@/models/TerrainEnum";
 
 function getResourceDef(resourceType: ResourceId) : ResourceDef | undefined {
-  return ALL_RESOURCE_DEFS.find(def => def.resourceKey === resourceType);
+  return RESOURCE_DEFS.find(def => def.id === resourceType);
 }
 
 function getResourceDisplayName(resourceType: ResourceId): string {
-  return getResourceDef(resourceType)?.name || 'Unknown';
+  return getResourceDef(resourceType)?.displayName || 'Unknown';
 }
 
 function getResourceIcon(resourceKey: ResourceId): string {
-  const resourceIconMap = ALL_RESOURCE_DEFS.reduce((map: Record<string, string>, def: ResourceDef) => {
-    map[def.resourceKey] = def.icon;
+  const resourceIconMap = RESOURCE_DEFS.reduce((map: Record<string, string>, def: ResourceDef) => {
+    map[def.id] = def.icon;
     return map;
   }, {} as Record<string, string>);
   return resourceIconMap[resourceKey as string] || `${resourceKey as string} not found
   ❓`;
 }
 
-function getRecipeIcon(recipe: CraftingRecipe): string {
-  return getResourceIcon(recipe.result.resourceKey);
+function getRecipeIcon(recipe: CraftingRecipeDef): string {
+  return getResourceIcon(recipe.resultingResourceId);
 }
 
 function getIngredientIcon(ingredient: CraftingIngredient): string {
@@ -62,7 +62,7 @@ function getFoliageTypeIcon(foliageType: FoliageEnum | null | undefined) {
 }
 
 function getActionVerb(resourceType: ResourceId): string {
-  const resourceDef = ALL_RESOURCE_DEFS.find(def => def.resourceKey === resourceType);
+  const resourceDef = RESOURCE_DEFS.find(def => def.id === resourceType);
   if (!resourceDef) throw new Error(`ResourceDef not found for resourceType: ${resourceType}`);
 
   return resourceDef.isGatherable

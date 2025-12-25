@@ -1,11 +1,11 @@
-import GatherProgressComponent from '@/components/GatherProgressComponent'
-import { ResourceId } from '@/constants/ResourceDefs'
+import GatherProgressComponent from '@/components/GatherProgressComponent';
+import { ActionId } from '@/constants/ActionDefs';
 
 interface GatheringProgress {
   isActive: boolean
   progress: number
   tile: { x: number; y: number }
-  resourceType: GatheringActionType
+  actionId: ActionId
 }
 
 interface GatheringProgressDisplayProps {
@@ -70,7 +70,7 @@ export default function GatheringProgressDisplay({ gatheringProgress }: Gatherin
     }
   }
 
-  const styles = isActive ? getResourceTypeStyles(gatheringProgress.resourceType) : {
+  const styles = isActive ? getResourceTypeStyles(gatheringProgress.actionId) : {
     container: 'bg-gray-50 border border-gray-200',
     text: 'text-gray-600',
     progressBg: 'bg-gray-200',

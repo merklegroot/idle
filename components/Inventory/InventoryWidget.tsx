@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import useGameStore from '@/stores/gameStore'
-import { ResourceDef } from '@/app/models/ResourceDef'
-import InventoryItem from './InventoryItem'
-import { ALL_RESOURCE_DEFS } from '@/constants/ResourceDefs'
+import { useState } from 'react';
+import useGameStore from '@/stores/gameStore';
+import { ResourceDef } from '@/constants/ResourceDefs';
+import InventoryItem from './InventoryItem';
+import { RESOURCE_DEFS } from '@/constants/ResourceDefs';
 
 export default function InventoryWidget() {
   const { getResource } = useGameStore()
@@ -19,13 +19,13 @@ export default function InventoryWidget() {
 
   function toResourceInventoryItemDef(resourceDef: ResourceDef): ResourceInventoryItemDef {
     return {
-      key: resourceDef.resourceKey,
-      name: resourceDef.name,
+      key: resourceDef.id,
+      name: resourceDef.displayName,
       icon: resourceDef.icon
     }
   }
 
-  const allItems = ALL_RESOURCE_DEFS
+  const allItems = RESOURCE_DEFS
       .map(resource => toResourceInventoryItemDef(resource));
 
   const inventoryItems = allItems.map(resource => {

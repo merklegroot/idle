@@ -1,10 +1,10 @@
 'use client'
 
-import { CraftingRecipe } from '@/constants/CraftingRecipeDefs'
+import { CraftingRecipeDef } from '@/constants/CraftingRecipeDefs'
 import { resourceUtil } from '@/utils/resourceUtil'
 
 interface RecipeItemProps {
-  recipe: CraftingRecipe
+  recipe: CraftingRecipeDef
   isSelected: boolean 
   onSelect: (recipeId: string) => void
 }
@@ -22,7 +22,7 @@ export default function RecipeItem({ recipe, isSelected, onSelect }: RecipeItemP
     >
       <div className="flex flex-col items-center gap-1">
         <div className="text-lg">{recipeIcon}</div>
-        <div className="text-xs font-medium text-gray-800">{recipe.name}</div>
+        <div className="text-xs font-medium text-gray-800">{recipe.displayName}</div>
       </div>
     </button>
   );

@@ -1,13 +1,12 @@
 'use client'
 
-import useGameStore from '@/stores/gameStore'
-import { getResourceColorClass } from '@/models/ResourceType';
-import { CraftingRecipe } from '@/constants/CraftingRecipeDefs'
-import { resourceUtil } from '@/utils/resourceUtil'
-import { CraftingIngredient } from '@/constants/CraftingRecipeDefs'
+import useGameStore from '@/stores/gameStore';
+import { resourceUtil } from '@/utils/resourceUtil';
+import { CraftingRecipeDef } from '@/constants/CraftingRecipeDefs';
+import { CraftingIngredient } from '@/constants/CraftingRecipeDefs';
 
 interface RecipeDetailsProps {
-  selectedRecipe: CraftingRecipe | null | undefined
+  selectedRecipe: CraftingRecipeDef | null | undefined
   onCraft: (recipeId: string) => void
 }
 
@@ -17,7 +16,7 @@ export default function RecipeDetails({ selectedRecipe, onCraft }: RecipeDetails
   const getIngredientDisplay = (ingredient: CraftingIngredient) => {
     const resource = getResource(ingredient.resourceId)
     const hasEnough = resource && resource.quantity >= ingredient.quantity
-    const colorClass = hasEnough ? getResourceColorClass(ingredient.resourceId as any) : 'text-red-600'
+    const colorClass = hasEnough ? resourceUtil.getResourceColorClass(ingredient.resourceId as any) : 'text-red-600'
     
     const ingredientIcon = resourceUtil.getIngredientIcon(ingredient);
 
@@ -38,7 +37,7 @@ export default function RecipeDetails({ selectedRecipe, onCraft }: RecipeDetails
   return (
     <div className="flex flex-col h-full">
       <div className="mb-3">
-        <h3 className="text-lg font-semibold text-gray-800">{resourceUtil.getRecipeIcon(selectedRecipe)} {selectedRecipe.name}</h3>
+        <h3 className="text-lg font-semibold text-gray-800">{resourceUtil.getRecipeIcon(selectedRecipe)} {selectedRecipe.displayName}</h3>
       </div>
 
       <div className="space-y-3">
