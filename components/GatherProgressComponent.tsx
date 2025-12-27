@@ -3,10 +3,10 @@ import { ResourceId } from "@/constants/ResourceDefs";
 import { CRAFTING_RECIPES, CraftingRecipeId } from "@/constants/CraftingRecipeDefs";
 import { GatherActionId } from "@/constants/GatherDefs";
 import { ActionId } from "@/constants/ActionDefs";
-import { GATHER_ACTION_DEFS, GatherActionDef } from "@/constants/GatherDefs";
+import { ALL_GATHER_ACTION_DEFS, GatherActionDef } from "@/constants/GatherDefs";
 
 function getResourceTypeFromActionType(actionId: ActionId): ResourceId | null {
-  const gatherAction = GATHER_ACTION_DEFS.find(g => g.id === actionId);
+  const gatherAction = ALL_GATHER_ACTION_DEFS.find(g => g.id === actionId);
   if (gatherAction) return gatherAction.resultingResourceId;
 
   // Check if the actionType matches a recipe ID directly

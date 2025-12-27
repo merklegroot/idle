@@ -1,7 +1,7 @@
 import GatherProgressComponent from '@/components/GatherProgressComponent';
 import { ActionId } from '@/constants/ActionDefs';
 
-interface GatheringProgress {
+export interface GatheringProgressProps {
   isActive: boolean
   progress: number
   tile: { x: number; y: number }
@@ -9,7 +9,7 @@ interface GatheringProgress {
 }
 
 interface GatheringProgressDisplayProps {
-  gatheringProgress: GatheringProgress | null
+  gatheringProgress: GatheringProgressProps | null
 }
 
 export default function GatheringProgressDisplay({ gatheringProgress }: GatheringProgressDisplayProps) {

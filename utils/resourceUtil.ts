@@ -2,11 +2,13 @@ import { ResourceDef } from "@/constants/ResourceDefs";
 import { FOLIAGE_DEFS } from "@/constants/FoliageDefs";
 import { RESOURCE_DEFS, DefaultResourceColorClass } from "@/constants/ResourceDefs";
 import { TERRAIN_DEFS } from "@/constants/TerrainDefs";
-import { CraftingIngredient } from "@/constants/CraftingRecipeDefs";
+import { CRAFTING_RECIPES, CraftingIngredient } from "@/constants/CraftingRecipeDefs";
 import { CraftingRecipeDef } from "@/constants/CraftingRecipeDefs";
 import { FoliageEnum } from "@/models/FoliageEnum";
 import { ResourceId } from "@/constants/ResourceDefs";
 import { TerrainEnum } from "@/models/TerrainEnum";
+import { ActionCategory, ActionId } from "@/constants/ActionDefs";
+import { ALL_GATHER_ACTION_DEFS } from "@/constants/GatherDefs";
 
 function getResourceDef(resourceType: ResourceId) : ResourceDef | undefined {
   return RESOURCE_DEFS.find(def => def.id === resourceType);
@@ -47,6 +49,13 @@ function getTileTypeIcon(terrainType: TerrainEnum | undefined | null) {
   return terrainDef?.icon || '❓';
 }
 
+function getActionCategory(actionId: ActionId): ActionCategory {
+  if (ALL_GATHER_ACTION_DEFS.some(g => g.id === actionId)) return ActionCategory.Gathering;
+  if (CRAFTING_RECIPES.some(r => r.id === actionId)) return ActionCategory.Crafting;
+
+  throw new Error(`Action category not found for action id: ${actionId}`);
+}
+
 function getFoliageTypeText(foliageType: FoliageEnum | null | undefined) {
   if (!foliageType || foliageType === FoliageEnum.Invalid || foliageType === FoliageEnum.Empty) return 'None';
 
@@ -85,5 +94,6 @@ export const resourceUtil = {
     getActionVerb,
     getResourceDef,
     getResourceDisplayName,
-    getResourceColorClass
+    getResourceColorClass,
+    getActionCategory
 }

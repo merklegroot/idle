@@ -8,14 +8,17 @@ import SelectedTileComponent from '@/components/SelectedTileComponent';
 import CompactStatsBar from '@/components/CompactStatsBar';
 import CompactDayNightCycle from '@/components/CompactDayNightCycle';
 import useGameStore from '@/stores/gameStore';
-import GatheringProgressDisplay from '@/components/GatheringProgressDisplay';
+import GatheringProgressDisplay, { GatheringProgressProps } from '@/components/GatheringProgressDisplay';
 import MapLegend from '@/components/MapLegend';
 import InventoryWidget from '@/components/Inventory/InventoryWidget';
 import CraftingPanel from '@/components/Crafting/CraftingPanel';
 import DebugControls from '@/components/DebugControls';
 import { TerrainEnum } from '@/models/TerrainEnum';
 import { FoliageEnum } from '@/models/FoliageEnum';
-import { CraftingRecipeDef, CraftingRecipeId } from '@/constants/CraftingRecipeDefs';
+import { CraftingRecipeId } from '@/constants/CraftingRecipeDefs';
+import { ActionCategory, ActionId } from '@/constants/ActionDefs';
+import { resourceUtil } from '@/utils/resourceUtil';
+import { ALL_GATHER_ACTION_DEFS, GatherDefs } from '@/constants/GatherDefs';
 
 export default function MapPage() {
   const { addResourceQuantity, initializeResource, getResource, drinkWater, bootstrap, canCraftRecipe, craftRecipe } = useGameStore();
@@ -27,12 +30,7 @@ export default function MapPage() {
   const [shouldShowTileLetters, setShouldShowTileLetters] = useState(false);
   const [shouldShowTileVariants, setShouldShowTileVariants] = useState(false);
   const [selectedTile, setSelectedTile] = useState<{ x: number; y: number } | null>(null);
-  const [gatheringProgress, setGatheringProgress] = useState<{
-    isActive: boolean;
-    progress: number;
-    tile: { x: number; y: number };
-    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head' | 'craft-tool-handle-recipe' | 'craft-flimsy-axe-recipe';
-  } | null>(null);
+  const [gatheringProgress, setGatheringProgress] = useState<GatheringProgressProps | undefined>();
   const completionHandled = useRef(false);
 
   useEffect(() => {
@@ -84,41 +82,11 @@ export default function MapPage() {
     setSelectedTile({ x, y });
   }
 
-  function startGathering(resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head' | 'craft-tool-handle-recipe' | 'craft-flimsy-axe-recipe') {
+  function startGathering(actionId: ActionId) {
     // For crafting actions, allow starting without a selected tile
-    const isCraftAction = resourceType === 'craft-twine' || resourceType === 'craft-knapped-axe-head' || resourceType === 'craft-tool-handle-recipe' || resourceType === 'craft-flimsy-axe-recipe';
-    if (!selectedTile && !isCraftAction) return;
-
-    // Handle construction resource check
-    if (resourceType === 'construct-lean-to') {
-      const stickResource = getResource('stick');
-      if (!stickResource || stickResource.quantity < 1) {
-        alert('You need at least 1 stick to construct a lean-to!');
-        return;
-      }
-    }
-
-    // Handle crafting recipe checks
-    if (resourceType === 'craft-twine' && !canCraftRecipe('twine')) {
-      return;
-    }
-    if (resourceType === 'craft-knapped-axe-head' && !canCraftRecipe('knapped-axe-head')) {
-      return;
-    }
-    if (resourceType === 'craft-tool-handle-recipe' && !canCraftRecipe('tool-handle-recipe')) {
-      return;
-    }
-    if (resourceType === 'craft-flimsy-axe-recipe' && !canCraftRecipe('flimsy-axe-recipe')) {
-      return;
-    }
-
-    // Initialize resource if it doesn't exist (for non-crafting actions)
-    if (!isCraftAction && resourceType !== 'construct-lean-to') {
-      const resourceKey = resourceType === 'berry' ? 'berries' : resourceType;
-      if (!getResource(resourceKey)) {
-        initializeResource(resourceKey);
-      }
-    }
+    
+    const actionCategory = resourceUtil.getActionCategory(actionId);
+    if (!selectedTile && actionCategory === ActionCategory.Crafting) return;
 
     // Reset completion flag
     completionHandled.current = false;
@@ -128,13 +96,13 @@ export default function MapPage() {
       isActive: true,
       progress: 0,
       tile: selectedTile || { x: 0, y: 0 },
-      resourceType
+      actionId: actionId
     });
 
     // Simulate gathering progress over 3 seconds
     const interval = setInterval(() => {
-      setGatheringProgress(prev => {
-        if (!prev) return null;
+      setGatheringProgress((prev: GatheringProgressProps | undefined) => {
+        if (!prev) return undefined;
 
         const newProgress = prev.progress + 10;
         if (newProgress >= 100) {
@@ -163,32 +131,27 @@ export default function MapPage() {
   }
 
   function handleGatherStick() {
-    startGathering('stick');
+    startGathering(GatherDefs.Stick.id);
   }
 
   function handleGatherStone() {
-    startGathering('stone');
+    startGathering(GatherDefs.Stone.id);
   }
 
   function handleGatherThatch() {
-    startGathering('thatch');
+    startGathering(GatherDefs.Thatch.id);
   }
 
   function handleDrinkWater() {
-    startGathering('water');
+    startGathering(GatherDefs.Water.id);
   }
 
   function handleGatherBerry() {
-    startGathering('berry');
-  }
-
-  function handleConstructLeanTo() {
-    startGathering('construct-lean-to');
+    startGathering(GatherDefs.Berry.id);
   }
 
   function handleCraftTwine() {
-    if (!canCraftRecipe('twine')) {
-      alert('You need at least 1 thatch to craft twine!');
+    if (!canCraftRecipe(CraftingRecipes.Twine.id)) {
       return;
     }
     startGathering('craft-twine');
@@ -206,20 +169,15 @@ export default function MapPage() {
   }
 
   function handleGatheringCompletion(prev: {
-    resourceType: 'stick' | 'stone' | 'thatch' | 'water' | 'berry' | 'construct-lean-to' | 'craft-twine' | 'craft-knapped-axe-head' | 'craft-tool-handle-recipe' | 'craft-flimsy-axe-recipe';
+    actionId: ActionId
     tile: { x: number; y: number };
   }) {
-    // Add resource to inventory after delay
-    if (prev.resourceType === 'stone') {
-      addResourceQuantity('stone', 1);
-    }
-
-    if (prev.resourceType === 'stick') {
-      addResourceQuantity('stick', 1);
-    }
-
-    if (prev.resourceType === 'thatch') {
-      addResourceQuantity('thatch', 1);
+    const actionCategory = resourceUtil.getActionCategory(prev.actionId);
+    if (actionCategory === ActionCategory.Gathering) {
+      const gatherAction = ALL_GATHER_ACTION_DEFS.find(g => g.id === prev.actionId);
+      if (gatherAction) {
+        addResourceQuantity(gatherAction.resultingResourceId, 1);
+      }
     }
 
     if (prev.resourceType === 'water') {
@@ -228,22 +186,6 @@ export default function MapPage() {
 
     if (prev.resourceType === 'berry') {
       addResourceQuantity('berries', 1);
-    }
-
-    if (prev.resourceType === 'construct-lean-to') {
-      // Deduct the cost and show success message
-      addResourceQuantity('stick', -1);
-
-      // Mark the tile as having a lean-to
-      setMapData(prevMapData =>
-        prevMapData.map(tile =>
-          tile.x === prev.tile.x && tile.y === prev.tile.y
-            ? { ...tile, hasLeanTo: true }
-            : tile
-        )
-      );
-
-      alert('Lean-to constructed successfully!');
     }
 
     if (prev.resourceType === 'craft-twine') {
