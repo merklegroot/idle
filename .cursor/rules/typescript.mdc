@@ -48,3 +48,6 @@ When splitting lines, do so in a way that works with the major EOL formats, incl
 When creating a line break, make sure to use the proper EOL format for the platform.
 Note that this sometimes may not apply to text that's rendered in the browser, as browsers on all platforms (even Windows) use \n.
 When joining paths, please do so in context of the OS's path format.
+
+## Empty / Missing Values
+In most cases, prefer undefined over null.

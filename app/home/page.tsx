@@ -15,7 +15,7 @@ import CraftingPanel from '@/components/Crafting/CraftingPanel';
 import DebugControls from '@/components/DebugControls';
 import { TerrainEnum } from '@/models/TerrainEnum';
 import { FoliageEnum } from '@/models/FoliageEnum';
-import { CraftingRecipeId } from '@/constants/CraftingRecipeDefs';
+import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipeDefs';
 import { ActionCategory, ActionId } from '@/constants/ActionDefs';
 import { resourceUtil } from '@/utils/resourceUtil';
 import { ALL_GATHER_ACTION_DEFS, GatherDefs } from '@/constants/GatherDefs';
@@ -150,24 +150,6 @@ export default function MapPage() {
     startGathering(GatherDefs.Berry.id);
   }
 
-  function handleCraftTwine() {
-    if (!canCraftRecipe(CraftingRecipes.Twine.id)) {
-      return;
-    }
-    startGathering('craft-twine');
-  }
-
-  // Check if player can construct a lean-to (has at least 1 stick)
-  function canConstructLeanTo() {
-    const stickResource = getResource('stick');
-    return stickResource && stickResource.quantity >= 1;
-  }
-
-  // Check if player can craft twine (has at least 1 thatch)
-  function canCraftTwine() {
-    return canCraftRecipe('twine');
-  }
-
   function handleGatheringCompletion(prev: {
     actionId: ActionId
     tile: { x: number; y: number };
@@ -180,35 +162,14 @@ export default function MapPage() {
       }
     }
 
-    if (prev.resourceType === 'water') {
-      drinkWater();
+    if (actionCategory === ActionCategory.Crafting) {
+      const craftingRecipe = CRAFTING_RECIPES.find(r => r.id === prev.actionId);
+      if (craftingRecipe) {
+        craftRecipe(craftingRecipe.id);
+      }
     }
 
-    if (prev.resourceType === 'berry') {
-      addResourceQuantity('berries', 1);
-    }
-
-    if (prev.resourceType === 'craft-twine') {
-      // Craft twine using the crafting system
-      craftRecipe('twine');
-    }
-
-    if (prev.resourceType === 'craft-knapped-axe-head') {
-      // Craft knapped axe head using the crafting system
-      craftRecipe('knapped-axe-head');
-    }
-
-    if (prev.resourceType === 'craft-tool-handle-recipe') {
-      // Craft tool handle using the crafting system
-      craftRecipe('tool-handle-recipe');
-    }
-
-    if (prev.resourceType === 'craft-flimsy-axe-recipe') {
-      // Craft flimsy axe using the crafting system
-      craftRecipe('flimsy-axe-recipe');
-    }
-
-    setGatheringProgress(null);
+    setGatheringProgress(undefined);
   }
 
   function onStartCrafting(recipeId: CraftingRecipeId) {
@@ -267,7 +228,7 @@ export default function MapPage() {
               <div className="flex-1">
                 <SelectedTileComponent
                   selectedTile={selectedTile}
-                  terrainType={selectedMapTile?.terrainType || null}
+                  terrainType={selectedMapTile?.terrainType}
                   containsTree={selectedTreeTile?.sceneryType === FoliageEnum.Tree || false}
                   containsStone={selectedTreeTile?.sceneryType === FoliageEnum.Rock || false}
                   containsThatch={containsThatch || false}
@@ -279,10 +240,8 @@ export default function MapPage() {
                   onGatherThatch={handleGatherThatch}
                   onDrinkWater={handleDrinkWater}
                   onGatherBerry={handleGatherBerry}
-                  onConstructLeanTo={handleConstructLeanTo}
                   onClose={() => handleTileSelect(null, null)}
                   isGathering={gatheringProgress?.isActive || false}
-                  canConstructLeanTo={canConstructLeanTo()}
                 />
               </div>
             )}

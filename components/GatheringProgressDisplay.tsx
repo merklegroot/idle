@@ -9,7 +9,7 @@ export interface GatheringProgressProps {
 }
 
 interface GatheringProgressDisplayProps {
-  gatheringProgress: GatheringProgressProps | null
+  gatheringProgress: GatheringProgressProps | undefined
 }
 
 export default function GatheringProgressDisplay({ gatheringProgress }: GatheringProgressDisplayProps) {
