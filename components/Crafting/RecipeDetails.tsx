@@ -4,10 +4,11 @@ import useGameStore from '@/stores/gameStore';
 import { resourceUtil } from '@/utils/resourceUtil';
 import { CraftingRecipeDef } from '@/constants/CraftingRecipeDefs';
 import { CraftingIngredient } from '@/constants/CraftingRecipeDefs';
+import { CraftingRecipeId } from '@/constants/CraftingRecipeDefs';
 
 interface RecipeDetailsProps {
   selectedRecipe: CraftingRecipeDef | null | undefined
-  onCraft: (recipeId: string) => void
+  onCraft: (recipeId: CraftingRecipeId) => void
 }
 
 export default function RecipeDetails({ selectedRecipe, onCraft }: RecipeDetailsProps) {

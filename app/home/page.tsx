@@ -1,23 +1,24 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import type { MapTile } from '@/models/MapTile'
-import type { SceneryTileMap } from '@/models/SceneryTileMap'
-import MapComponent from '@/components/MapComponent'
-import SelectedTileComponent from '@/components/SelectedTileComponent'
-import CompactStatsBar from '@/components/CompactStatsBar'
-import CompactDayNightCycle from '@/components/CompactDayNightCycle'
-import useGameStore from '@/stores/gameStore'
-import GatheringProgressDisplay from '@/components/GatheringProgressDisplay'
-import MapLegend from '@/components/MapLegend'
-import InventoryWidget from '@/components/Inventory/InventoryWidget'
-import CraftingPanel from '@/components/Crafting/CraftingPanel'
-import DebugControls from '@/components/DebugControls'
-import { TerrainEnum } from '@/models/TerrainEnum'
-import { FoliageEnum } from '@/models/FoliageEnum'
+import { useState, useEffect, useRef } from 'react';
+import type { MapTile } from '@/models/MapTile';
+import type { SceneryTileMap } from '@/models/SceneryTileMap';
+import MapComponent from '@/components/MapComponent';
+import SelectedTileComponent from '@/components/SelectedTileComponent';
+import CompactStatsBar from '@/components/CompactStatsBar';
+import CompactDayNightCycle from '@/components/CompactDayNightCycle';
+import useGameStore from '@/stores/gameStore';
+import GatheringProgressDisplay from '@/components/GatheringProgressDisplay';
+import MapLegend from '@/components/MapLegend';
+import InventoryWidget from '@/components/Inventory/InventoryWidget';
+import CraftingPanel from '@/components/Crafting/CraftingPanel';
+import DebugControls from '@/components/DebugControls';
+import { TerrainEnum } from '@/models/TerrainEnum';
+import { FoliageEnum } from '@/models/FoliageEnum';
+import { CraftingRecipeDef, CraftingRecipeId } from '@/constants/CraftingRecipeDefs';
 
 export default function MapPage() {
-  const { addResourceQuantity, initializeResource, getResource, drinkWater, bootstrap, canCraftRecipe, craftRecipe } = useGameStore()
+  const { addResourceQuantity, initializeResource, getResource, drinkWater, bootstrap, canCraftRecipe, craftRecipe } = useGameStore();
   const [mapData, setMapData] = useState<MapTile[]>([]);
   const [treeData, setTreeData] = useState<SceneryTileMap[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +47,7 @@ export default function MapPage() {
       } finally {
         setIsLoading(false);
       }
-    }
+    };
 
     loadMapData();
   }, [])
@@ -56,7 +57,7 @@ export default function MapPage() {
       <div className="flex items-center justify-center h-full">
         <div className="text-xl text-gray-600">Loading map...</div>
       </div>
-    )
+    );
   }
 
   // Calculate map dimensions for legend
@@ -232,16 +233,16 @@ export default function MapPage() {
     if (prev.resourceType === 'construct-lean-to') {
       // Deduct the cost and show success message
       addResourceQuantity('stick', -1);
-      
+
       // Mark the tile as having a lean-to
-      setMapData(prevMapData => 
-        prevMapData.map(tile => 
+      setMapData(prevMapData =>
+        prevMapData.map(tile =>
           tile.x === prev.tile.x && tile.y === prev.tile.y
             ? { ...tile, hasLeanTo: true }
             : tile
         )
       );
-      
+
       alert('Lean-to constructed successfully!');
     }
 
@@ -266,6 +267,11 @@ export default function MapPage() {
     }
 
     setGatheringProgress(null);
+  }
+
+  function onStartCrafting(recipeId: CraftingRecipeId) {
+   if (!canCraftRecipe(recipeId)) return;
+   startGathering(recipeId);
   }
 
   return (
@@ -310,9 +316,9 @@ export default function MapPage() {
         </div>
 
         {/* Info Panels */}
-        <div className="flex-1 min-w-0 space-y-4">          
+        <div className="flex-1 min-w-0 space-y-4">
           <InventoryWidget />
-          
+
           {/* Selected Tile and Crafting Panels - Side by Side */}
           <div className="flex gap-4">
             {selectedTile && (
@@ -338,32 +344,9 @@ export default function MapPage() {
                 />
               </div>
             )}
-            
+
             <div className="flex-1">
-              <CraftingPanel onStartCrafting={(recipeId) => {
-                if (recipeId === 'twine') {
-                  handleCraftTwine()
-                  return
-                }
-                if (recipeId === 'knapped-axe-head') {
-                  // Route through gathering progress like twine
-                  if (!canCraftRecipe('knapped-axe-head')) return
-                  startGathering('craft-knapped-axe-head')
-                  return
-                }
-                if (recipeId === 'tool-handle-recipe') {
-                  // Route through gathering progress like twine
-                  if (!canCraftRecipe('tool-handle-recipe')) return
-                  startGathering('craft-tool-handle-recipe')
-                  return
-                }
-                if (recipeId === 'flimsy-axe-recipe') {
-                  // Route through gathering progress like twine
-                  if (!canCraftRecipe('flimsy-axe-recipe')) return
-                  startGathering('craft-flimsy-axe-recipe')
-                  return
-                }
-              }} />
+              <CraftingPanel onStartCrafting={onStartCrafting} />
             </div>
           </div>
         </div>
@@ -371,5 +354,5 @@ export default function MapPage() {
 
       <MapLegend maxX={maxX} maxY={maxY} />
     </div>
-  )
+  );
 }

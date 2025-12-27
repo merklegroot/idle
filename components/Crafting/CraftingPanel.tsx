@@ -5,9 +5,10 @@ import RecipeDetails from './RecipeDetails'
 import RecipeItem from './RecipeItem'
 import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipeDefs'
 import { recipeUtil } from '@/utils/recipeUtil'
+import { ActionId } from '@/constants/ActionDefs'
 
 interface CraftingPanelProps {
-  onStartCrafting?: (recipeId: string) => void
+  onStartCrafting?: (recipeId: CraftingRecipeId) => void
 }
 
 export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
@@ -19,12 +20,9 @@ export default function CraftingPanel({ onStartCrafting }: CraftingPanelProps) {
     return recipeUtil.getRecipeById(selectedRecipeId as CraftingRecipeId)
   }, [selectedRecipeId])
 
-  const handleCraft = (recipeId: string) => {
-    if (onStartCrafting) {
-      onStartCrafting(recipeId)
-    }
+  const handleCraft = (recipeId: CraftingRecipeId) => {
+    onStartCrafting?.(recipeId);
   }
-
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 max-w-3xl mx-auto">
