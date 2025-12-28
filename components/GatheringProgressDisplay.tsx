@@ -1,5 +1,6 @@
 import GatherProgressComponent from '@/components/GatherProgressComponent';
 import { ActionId } from '@/constants/ActionDefs';
+import { resourceUtil } from '@/utils/resourceUtil';
 
 export interface GatheringProgressProps {
   isActive: boolean
@@ -14,10 +15,25 @@ interface GatheringProgressDisplayProps {
 
 export default function GatheringProgressDisplay({ gatheringProgress }: GatheringProgressDisplayProps) {
   // Always render the container to maintain consistent layout
-  const isActive = gatheringProgress !== null
+  const isActive = gatheringProgress !== null && gatheringProgress !== undefined;
 
-  const getResourceTypeStyles = (resourceType: string) => {
-    switch (resourceType) {
+  const getResourceTypeStyles = (actionId: ActionId | undefined) => {
+    const defafultStyles = {
+      container: 'bg-gray-50 border border-gray-200',
+      text: 'text-gray-600',
+      progressBg: 'bg-gray-200',
+      progressBar: 'bg-gray-600'
+    }
+
+    if (!actionId) return defafultStyles;
+
+    
+    const resourceId = resourceUtil.getResultingResourceIdFromActionId(actionId);
+    if (!resourceId) return defafultStyles;
+
+    // TODO: the varations from the standard display should be
+    // part of the resource defs, not part of a method.
+    switch (resourceId) {
       case 'stick':
         return {
           container: 'bg-green-50 border border-green-200',
@@ -39,21 +55,14 @@ export default function GatheringProgressDisplay({ gatheringProgress }: Gatherin
           progressBg: 'bg-purple-200',
           progressBar: 'bg-purple-600'
         }
-      case 'construct-lean-to':
-        return {
-          container: 'bg-blue-50 border border-blue-200',
-          text: 'text-blue-600',
-          progressBg: 'bg-blue-200',
-          progressBar: 'bg-blue-600'
-        }
-      case 'craft-twine':
+      case 'twine':
         return {
           container: 'bg-amber-50 border border-amber-200',
           text: 'text-amber-600',
           progressBg: 'bg-amber-200',
           progressBar: 'bg-amber-600'
         }
-      case 'craft-knapped-axe-head':
+      case 'knapped-axe-head':
         return {
           container: 'bg-gray-50 border border-gray-200',
           text: 'text-gray-700',
@@ -70,7 +79,7 @@ export default function GatheringProgressDisplay({ gatheringProgress }: Gatherin
     }
   }
 
-  const styles = isActive ? getResourceTypeStyles(gatheringProgress.actionId) : {
+  const styles = isActive ? getResourceTypeStyles(gatheringProgress?.actionId) : {
     container: 'bg-gray-50 border border-gray-200',
     text: 'text-gray-600',
     progressBg: 'bg-gray-200',
@@ -84,7 +93,7 @@ export default function GatheringProgressDisplay({ gatheringProgress }: Gatherin
           <>
             <GatherProgressComponent gatheringProgress={gatheringProgress} />
             <span className={`text-sm font-medium ${styles.text}`}>
-              {gatheringProgress.progress}%
+              {gatheringProgress?.progress}%
             </span>
           </>
         ) : (
@@ -97,7 +106,7 @@ export default function GatheringProgressDisplay({ gatheringProgress }: Gatherin
       <div className={`w-full rounded-full h-3 ${styles.progressBg}`}>
         <div
           className={`h-3 rounded-full transition-all duration-300 ease-out ${styles.progressBar}`}
-          style={{ width: isActive ? `${gatheringProgress.progress}%` : '0%' }}
+          style={{ width: isActive ? `${gatheringProgress?.progress}%` : '0%' }}
         ></div>
       </div>
     </div>

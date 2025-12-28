@@ -57,14 +57,14 @@ function getActionCategory(actionId: ActionId): ActionCategory {
 }
 
 function getFoliageTypeText(foliageType: FoliageEnum | null | undefined) {
-  if (!foliageType || foliageType === FoliageEnum.Invalid || foliageType === FoliageEnum.Empty) return 'None';
+  if (foliageType === FoliageEnum.Invalid || !foliageType) return 'None';
 
   const foliageDef = FOLIAGE_DEFS[foliageType as FoliageEnum];
   return foliageDef?.name || '❓';
 }
 
 function getFoliageTypeIcon(foliageType: FoliageEnum | null | undefined) {
-  if (!foliageType || foliageType === FoliageEnum.Invalid || foliageType === FoliageEnum.Empty) return null;
+  if (foliageType === FoliageEnum.Invalid || foliageType === FoliageEnum.Empty || !foliageType) return null;
 
   const foliageDef = FOLIAGE_DEFS[foliageType as FoliageEnum];
   return foliageDef?.icon || '❓';
@@ -84,6 +84,24 @@ function getResourceColorClass(resourceType: ResourceId): string {
   return resourceDef?.colorClass || DefaultResourceColorClass;
 }
 
+function getResultingResourceIdFromActionId(actionId: ActionId): ResourceId | undefined {
+  // not get gather -- make sure to account for crafting actions  
+  const actionCategory = getActionCategory(actionId);
+  if (actionCategory === ActionCategory.Gathering) {
+    const actionDef = ALL_GATHER_ACTION_DEFS.find(g => g.id === actionId);
+    if (!actionDef) return undefined;
+    return actionDef.resultingResourceId;
+  }
+  
+  if (actionCategory === ActionCategory.Crafting) {
+    const recipe = CRAFTING_RECIPES.find(r => r.id === actionId);
+    if (!recipe) return undefined;
+    return recipe.resultingResourceId;
+  }
+
+  throw new Error(`Resulting resource id not found for action id: ${actionId}`);
+}
+
 export const resourceUtil = {
     getRecipeIcon,
     getIngredientIcon,
@@ -95,5 +113,6 @@ export const resourceUtil = {
     getResourceDef,
     getResourceDisplayName,
     getResourceColorClass,
-    getActionCategory
+    getActionCategory,
+    getResultingResourceIdFromActionId
 }

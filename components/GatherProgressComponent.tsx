@@ -1,9 +1,9 @@
 import { resourceUtil } from "@/utils/resourceUtil";
 import { ResourceId } from "@/constants/ResourceDefs";
-import { CRAFTING_RECIPES, CraftingRecipeId } from "@/constants/CraftingRecipeDefs";
-import { GatherActionId } from "@/constants/GatherDefs";
+import { CRAFTING_RECIPES } from "@/constants/CraftingRecipeDefs";
 import { ActionId } from "@/constants/ActionDefs";
-import { ALL_GATHER_ACTION_DEFS, GatherActionDef } from "@/constants/GatherDefs";
+import { ALL_GATHER_ACTION_DEFS } from "@/constants/GatherDefs";
+import { GatheringProgressProps } from "./GatheringProgressDisplay";
 
 function getResourceTypeFromActionType(actionId: ActionId): ResourceId | null {
   const gatherAction = ALL_GATHER_ACTION_DEFS.find(g => g.id === actionId);
@@ -17,9 +17,7 @@ function getResourceTypeFromActionType(actionId: ActionId): ResourceId | null {
 }
 
 export default function GatherProgressComponent(
-  { gatheringProgress }: { gatheringProgress: 
-    { isActive: boolean, progress: number, tile: { x: number, y: number }, 
-    actionId: CraftingRecipeId | GatherActionId } }) {
+  { gatheringProgress }: { gatheringProgress: GatheringProgressProps }) {
   const actualResourceType = getResourceTypeFromActionType(gatheringProgress.actionId);
   
   // Handle special cases that don't have resource types
