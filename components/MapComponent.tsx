@@ -1,13 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
-import type { MapTile } from '@/models/MapTile'
-import type { SceneryTileMap } from '@/models/SceneryTileMap'
-import { pathUtil } from '@/utils/pathUtil'
-import { TerrainEnum } from '@/models/TerrainEnum'
-import { FoliageEnum } from '@/models/FoliageEnum'
-import useGameStore from '@/stores/gameStore'
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import type { MapTile } from '@/models/MapTile';
+import type { SceneryTileMap } from '@/models/SceneryTileMap';
+import { pathUtil } from '@/utils/pathUtil';
+import { TerrainEnum } from '@/models/TerrainEnum';
+import useGameStore from '@/stores/gameStore';
 
 interface TileVariant {
   src: string
@@ -89,17 +88,17 @@ function getTileVariant(tile: MapTile, mapData: MapTile[]): string {
 
 // Helper function to check if there's a tree at specific coordinates
 function hasTreeAt(x: number, y: number, treeData: SceneryTileMap[]): boolean {
-  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === FoliageEnum.Tree)
+  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === 'tree')
 }
 
 // Helper function to check if there's a stone at specific coordinates
 function hasStoneAt(x: number, y: number, treeData: SceneryTileMap[]): boolean {
-  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === FoliageEnum.Rock)
+  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === 'rock')
 }
 
 // Helper function to check if there's a berry bush at specific coordinates
 function hasBerryBushAt(x: number, y: number, treeData: SceneryTileMap[]): boolean {
-  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === FoliageEnum.BerryBush)
+  return treeData.some(tree => tree.x === x && tree.y === y && tree.sceneryType === 'berry-bush')
 }
 
 // Helper function to calculate vertical offset for non-square images

@@ -1,7 +1,7 @@
 import { parseTerrainType, type MapTile } from "@/models/MapTile";
 import { TerrainEnum } from "@/models/TerrainEnum";
 import type { SceneryTileMap } from "@/models/SceneryTileMap";
-import { FoliageEnum } from "@/models/FoliageEnum";
+import { FoliageId } from "@/constants/FoliageDefs";
 
 // Helper function to get tile at specific coordinates
 function getTileAt(x: number, y: number, mapData: MapTile[]): MapTile | null {
@@ -203,17 +203,17 @@ function parseTreeMapData(treeMapData: string): SceneryTileMap[] {
     return tiles;
 }
 
-function parseSceneryType(sceneryType: string): FoliageEnum {
+function parseSceneryType(sceneryType: string): FoliageId {
     if (sceneryType === '.')
-        return FoliageEnum.Empty;
+        return 'empty';
     if (sceneryType === 't')
-        return FoliageEnum.Tree;
+        return 'tree';
     if (sceneryType === 's')
-        return FoliageEnum.Rock;
+        return 'rock';
     if (sceneryType === 'b')
-        return FoliageEnum.BerryBush;
+        return 'berry-bush';
 
-    return FoliageEnum.Invalid;
+    return 'invalid';
 }
 
 export const pathUtil = {

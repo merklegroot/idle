@@ -1,7 +1,7 @@
-import { FoliageEnum } from "./FoliageEnum";
+import { FoliageId } from "@/constants/FoliageDefs";
 
 export interface SceneryTileMap {
-    sceneryType: FoliageEnum,
+    sceneryType: FoliageId,
     x: number
     y: number
 }

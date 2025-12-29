@@ -3,7 +3,7 @@
 import { TerrainEnum } from "@/models/TerrainEnum";
 import { GatherButton } from "./GatherButton";
 import { resourceUtil } from "@/utils/resourceUtil";
-import { FoliageEnum } from "@/models/FoliageEnum";
+import { FoliageId } from "@/constants/FoliageDefs";
 
 interface SelectedTileComponentProps {
   selectedTile: { x: number; y: number } | null;
@@ -13,7 +13,7 @@ interface SelectedTileComponentProps {
   containsThatch: boolean;
   containsWater: boolean;
   hasLeanTo?: boolean;
-  foliageType?: FoliageEnum | undefined | null;
+  foliageType?: FoliageId | undefined | null;
   onGatherStick?: () => void;
   onGatherStone?: () => void;
   onGatherThatch?: () => void;
@@ -33,7 +33,7 @@ export default function SelectedTileComponent({
   containsThatch,
   containsWater,
   hasLeanTo = false,
-  foliageType = null,
+  foliageType = undefined,
   onGatherStick,
   onGatherStone,
   onGatherThatch,
@@ -92,10 +92,10 @@ export default function SelectedTileComponent({
         <div className="space-y-1 text-sm">
           <p><span className="font-medium">Resources:</span> {getResourcesText()}</p>
           <p><span className="font-medium">Foliage:</span> 
-            {resourceUtil.getFoliageTypeIcon(foliageType as FoliageEnum) && (
-              <span className="ml-1">{resourceUtil.getFoliageTypeIcon(foliageType as FoliageEnum)}</span>
+            {resourceUtil.getFoliageTypeIcon(foliageType) && (
+              <span className="ml-1">{resourceUtil.getFoliageTypeIcon(foliageType)}</span>
             )}
-            <span className="ml-1">{resourceUtil.getFoliageTypeText(foliageType as FoliageEnum)}</span>
+            <span className="ml-1">{resourceUtil.getFoliageTypeText(foliageType)}</span>
           </p>
         </div>
 
@@ -123,7 +123,7 @@ export default function SelectedTileComponent({
           </div>
         )}
 
-        {foliageType && foliageType === FoliageEnum.BerryBush && onGatherBerry && (
+        {foliageType && foliageType === 'berry-bush' && onGatherBerry && (
           <div className="mt-3">
             <GatherButton resourceType="berry" isActing={isGathering} onPress={onGatherBerry} />
           </div>

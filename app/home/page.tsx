@@ -14,7 +14,6 @@ import InventoryWidget from '@/components/Inventory/InventoryWidget';
 import CraftingPanel from '@/components/Crafting/CraftingPanel';
 import DebugControls from '@/components/DebugControls';
 import { TerrainEnum } from '@/models/TerrainEnum';
-import { FoliageEnum } from '@/models/FoliageEnum';
 import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipeDefs';
 import { ActionCategory, ActionId } from '@/constants/ActionDefs';
 import { resourceUtil } from '@/utils/resourceUtil';
@@ -229,8 +228,8 @@ export default function MapPage() {
                 <SelectedTileComponent
                   selectedTile={selectedTile}
                   terrainType={selectedMapTile?.terrainType}
-                  containsTree={selectedTreeTile?.sceneryType === FoliageEnum.Tree || false}
-                  containsStone={selectedTreeTile?.sceneryType === FoliageEnum.Rock || false}
+                  containsTree={selectedTreeTile?.sceneryType === 'tree'}
+                  containsStone={selectedTreeTile?.sceneryType === 'rock'}
                   containsThatch={containsThatch || false}
                   containsWater={selectedMapTile?.terrainType === TerrainEnum.Water || false}
                   hasLeanTo={selectedMapTile?.hasLeanTo || false}
