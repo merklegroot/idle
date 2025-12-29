@@ -56,7 +56,7 @@ function getActionCategory(actionId: ActionId): ActionCategory {
 }
 
 function getFoliageTypeText(foliageType: FoliageId | null | undefined) {
-  if (foliageType === 'invalid' || !foliageType) return 'None';
+  if (foliageType === 'invalid' || foliageType === 'empty' || !foliageType) return 'None';
 
   const foliageDef = FOLIAGE_DEFS.find(f => f.id === foliageType);
   return foliageDef?.name || '❓';
