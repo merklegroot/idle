@@ -1,34 +1,33 @@
 'use client'
 
-import { useMemo, useState, useEffect, useRef } from 'react'
-import RecipeDetails from './RecipeDetails'
-import RecipeItem from './RecipeItem'
-import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipeDefs'
-import { recipeUtil } from '@/utils/recipeUtil'
-import { ActionId } from '@/constants/ActionDefs'
+import { useMemo, useState, useEffect, useRef } from 'react';
+import RecipeDetails from './RecipeDetails';
+import RecipeItem from './RecipeItem';
+import { CRAFTING_RECIPES, CraftingRecipeId } from '@/constants/CraftingRecipeDefs';
+import { recipeUtil } from '@/utils/recipeUtil';
 
 interface CraftingPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  onStartCrafting?: (recipeId: CraftingRecipeId) => void
+  onStartCrafting?: (recipeId: CraftingRecipeId) => void;
 }
 
 export default function CraftingPanel({ isOpen, onClose, onStartCrafting }: CraftingPanelProps) {
   const [selectedRecipeId, setSelectedRecipeId] = useState<CraftingRecipeId | undefined>(
     CRAFTING_RECIPES[0]?.id
-  )
-  const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
+  );
+  const [position, setPosition] = useState<{ x: number; y: number } | undefined>(undefined);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const windowRef = useRef<HTMLDivElement>(null);
 
   const selectedRecipe = useMemo(() => {
-    return recipeUtil.getRecipeById(selectedRecipeId as CraftingRecipeId)
-  }, [selectedRecipeId])
+    return recipeUtil.getRecipeById(selectedRecipeId as CraftingRecipeId);
+  }, [selectedRecipeId]);
 
   const handleCraft = (recipeId: CraftingRecipeId) => {
     onStartCrafting?.(recipeId);
-  }
+  };
 
   // Handle escape key to close panel
   useEffect(() => {
@@ -50,7 +49,7 @@ export default function CraftingPanel({ isOpen, onClose, onStartCrafting }: Craf
   // Reset position when opening
   useEffect(() => {
     if (isOpen && !isDragging) {
-      setPosition(null);
+      setPosition(undefined);
     }
   }, [isOpen]);
 
@@ -89,8 +88,8 @@ export default function CraftingPanel({ isOpen, onClose, onStartCrafting }: Craf
       y: e.clientY - rect.top
     });
     
-    // If position was null (centered), set initial position based on current rect
-    if (position === null) {
+    // If position was undefined (centered), set initial position based on current rect
+    if (position === undefined) {
       setPosition({ x: rect.left, y: rect.top });
     }
     
@@ -138,12 +137,12 @@ export default function CraftingPanel({ isOpen, onClose, onStartCrafting }: Craf
                   {CRAFTING_RECIPES.map(recipe => {
                     return (
                       <RecipeItem
-                      key={recipe.id}
-                      recipe={recipe}
-                      isSelected={recipe.id === selectedRecipe?.id}
-                      onSelect={setSelectedRecipeId}
-                    />
-                  )
+                        key={recipe.id}
+                        recipe={recipe}
+                        isSelected={recipe.id === selectedRecipe?.id}
+                        onSelect={setSelectedRecipeId}
+                      />
+                    );
                   })}
                 </div>
               </div>
@@ -160,5 +159,5 @@ export default function CraftingPanel({ isOpen, onClose, onStartCrafting }: Craf
         )}
       </div>
     </div>
-  )
+  );
 }
