@@ -30,6 +30,7 @@ export default function MapPage() {
   const [shouldShowTileVariants, setShouldShowTileVariants] = useState(false);
   const [selectedTile, setSelectedTile] = useState<{ x: number; y: number } | null>(null);
   const [gatheringProgress, setGatheringProgress] = useState<GatheringProgressProps | undefined>();
+  const [isCraftingModalOpen, setIsCraftingModalOpen] = useState(false);
   const completionHandled = useRef(false);
 
   useEffect(() => {
@@ -219,40 +220,48 @@ export default function MapPage() {
 
         {/* Info Panels */}
         <div className="flex-1 min-w-0 space-y-4">
-          <InventoryWidget />
-
-          {/* Selected Tile and Crafting Panels - Side by Side */}
-          <div className="flex gap-4">
-            {selectedTile && (
-              <div className="flex-1">
-                <SelectedTileComponent
-                  selectedTile={selectedTile}
-                  terrainType={selectedMapTile?.terrainType}
-                  containsTree={selectedTreeTile?.sceneryType === 'tree'}
-                  containsStone={selectedTreeTile?.sceneryType === 'rock'}
-                  containsThatch={containsThatch || false}
-                  containsWater={selectedMapTile?.terrainType === TerrainEnum.Water || false}
-                  hasLeanTo={selectedMapTile?.hasLeanTo || false}
-                  foliageType={selectedTreeTile ? selectedTreeTile.sceneryType : null}
-                  onGatherStick={handleGatherStick}
-                  onGatherStone={handleGatherStone}
-                  onGatherThatch={handleGatherThatch}
-                  onDrinkWater={handleDrinkWater}
-                  onGatherBerry={handleGatherBerry}
-                  onClose={() => handleTileSelect(null, null)}
-                  isGathering={gatheringProgress?.isActive || false}
-                />
-              </div>
-            )}
-
-            <div className="flex-1">
-              <CraftingPanel onStartCrafting={onStartCrafting} />
-            </div>
+          <div className="flex items-center gap-4">
+            <InventoryWidget />
+            <button
+              onClick={() => setIsCraftingModalOpen(true)}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+            >
+              Crafting
+            </button>
           </div>
+
+          {/* Selected Tile Panel */}
+          {selectedTile && (
+            <div className="flex-1">
+              <SelectedTileComponent
+                selectedTile={selectedTile}
+                terrainType={selectedMapTile?.terrainType}
+                containsTree={selectedTreeTile?.sceneryType === 'tree'}
+                containsStone={selectedTreeTile?.sceneryType === 'rock'}
+                containsThatch={containsThatch || false}
+                containsWater={selectedMapTile?.terrainType === TerrainEnum.Water || false}
+                hasLeanTo={selectedMapTile?.hasLeanTo || false}
+                foliageType={selectedTreeTile ? selectedTreeTile.sceneryType : null}
+                onGatherStick={handleGatherStick}
+                onGatherStone={handleGatherStone}
+                onGatherThatch={handleGatherThatch}
+                onDrinkWater={handleDrinkWater}
+                onGatherBerry={handleGatherBerry}
+                onClose={() => handleTileSelect(null, null)}
+                isGathering={gatheringProgress?.isActive || false}
+              />
+            </div>
+          )}
         </div>
       </div>
 
       <MapLegend maxX={maxX} maxY={maxY} />
+
+      <CraftingPanel 
+        isOpen={isCraftingModalOpen}
+        onClose={() => setIsCraftingModalOpen(false)}
+        onStartCrafting={onStartCrafting} 
+      />
     </div>
   );
 }
